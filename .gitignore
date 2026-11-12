@@ -1,0 +1,14 @@
+/.gradle/
+**/build/
+/local.properties
+/.local/
+/key.properties
+*.apk
+*.jks
+*.p12
+*.bks
+/.idea/
+
+/DEVELOPMENT.md
+/AGENTS.md
+/.kotlin/

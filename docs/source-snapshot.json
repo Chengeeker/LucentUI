@@ -1,0 +1,1442 @@
+{
+  "Review": {
+    "versionName": "3.17.5",
+    "files": [
+      {
+        "path": "app/src/main/java/com/review/compose/AppearanceTemplate.kt",
+        "sha256": "e1c88d3e9f5dc3f9b9d7be3991ffa5188bbd5034ca071babc2ed785b06563e9f"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/BackdropNavigation.kt",
+        "sha256": "6e8e9c794f1e2a9571100ec3fd50985fd4c63e628c4d45da3f490cc12650c747"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/Backup.kt",
+        "sha256": "405f540e24f65f66f373ab86877f3adaa98aa162bbad2e15e65cf7f5b556002a"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/BackupSchema.kt",
+        "sha256": "53e585b527831ac9a9d2add90d3c1db7480c8b96af7fd6b1d376e30cf7c74c55"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/BackupScreen.kt",
+        "sha256": "92ed852a24843318ba69f6dd32d80724db12211b793ba3f5911419bb9502bd0f"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/CacheMaintenance.kt",
+        "sha256": "4a8d1b638d2440beac6961e226e07514bde909c009f5d5ba526626c1b9eab1c1"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/DeviceSettings.kt",
+        "sha256": "33444b3ffe29f33d2b41271f8b40a7c2d91c0ddfa5fa35cdd83d2f1528796407"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/FontSizeSetting.kt",
+        "sha256": "d2f3aceb480db9cdfe77285e5b04e77bc2019e129d5204d7fe46d304200454b6"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/FontWeight.kt",
+        "sha256": "e65220a139b8ecb0267ba67554f2eeb565324326afd0a45aa7d71941df19d0cc"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/FontWeightSetting.kt",
+        "sha256": "28249ec7e9a0d43cf980828eabc2cdc9125726b9c263c7df861c6e41aea51778"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GalleryFlight.kt",
+        "sha256": "3e5e4ecb370bd83363e05aadee2d47565c33061a8a7ed75bc94d5d8b19c76872"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GalleryGlassButton.kt",
+        "sha256": "51625d409e280d33c9838781116ac996c1705ff85c093ef4e9c0802bda9cb9ba"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GalleryScreen.kt",
+        "sha256": "bc8f5167e4010d1f9e73f1d9d030a43d7ae5ae6a2b758f8285da14d28a47af93"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GlassGpu.kt",
+        "sha256": "0bd799958b63117ed0092f5cdc4f9e7b1a779632b1fdf1775094d9cfe554a96e"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GlassMotion.kt",
+        "sha256": "fb3ab8abf9596163587e83ba16e0621c80cbd852cb3c4b50e92777e9c1691e11"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GlassNavigation.kt",
+        "sha256": "a017223e5c9c792ebf4eb39bdc4bf99b7c9dddf4ba97ca5d986e401348d8fc4b"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GlassShadow.kt",
+        "sha256": "57ee9ee46ac3289593798af41d314cd4c0838e72858874c789e87ced2ab7d8d6"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/GlassView.kt",
+        "sha256": "3a56b8977e262294009d5940018d194bc1013710d45a5a7f7c9bdd460820c736"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/Haptics.kt",
+        "sha256": "18067593a29c5bbd77ce9a03d24c5c4dad356911ff0b515ab5ec10db87f3942b"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/LiquidGlass.kt",
+        "sha256": "17b9633b758ab479d85bf98ff7c11a578d05ec50ee3cbc312c605862f304f8e8"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/LoginScreen.kt",
+        "sha256": "49d98760440b12c67e6c38cce8a00510422e3a53e1acea7bee6210d7574caa98"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/NavigationGlassChoice.kt",
+        "sha256": "3f838dec22c8ee533399458a1f6c32eaf103392a04c413a5710594c11565938e"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/NavigationGlassMaterial.kt",
+        "sha256": "20ed0ccc355ec9bf1cf63ee219c5965e559c0de909788b1ba23214a2b64ea89a"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/Notifications.kt",
+        "sha256": "927b8d2d7d3271e1dccd3d8d904ea2e75c965b015ed6ec23a4c5ce4183cdc7ff"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/NotificationScreens.kt",
+        "sha256": "7cfc68f3de284af2275479c1dc62ca6021cb3b269b1fc5de01fced4b545375a6"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/NotificationSettingsScreen.kt",
+        "sha256": "ee67d7d89e9f287a2f65131b63b3064737446fbabd1d99666e20db789e7b161f"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/PlainGalleryControl.kt",
+        "sha256": "d6c2278fcfd3813d62fa5b118dd90623b75dd157d9b1dd638ebe127313251300"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/QweaNavigationView.kt",
+        "sha256": "cd7da5d7f214cb3c7edffabe991bc0b5b6c8ca4489a67401d34f7edb22fc22a4"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/ReviewVideoChrome.kt",
+        "sha256": "fd14e27e37c8df7d4e60fcb99ecad05bf13a17b59bc89ac7579eb0aebf5a84d4"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/SettingsCardColor.kt",
+        "sha256": "2715d9de153c4b04c91b49ee2eb540139538bbcf2fd74f82a997a50489ce194d"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/SettingsScreens.kt",
+        "sha256": "7ea3e7822be6a4e372897e4695b8aae8538b1f53bed4fa3189b5e959a2e77da9"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/ThemeScreen.kt",
+        "sha256": "b50df3908bc30af2cc481d45a972029a92333bc3003f7bf09ffb97e8e951f9ab"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/VideoLinks.kt",
+        "sha256": "9401e07ff6eb692aca7cdb79c1386e5873e75804675fac85bb58a7b585590915"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/VideoPlayer.kt",
+        "sha256": "e2ef47791019525b52e9749545a79c93a71da56f771be473b7c84400f450bc57"
+      },
+      {
+        "path": "app/src/main/java/com/review/compose/VideoTrackChoices.kt",
+        "sha256": "b9b657ecf25d605c5a25f368caccdf41fb295a68a2f46a13b115578e26360667"
+      }
+    ]
+  },
+  "Review X": {
+    "versionName": "2.0.16",
+    "files": [
+      {
+        "path": "app/src/main/kotlin/com/review/x/AppearanceTemplate.kt",
+        "sha256": "c2ac9ed6a82f1a7f567effac6cd12422c4d96882204657287dc82835b625abc3"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/AppSettings.kt",
+        "sha256": "5b3e1a599ddf03220947613b357d2ec88cc196d29c17627bd894d2c8d4529785"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/BackdropNavigation.kt",
+        "sha256": "b33b3873ffdb04a77762a59ff3cafe3254fa24ca054b17de57b48285e4f20506"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/BackupService.kt",
+        "sha256": "17e8a75da237af6d4dad772c339a136b3d386d2544523882735adefcff833052"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/FontSizeSetting.kt",
+        "sha256": "01efdcad34dd66345e4bc78d751d612615bbe80b86b04f4dc8d5e56a2368e048"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/FontWeightSetting.kt",
+        "sha256": "d8ae1e5a747c5a17e72e4d3fccf8e3ddd58b0d511e620effe84c2ba8cb377c70"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/GalleryFlight.kt",
+        "sha256": "f7c085f6c78074941dad023d6c1f6c340cb823789cba0307463389fbafc9432b"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/Glass.kt",
+        "sha256": "df35788a9133582c7b01f2ea225be53612f2d55b17e7dcbd7c6f09f6993acdf1"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/GlassFallback.kt",
+        "sha256": "953e80e8d1a95731bc292235935cacc15fc5b7d152bcef45ca3146e34b647151"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/GlassShadow.kt",
+        "sha256": "f349c63a59ac92e37229ea7ebc1172d9218eeaef44f98097baa6857b01be8556"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/Haptics.kt",
+        "sha256": "eacf0d24e2320dc5c5ade0f1e6e1593ff1f29af4dbdedbd8617c64b469129e76"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/LegacyGlass.kt",
+        "sha256": "6c95efa4758edcc258fb106a0ce6dde429c38028c8cce504743c9b288f3bb5ed"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/LiquidNavigation.kt",
+        "sha256": "ea1de55ac7a483c3e72794daa3e990102ad491ec74b76ca718bd120dea5c2f9d"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/LiquidNavigationGpu.kt",
+        "sha256": "45a619475861c6560e86bfe619dc981b0763ca5d29e9e7dae9f017d1d90e5214"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/NavigationGlassChoice.kt",
+        "sha256": "892fe3161fe7fca154d55344cfc77d1535d871f0ca6722beb2cfd7b9cf8710e4"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/NavigationGlassMaterial.kt",
+        "sha256": "57d95c9b97c1ebb2b7b035b607e259dcf52eb806ab0302990c3222c5e090c2e5"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/NavigationGlassMotion.kt",
+        "sha256": "eac1a1e81727fc45242133641edbe658d0fa9fc8866a4c972a50568338ccf88b"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/NotificationWorker.kt",
+        "sha256": "1d1f30ad293fabb21734d92dd0b99bdb72282e902325714ee5663445b9905ade"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/PlainGalleryControl.kt",
+        "sha256": "65a82b525bc97e1da9b9b7637cd740b7bf4fc1e8e67c68750751184d2a893fff"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/QweaNavigationView.kt",
+        "sha256": "9a2beeede4ece0aa2b5b4071427f6f2b1773a12a6d8441ad2ee74cffb81dfb99"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/ReviewTheme.kt",
+        "sha256": "46086cb154e994f5a87b7469f61fda32bdf33709fd5c0ecec95f3e89c7b11e99"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/SettingsCardColor.kt",
+        "sha256": "e10552f1b9a4e17615f78c7fcf6955e0113be93744c43f22446ad365fb9aab15"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/SettingsUi.kt",
+        "sha256": "1e233c21772c8c34c68e86b8e7311acd9ab74d429d755fd8306bf7a671606256"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/XLoginActivity.kt",
+        "sha256": "cd026c7ecf124339106d6d01f29dee65cc04fb86dcf4c42f4e8a278c8c37e8e8"
+      },
+      {
+        "path": "app/src/main/kotlin/com/review/x/XLoginDiagnostics.kt",
+        "sha256": "54bdbfcc4c4b189f40d4b8a69e681f9db188c6a37914ad0af8c8880878f6a8b7"
+      }
+    ]
+  },
+  "GreenMusic": {
+    "versionName": "1.2.19",
+    "files": [
+      {
+        "path": "app/src/main/java/com/green/music/data/AppSettings.kt",
+        "sha256": "83b2daa6af7e785fb275ef6c72def6202ef4d9dcacbcd91910a33a93a737ed9b"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/data/Backup.kt",
+        "sha256": "050a2eac81e3128b815198b5239f6d1c426d626950cfbf621c99280e1c233b16"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/data/LoginProtocol.kt",
+        "sha256": "0008eb6acd8c4d09d8282890e2859f0ca147321866acb8f02c974f33d4832ec1"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/player/Downloads.kt",
+        "sha256": "7b93db6fde3b420a70526c7dd9fe25165a7a5049f323c16b5135ca7e40c1ba42"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/player/DownloadTransfer.kt",
+        "sha256": "fca3e27458b8859b0a91fe3b5e007d5f5227cb6cf63878938f191551ab55f3db"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/AppearanceTemplate.kt",
+        "sha256": "53789d311307fba3d95a3634f98f142291dd4a0a8102a78608c309e97dde568b"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/BackdropNavigation.kt",
+        "sha256": "7fac44420bf13cde4df06ab85aa4253cffbb4ec40e50ee17c88ecd2d6acc01ec"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/DownloadScreens.kt",
+        "sha256": "81805d26ba3df9abb8f08abee0ee34e078f8f20d98ee19c5694f795c6b1d6c75"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/FontSizeSetting.kt",
+        "sha256": "250aed67132677f1d9b42783eb14f65d941d166822d41956ffee99d7650c0fd4"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/FontWeightSetting.kt",
+        "sha256": "fb1002cc488a8dba68e132e17c7a44311b369f29bebac5d1e5b527ece86943ae"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Glass.kt",
+        "sha256": "be703c015bf73abb500b8078391f382840c37c9751232529978897d8f71e4422"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/GlassNavigation.kt",
+        "sha256": "e92d153bc463afb58ba690e16c6f09920870b774a10e8f98eae85c45f8c7f801"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/GlassNavigationGpu.kt",
+        "sha256": "dffa3b72f2b444622f24d56f8f4d8aeb6b39190229eae43edab679644b9c4efe"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/GlassNavigationMotion.kt",
+        "sha256": "a5c3c3a1879e2d837a391be5ab51f692248658b6a337ef170c0278908353aedb"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/GlassShadow.kt",
+        "sha256": "eb64bb5ba721692b5f8cd60df97d98036df8fd263adb5a2011eb08dc9b029ef9"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/GlassView.kt",
+        "sha256": "071e3aac5c5820a6aae475a68228803bdb299d04e69cfb42da9a1bff8bd86f66"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/LegacyGlass.kt",
+        "sha256": "b13c4230cbe444e108057f65c4a7aa7341e393b6965a93ee5030128fff71036b"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Login.kt",
+        "sha256": "9e5b6386a60292c57f78d3b14e8f8ef9c8202643e4f56cde4ec95177c87f75e9"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Navigation.kt",
+        "sha256": "8b51e86ce4b8138ffa93f9e18c082d79dd5acfa379e99cb7c88c9f4998659860"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/NavigationGlassChoice.kt",
+        "sha256": "6352093cdbf7610cded9ae04d7ed6a39b89a3b685e191797e5ebedad061e79bb"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/NavigationGlassMaterial.kt",
+        "sha256": "7579a98ca050ae5d898a829c7a75291cf059d29c85b36ade8d134509dd84e52a"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Player.kt",
+        "sha256": "e175e1d2c8d4b50ddd2fb3cc77cdf7fb3d8050f7764501886eccdf7dcbb95be4"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/PlayerTransition.kt",
+        "sha256": "6feaf93c8596fda2b2253a2402530bcb7290dfa1143b3cb06c8fe83348208866"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/QweaNavigationView.kt",
+        "sha256": "ac4f7e475f53e4bd7c92f4a465eeb075f850766cdd2c6080a0d0871d700b588d"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Settings.kt",
+        "sha256": "f74299b697860637ddf8b75f492662495c9464ca4c161183569552bb60a75b7d"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/SettingsCardColor.kt",
+        "sha256": "ca09cd484d57c27cd13b509b326cd53df3e8af5a49d27dabba6e59e0aa23d37d"
+      },
+      {
+        "path": "app/src/main/java/com/green/music/ui/Theme.kt",
+        "sha256": "cee4878342bcf7c6bbc93b3bc35e37d12f08d5b6b1ebe960bd5375a4a10717d3"
+      }
+    ]
+  },
+  "GreenNote": {
+    "versionName": "2.0.6",
+    "files": [
+      {
+        "path": "app/src/main/java/com/green/note/ResolvedVideoScreen.kt",
+        "sha256": "82f039095491693937a646952b1b8fdde1a35931c339d52a68e35e6164326b63"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/account/LoginScreens.kt",
+        "sha256": "774cd8668350e4245941c37aee9213e22544f6dd09fdb0da1691c59a3c06d855"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/account/OfficialLoginSession.kt",
+        "sha256": "c3fb7a3e916373cae18289a8eb44738177b3b202386b43ed8c46c28b0c46dd6d"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/content/FeedVideo.kt",
+        "sha256": "2fc7fa58abd2fdb6e3a03e6700bc149330402756d2d413ba575153bdcf5ddb1f"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/content/NotificationBadgeMeasurePolicy.kt",
+        "sha256": "54f9c53c3f9f2e756f03f75ef75a2878d740ffd89a0a98ad30619971482298d7"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/content/NotificationData.kt",
+        "sha256": "ef68c401bcd74496418567bffdaac56aac15bd39a08fa76aa7bf9df3a86c3340"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/content/NotificationScreens.kt",
+        "sha256": "f3ec8a49724f913e805fab6792a87c695aa7c5edc33f16cf4e8752976c34c8ad"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/content/StoreDownloadButton.kt",
+        "sha256": "bdfa4928a25c64b47dc9d555fbae34c343dc3e72caf5fe23a6ef2c3949ad9876"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/AppDownloads.kt",
+        "sha256": "8b763608b1c473b6692cdb2117da3f21cf0e6d3264457fe9f9f311475046d7b9"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/DownloadScreen.kt",
+        "sha256": "d3bd51107e407bd35007cd203e54df8bb009f062aa3409237a9dea7af517be5d"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/GalleryBadge.kt",
+        "sha256": "9c3fc18a45fe94922ce47ecaf9d1a3b96bc3725eebc15c9e0a2962fcf098a8d1"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/GalleryHero.kt",
+        "sha256": "332f4ef28aefb2c58b633218f2428e88dbca58d1f9bbe65c561aee18dbbdd2c9"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/GalleryPreview.kt",
+        "sha256": "adba03440ec76177d6018aff23899d1322f72b98e8165f174bf28ff9f9a67f65"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/GalleryScreen.kt",
+        "sha256": "96760df9264d2f9d1e66c234528a004207ce2ab4e0ee9b4450fffd5cd26f04e6"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/ReviewVideoChrome.kt",
+        "sha256": "599e43a18c3158bbe357f48edab812a8233c96bc9f3b795048e1d279ff60ffdb"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/StoreDownloads.kt",
+        "sha256": "809eadf6ab86afbd31336ffee93aaf365fd505758dbde672476bb0db0a8a156d"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/StoreDownloadService.kt",
+        "sha256": "33e5b087e6f2b30c309c8612d15e0468dbc038f29c0f756aed646aeca699357a"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/VideoResolution.kt",
+        "sha256": "a56cce50b0fc6d95ce913df4e6cb1bb5a7b55544ab4d675a77228b1b762df7d2"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/VideoResolver.kt",
+        "sha256": "f53ddb10cbc9936f3e6c28a05efedf3ccf02ce7b24eb5ad8934738d91950f90b"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/media/VideoScreen.kt",
+        "sha256": "525081e69f4149bb79dea760c273cf9e92ec6e655070160ac5ea0b46d34e908c"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/settings/CacheManagement.kt",
+        "sha256": "3d36c20f9aa22e68b67747296b613331bd55bd41c1711eabf5d5b1f9697ddc37"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/settings/NotificationSettingsScreen.kt",
+        "sha256": "011e33d81887bcf67c8d45b9fd06993a23ab9f3066b8972529825e9c9499175e"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/settings/SettingsScreens.kt",
+        "sha256": "cd27a99b3dad520742325578c9e6e31f5b16b08d0aac28fcaaa42f724db67d3f"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/settings/WebDavBackups.kt",
+        "sha256": "0297ccda7c579e166008512ba9e7770285f355b22f582b1f8b4d0227050af5dd"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/settings/WebDavBackupScreen.kt",
+        "sha256": "b9cfdd83f3f287faf76d45363029a7a6f91786c534593bce607d415bd662f096"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/AppearanceTemplate.kt",
+        "sha256": "0763c25a74f6fd76d0d7342eda41b00f4fafcb255c1787db739edc3dc8cf187f"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/AppHaptics.kt",
+        "sha256": "68396a311ab2589ac4b92f958a0ed36b2ff63bffb3766c77ba734e89aced762d"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/BackdropNavigation.kt",
+        "sha256": "eccd4fce0fbba06efba5b4b8ece82c15188985eb395b07c4448baad829791dbc"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/BaselineGlassShaders.kt",
+        "sha256": "81c559708592242161998b9211bb5d92ed844583cebc073a87e2d93503dcb7a3"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/FontSizeSetting.kt",
+        "sha256": "8c07ae0c68c55ffe196871f0fea495ead818275cbaeb8940fb38207142c11cfb"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/FontWeightSetting.kt",
+        "sha256": "8224b8da88a959891d2454bb493f102f3cf7533414298af182bd842da9346484"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassBackdrop.kt",
+        "sha256": "bbad3b672a773e0c8d047b871cef2a3fe4bbabe71ec00a25a556a0e602a54a73"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassOpticalBounds.kt",
+        "sha256": "251a78dc8b6253d35d622e784cd846009f7f010ea69f9e1c739bb6e8e8dbca0b"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassPresentationState.kt",
+        "sha256": "cc66890402791df45829260b835b105e53b22123898bd5ea75451e5e4473f053"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassRenderer.kt",
+        "sha256": "a20d50364731a1c32819601cba79769fe85409cc26614fe0b86d7a96b30b88cf"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassShadow.kt",
+        "sha256": "7c0b852ac1904df6b5a7d67233f97ba60f84f8bcb44e068cb9f10c4f704588f4"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/GlassSurface.kt",
+        "sha256": "2d4316acd446da8e151611c17bdb0563d90e47dcea2f79aa5c999853ed55a4e3"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/NavigationGlassChoice.kt",
+        "sha256": "bbc8805db7b1e024b71b845337383ac92372b6cda97510ae5b604bf1e7d6efc1"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/NavigationGlassGpu.kt",
+        "sha256": "18f9e561d6348c94d67bddd289c46148429d415602e5cf304b84597c06c049e2"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/NavigationGlassMaterial.kt",
+        "sha256": "09970be9a501343fdcf43fee48ce68c02948651b4c310ab2dce552e2b704bcde"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/NavigationGlassMotion.kt",
+        "sha256": "7bca8e5475f2b027e58faf7b127e2172a7e520e0fc7445f1727e869da6a4bb56"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/OfficialHomeTheme.kt",
+        "sha256": "039a28daa4c9b627d073e69239d73977e6b68d192195ec0b82a646675ea062af"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/PlainGalleryControl.kt",
+        "sha256": "5cc482259d1b1051498dc654df54d3a6b03e6565d67f959d4212bd03023f152c"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/QweaNavigationView.kt",
+        "sha256": "2edbfb5deb00ad5d4a4f1e8e987d5aa95691200b9f92f3987e799083b48408d5"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/RedNoteGlassNavigation.kt",
+        "sha256": "27296828249843f3d92dc22cdf28cc5972e7d36e5a20d6670841882eb12f1ead"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/RedNoteGlassView.kt",
+        "sha256": "3b78ab024c9a18d6b421c06d5c6979334117c56ef35a63c8565bef0f98dd3b1f"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/ReviewNavigationBar.kt",
+        "sha256": "9d0bf2aaa66300381d905cdb7da521f666e4759b2a441229cef448a507d5ca9d"
+      },
+      {
+        "path": "app/src/main/java/com/green/note/ui/SettingsCardColor.kt",
+        "sha256": "5c30c65364062b8ca4557e8f32282f85efd3b892c9ac9fb7bcaca601cde09718"
+      }
+    ]
+  },
+  "RedMusic": {
+    "versionName": "2.1.7",
+    "files": [
+      {
+        "path": "app/src/main/java/com/red/music/AppearanceTemplate.kt",
+        "sha256": "cb5572b65de2e87ea6a86a184a26009d41c760dbbb91e5614325163bca58c10d"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/ArtworkTheme.kt",
+        "sha256": "7bbf7ea2f4309b524d674d54e3edd10e61b550d750282e30aa6d090b31a91701"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/BackdropNavigation.kt",
+        "sha256": "c355e78298a99a10e693bf3c765d570a9e38794acddc6732f0dedad92734ce8b"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/Backup.kt",
+        "sha256": "8856ba90c77806b74cc5b26811db691af1f99e005d2514996c75fa77d5bb8e59"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/BackupUi.kt",
+        "sha256": "87aa14e4404b802e67767c8f96f42f5ba0cfa4809e391ef3f7f4816076d69d64"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/BatchDownload.kt",
+        "sha256": "473373386666866101dd5df345f05b5974cc9cdd06ca5e0f94d5e588fb21e275"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/Downloads.kt",
+        "sha256": "c84a98e74973710cd6f78b8fa031ccab0c693b49206314e253e1aa2d019d640c"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/DownloadTransfer.kt",
+        "sha256": "7ce0a93eef9629d5d8e0e1c027729110fe7a982db53141070f818d33e2242e8a"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/FontSizeSetting.kt",
+        "sha256": "5566a63c0b4e94fddc3ec3a14ac027bd0cdd6e3acf89e39fbe6f8e1bb471e4a2"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/FontWeightSetting.kt",
+        "sha256": "1d8be2178a0517f4f069f07c26869ce1b1c9672bb55cbe54d9cbaf7113a1020d"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassBackdrop.kt",
+        "sha256": "3b86ca01e8b008c12d19f6ecfe9482aa61115607e923dbfd031f82ee72473adc"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassNavigation.kt",
+        "sha256": "125f44b1111fc729ec1825702497b07f2bbf0835344fcdbce50a2daba39a6360"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassNavigationGpu.kt",
+        "sha256": "8edd957c26d69c52fc3314a1555bec55ee12f559abe20ff6891bb96f912ecd5f"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassNavigationMotion.kt",
+        "sha256": "9242b25493cc71aa4af7c8f07163518b54a9494bd46db67287967e4352c7ba17"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassShadow.kt",
+        "sha256": "3664dfb8702f542dd10b997867e8deb9eb168fcf0d0b12753e1804c305ea216a"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/GlassView.kt",
+        "sha256": "e5024b1dce7458b3870eaafc46a45835f0d80bb880f1c27e324b77268bad74d4"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/LiquidNavigation.kt",
+        "sha256": "4711bb3debbbd27e17a86010f3879ba57d661633a6e3547cd3e934f0a2b2f739"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/NavigationGlassChoice.kt",
+        "sha256": "5928c940983e07aca79f36ae247c622731bb12a91592fac2f6d1c3f865b78153"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/NavigationGlassMaterial.kt",
+        "sha256": "6f71ed6e9baa4ed16dd5902df5649e78a02372c10f956efa39687c86cfc9e497"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/OriginalNavigation.kt",
+        "sha256": "45406fff703d256fcdc4cc96b19b84e49b8240df7da0158ad4099d2e440c53e1"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/OriginalSettings.kt",
+        "sha256": "87659f658c8ff381f48ba4d64ccc5f5e133d55787d360508b289706ae047c334"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/OriginalTheme.kt",
+        "sha256": "a342a1509c01b081bd37ea801915dd3dbbb48a171fdb99259d8ae0af6db0399c"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/PlayerDetails.kt",
+        "sha256": "a3103e1ab69771ef98a5a2f3b327c54b6fbddfefd0e2c912a943b26648bd22b1"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/PlayerUi.kt",
+        "sha256": "99085fa53b92f8f2bd69f32dd62441d90545fd868931ec20fcddc0db1b874b50"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/QweaNavigationView.kt",
+        "sha256": "a2f2d7e91d84a5a3c8493b92dd851ed100a7cc101105fadc427e58b59c5feac6"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/RetainedPlayerPanes.kt",
+        "sha256": "2d10fd4992c1458c7ed85b9f8f6eef024a3142d398c11430f95ea4e5049f3a97"
+      },
+      {
+        "path": "app/src/main/java/com/red/music/SettingsCardColor.kt",
+        "sha256": "053d593384445b201498c831b00696d7dad09cca9a365df9a5b5d3e66d41cbf0"
+      }
+    ]
+  },
+  "RedNote": {
+    "versionName": "1.1.20",
+    "files": [
+      {
+        "path": "app/src/main/java/com/red/note/AppearanceTemplate.kt",
+        "sha256": "a150cfdd2c9f329e85fbc7b6c0824ef70a54743e96c8386dbec7aa62391ff28b"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/BackdropNavigation.kt",
+        "sha256": "d32b88d6e482fd7fccb52c4a0c402ec439beaa3d4c6cfd8eae2e19c9dff152a2"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/FontSizeSetting.kt",
+        "sha256": "b387363515e870bfc60b2b35285edd029580c71d38e83600f5803435a1ae360d"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/FontWeightSetting.kt",
+        "sha256": "1fb29d7caff392e25af15d6b1eddbfe6ce5f08114f292d7fa5751e6341ba7d83"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GalleryContent.kt",
+        "sha256": "9edf398c1ecd2a19ad8741628f7667ed3a694ccdb59e10a336c58949fd2468fb"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GalleryFlight.kt",
+        "sha256": "b383b51ba098bf1d4110e68113ba87de5c108cdcde08227dbf23212f886526ee"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassDecoration.kt",
+        "sha256": "f19a666331cd2523cfe1e3e075af7ea3678616759ca2f5dbaf0035f16e729b68"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassGpu.kt",
+        "sha256": "baffa740552791085ab41e7b7f36a619c0e5a2721fdb6430ee5b95183b97ecc1"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassMotion.kt",
+        "sha256": "9bb5c1092167736b3af5cf0ad03e35878a7d742e202aa32a52d4b6c35116d44a"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassNavigation.kt",
+        "sha256": "05f6fabe47f93cbce06774f27a28a334fe0e8e2eb535b7177ebd6305ed648115"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassShadow.kt",
+        "sha256": "078c49c3d4df4b445e10be2ecd1c38d5af8dead72f4c926536dbddd7f1839e78"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/GlassView.kt",
+        "sha256": "8fdeec3e2e2053c6f2c502b04ce7ebf996d5e66c8f353e953072d939c9d69dfa"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/HdrVideoProbe.kt",
+        "sha256": "dbf6a79455ea445eae929d7a0ae6d28ff0d0a9129c4eb79ee4e1749a1dd99111"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/ImageCacheMaintenance.kt",
+        "sha256": "e9289e5dd461a591a56f0e6c9fe38fc92b87203697d34195f16e9a20ecaaafbb"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/LoginActivity.kt",
+        "sha256": "f451dfcc61891fcbd9727900d823adb4211151ac000de6aaddcbe440bcddf5cf"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/NavigationGlassChoice.kt",
+        "sha256": "7121f72cf6470e7e545157dc8d395f45143b7688e244b6dce131abebd3eb3a5e"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/PlainGalleryControl.kt",
+        "sha256": "69581e208abcd1dc9e318045557eb3302fba08d436e535c8ddba18d5ebe15507"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/QweaNavigationView.kt",
+        "sha256": "f51482754e62804dfe03efed07f35259630b71353fc20dd34c8dd5327f7a6d02"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/ReviewVideoChrome.kt",
+        "sha256": "ee167441cad1a583a645718899a874b98689eb276d5396a10f2f12a41378aca8"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/SettingsCardColor.kt",
+        "sha256": "a001ff2ef732429f3b1fd3a1ade6124922c78d716694e56a63e5c0ff4699e9db"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/SettingsContent.kt",
+        "sha256": "8d8c1c08e68a52ba2cda5e7b18350bec02a8d4eb626aee5f01ed6e485c7ba9a9"
+      },
+      {
+        "path": "app/src/main/java/com/red/note/VideoContent.kt",
+        "sha256": "3a65dad44f856710db899f957e2a882ccc2d12010aa638df688658374f96c094"
+      }
+    ]
+  },
+  "RealDrama": {
+    "versionName": "2.3.7",
+    "files": [
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/AccountSettings.kt",
+        "sha256": "81cbbc3b210d00b65ec65004c08d0ce112b3eaffa2937e1e3299ee01e8fe9e52"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/AppearanceTemplate.kt",
+        "sha256": "14f323a9d5b7c0becca8a47232c7342e8b131ffdf4c306a61ac3f50c1c24cf54"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/BackupScreens.kt",
+        "sha256": "4d7690926ee5272ae4da8a3739330374276b14721dce7c3da30f382b11fd6551"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/BatchDownloads.kt",
+        "sha256": "7cf24e93513626fee20e1e162bf7dab3826f53cda29ae273c47618a5a5019e4a"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/DownloadCollections.kt",
+        "sha256": "34f69b84905a600d05ec3c89cb8e088ace122754cc3a59369c1ba19e61d58764"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/DownloadScreens.kt",
+        "sha256": "1cefca75f797e6600d910c90c471df19a0a1b94af63902a99b39de0d617e8dcb"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/DownloadService.kt",
+        "sha256": "00b6cce50f239f6f8e1f469aae987169de6ec46b94c625c8b0c879c5e8e4791e"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/FittedVideoTexture.kt",
+        "sha256": "178427a668039c71f686bc63814f9dc7dcadf4d410b634872f7ef7332966ba7c"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/FontSizeSetting.kt",
+        "sha256": "016775da3f28f357bf41319b52dfba4fa887981b6ceeaffe3f86fc9cb829dfba"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/FontWeightSetting.kt",
+        "sha256": "a67fbe7fa081928341c24be59f407aa668aa20982912947038a6ca69e79b7571"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/PersonalizationSettings.kt",
+        "sha256": "36b840df366ae53c0b776cb4bf104ec79eb64ddb0f612937ceac3508ce2d5cbd"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/PlayerGlass.kt",
+        "sha256": "391f5dd806741d33b1e6b5ff01a9dfedea9aaca4abbf73f6366e1ff02d072d54"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/ResourceSettings.kt",
+        "sha256": "99e52ece9e0ee7ecd401516fae57748fc2f7ee18564fb7e4252687bd9e9c8e97"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/SettingsCardColor.kt",
+        "sha256": "90788d05e130d4b6d03ba5380c276fdd06f8adf5cc3d58f107315b2ea7a164b0"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/SettingsScreens.kt",
+        "sha256": "a58c62b0eb25717ad2ca14789859eb66c5f900db80618cfcc006b0c1308e83e6"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/TelevisionNavigation.kt",
+        "sha256": "c1106a83f738f91816863b49abd1725912f70b03106d1b01a09d33f098bdb51f"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/TelevisionPlayerControls.kt",
+        "sha256": "2da76da621ad9caf1864136e9020772883812390b692eb5e891c8a263e739e39"
+      },
+      {
+        "path": "app/src/main/kotlin/com/real/drama/compose/VideoAuthorPanel.kt",
+        "sha256": "dfc35e766d42e36406511396a48ef7cb8479542575fa411119fc73d42c8ab647"
+      }
+    ]
+  },
+  "Hinge": {
+    "versionName": "3.0.2",
+    "files": [
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/AppearanceHeader.kt",
+        "sha256": "21c97af8873403508719be3344e4bd478b266964cdeeb3197c35cb235b259710"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/AppearanceTemplate.kt",
+        "sha256": "b994509f93fae1f5bc325a39065e7c9ab3b0a4f5893af221c02e004f215276ea"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/BackdropNavigation.kt",
+        "sha256": "469c2ac5d87bf33e2b8ed46a6679d5b935187c37dc5dbe0e438316cec531e9ac"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/ClipboardSyncSettings.kt",
+        "sha256": "8f227cada774ec4c603c679f79a4d7990d763b768fc8f1121f525045f11cb294"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/DesktopVideoBridge.kt",
+        "sha256": "aaf2abd618a1714cd7a775daf403708f86e5ff93e74dd39bc4df10a00366d5c1"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/DesktopVideoDecoder.kt",
+        "sha256": "c031aa94257ce17b994e1cde06b439befc7281a37d9943d556991f65be58aba0"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/DesktopVideoProtocol.kt",
+        "sha256": "c456a9708df779c7232d0849b46eb644c5770984cf7f1d63efd0d0ce3b73998e"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/FontScale.kt",
+        "sha256": "4b6a3852ad035dfd394dcc1a3de9d711ad845a8dcc84db5bdb6e859c40fc3ce4"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/FontSizeSetting.kt",
+        "sha256": "39686fa461e7a574d360a96b1a938d205f5adfd40aac71f22fc70fea2d884db9"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/FontWeightSetting.kt",
+        "sha256": "56e9b407616e5c27c7b954168875bccb9b42bd447edd472040c2554d06cb58b3"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/GlassGeometry.kt",
+        "sha256": "dac406d0c62725be3e79f5568f27f969bdf302e2512e180d606c5b80234bc8f9"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/GlassNavigation.kt",
+        "sha256": "06541f8c56eced6d41fa942fc1d59da0b1570c60e4092cd3f82636b454fa4dc6"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/GlassOptics.kt",
+        "sha256": "b91006fbfda4050efbe17adec03fc720b7640f19540372d7afc7504a67e5ab44"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/GlassRenderer.kt",
+        "sha256": "50953a70886f6ca92c9639586795d04df17619761f4be5e7228cbe341e693a78"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/GlassTabGestures.kt",
+        "sha256": "d0dc4157ffeb8b130f9128b1822e16f2173f4fb3f3c520565eb47721996963d6"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/LiveGlassBar.kt",
+        "sha256": "978f4533f650fec798572b0467cc61d724a4e1cc4ca71df044816691c714cf91"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/LiveGlassOptics.kt",
+        "sha256": "83ee28a701170402e312d2d565f5973420303ad53e72fb59b37dc3d448e23945"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/NavigationGlassChoice.kt",
+        "sha256": "53b84e9bcae9e85b91c3bde30ed35b517719d622cb3af7430493960b6d34f6f1"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/NavigationGlassMaterial.kt",
+        "sha256": "341c47d7c60abf19126f4a759911ceb83b62506efb8a120b6c2d42ba67447ec4"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/NotificationHistoryBridge.kt",
+        "sha256": "0c86d389ad46df017ae87e1a29f7326a8c8d931faa21478c6f69bd9ced418d5c"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/NotificationHistorySettings.kt",
+        "sha256": "f8b90d04b5ec2100363798bb18953d4c2502d06e9d8194d8b79e666aa92301c0"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/NotificationHistoryStore.kt",
+        "sha256": "fd6b0e2c3b483652e9777e8e8e16b02cadf0a1291842d5c9c5f13659526bae67"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/OriginalSettings.kt",
+        "sha256": "a7cf581af865b9bf4764ae9fad2210f2a054f2ad87738754f5c81760c3bad5f7"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/QweaNavigationView.kt",
+        "sha256": "e265ad8a8f2da94cf0c09536b8b9696c6868b2856db2a48219208950d6cf9a55"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/SettingsCardColor.kt",
+        "sha256": "a023d7f2bf06b725ab7f833c3f6278a821de346205dfc4024245fe5b31a0069f"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/SettingsDialogs.kt",
+        "sha256": "fc64d0402830212e12801efb4ca34ebf0e21cca6c4e2f82bf4c3b2504fba709a"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/SettingsParity.kt",
+        "sha256": "d1c6a26317544658c906bfe7a426922dd334bd4059e219575cb12e03dfa2b701"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/SmsNotificationListenerService.kt",
+        "sha256": "0082c9b764ba7d815f509a7259187153dd046be82a996cda79e0ed3bd378cc4b"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/TapHaptics.kt",
+        "sha256": "52286926a6081b1cf6dea85f84cf7d9d0c40daf90e93135b84d5100c20adae1f"
+      },
+      {
+        "path": "app/src/main/kotlin/com/hinge/office/WirelessDebuggingSettings.kt",
+        "sha256": "99cf79a4f890e4c20f44384f9bfab9987cafefa16e5e8c0e14d7336a14f82af6"
+      }
+    ]
+  },
+  "Lurk": {
+    "versionName": "3.0.2",
+    "files": [
+      {
+        "path": "app/src/main/kotlin/com/lurk/AppearanceTemplate.kt",
+        "sha256": "3006328477596fe63a615ad09a68a26c3deb87418b9cfe9ff8424fffad333e8d"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/AppHaptics.kt",
+        "sha256": "9e427cdca8c54b9f777ee59ba79e5c95ecae53465693119556dc16edec09e9ca"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/BackdropNavigation.kt",
+        "sha256": "c72719fa7e6bf6b9749a7574055d47bce1abd3625667edd773e24f98e3cd01d0"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/BackupSchema.kt",
+        "sha256": "f4b1e137561a6fa6c5826419c4af97479ba5eaf2dcc2343509b29965868dd88b"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/BackupScreen.kt",
+        "sha256": "45e2231228930649ea8c3a4b26af0fd9b0663b31ee334810ffed1614a9cba721"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/Cache.kt",
+        "sha256": "86e056dabd020b0eb3eb247f94980d54def7586512b6f9dd2d383c0f028879cc"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/FontSizeSetting.kt",
+        "sha256": "549ed290b2133c5bf00e43081c1b2ee3f070ba8fad90f218c97d976efe3185d4"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/FontWeightSetting.kt",
+        "sha256": "3f37541d20846287dec4702abf8ac7e38eaa91bbe6feaaef4f6afa01528ad3cf"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/GalleryOpeningMotion.kt",
+        "sha256": "043dfc9ca8cd12a189698660594dcc64a3308a29e7981a9ff6702919d6b8788e"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/GalleryScreen.kt",
+        "sha256": "70db7cd995da8291c1ea5dea4cc88d8d4f95c3d49b5f74721d1d68d464291053"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/GalleryThumbnailFling.kt",
+        "sha256": "33565dfb6c46bb4c0ec347656adfdce7118e0676d768dd628f12c8b41b8e3869"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/GalleryTransition.kt",
+        "sha256": "fa30212118cfc134500ecbfd5ef083ca697c91418bcf0f8ec1c1dadf55c7a9a4"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/GlassMotion.kt",
+        "sha256": "0d253830b71a5313f94e7ff80a7ce632c5b2231f3f60830939b62e885f6af831"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/LiquidNavigation.kt",
+        "sha256": "1863b64965039ce0e3d3b9ea04c5c410945b2d631ff4634477a26be731521bf7"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/NavigationGlassChoice.kt",
+        "sha256": "38754ff080cfed94a04a3fdebeedb1940376f90cbf6c8c35eaf081fb8b859f1a"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/NavigationGlassMaterial.kt",
+        "sha256": "20e1649c1aff34c0c2af819b7414ac3633b6da440d9030ce8342994fe763e1ec"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/OriginalFontSlider.kt",
+        "sha256": "a417d4f72986ae47190ccdf460e64ff8fbd3e1a2b95bf91031dbfcd2b6a3171a"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/OriginalSettings.kt",
+        "sha256": "2b5c4b7eb1418273109fe5d6e615cfa1490f663eb23ba95fc809ebe65210ec93"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/PlainGalleryControl.kt",
+        "sha256": "267f685a8de8f4b9fe4247f608c658b962f273fa8b0214b31f3fc4e3583be1fd"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/QweaNavigationView.kt",
+        "sha256": "4fac53e19b06096854eecf0a01d3a3873e7714966f9902208a1aedab86e831dd"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/ReferenceGlassGpu.kt",
+        "sha256": "d637f9abc0b12eccfa9c226e074c97b7d3e5a08f43feace3752bf8deded2a848"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/ReviewVideoChrome.kt",
+        "sha256": "89c2f9a978f8b2fc8c56ce09c7264e16d4d876f78992b2739d7f81a71fd2d495"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/SettingsCardColor.kt",
+        "sha256": "27b47944cb3a531dbc18a01313e14cd923746d89121be8da818808bb68866e45"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/SettingsScreens.kt",
+        "sha256": "1313a59c40952f4f92550b0d6554fb2064b9a94bcdb9dc9e86d980adcbb2072c"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/VideoPlayer.kt",
+        "sha256": "3970895a4cc5d1b82f3f4aee54ac8cf71c9340b0160aab5076569a45ecc04f15"
+      },
+      {
+        "path": "app/src/main/kotlin/com/lurk/VideoTrackChoices.kt",
+        "sha256": "0aa41d114725fb448bb893622e39a08072b785e58461d7c4e878a0a72b5dcbf8"
+      }
+    ]
+  },
+  "MT论坛": {
+    "versionName": "1.6.20",
+    "files": [
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/AppearanceTemplate.kt",
+        "sha256": "efffc869781b1774f6f161700ef216c6de61735479711a45826f267aef525339"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/BackdropNavigation.kt",
+        "sha256": "91fdc3f03da53808311ec5ed9d32a9842abd7023ed422c19ab90ddbb6d7ac392"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/BackupService.kt",
+        "sha256": "76addde4fb48c56b0f815fa9ff6b79dde7b1280966ed00968074fb11e9f74da0"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/FontSizeSetting.kt",
+        "sha256": "e16a0cf2a41e9eb21c21e72f1ecdccc7b9560cebc52c02f8f1729381a8abd9ee"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/FontWeightSetting.kt",
+        "sha256": "7c269df5d5e4d3f4a76e11ca65a3f3a5d836c495cdb8ff68b52f5f1d7b763d8f"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/GlassRenderer.kt",
+        "sha256": "486a5fcd9e4b4f831f89b93645f9000ca90b11b5385c2da6fb76619610728237"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/LiquidNavigation.kt",
+        "sha256": "6a8060cc45af9e7b62b291bf59dc0fda27213382f41d11062c908b95941cd98e"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/LoginPage.kt",
+        "sha256": "8eb9d45c5481bd6b8d96c2232a822dd91ecef903daca53e40917224d2cf99254"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassChoice.kt",
+        "sha256": "28a804e857357b66ed7f5a0ff8dd2d702a67f9d161e29691f29cb1f41913dc2f"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassGpu.kt",
+        "sha256": "d4c405bdcfb894ee7dcee2b19e6e71c163a2f58c58cd89180d2034716d6948ae"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassMaterial.kt",
+        "sha256": "d2648f43a90edef445c4c3869d54192b3be1e08773385ab9d3d575efb84a6071"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassMotion.kt",
+        "sha256": "74f66bab2ee968bc2a85ec9edf897374bfcb0c6f74343c0b0a4452a2870e12eb"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassShadow.kt",
+        "sha256": "3f538841686183f2982831d2465815d98f18418685136d9b06b78881aba7660b"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/NavigationGlassView.kt",
+        "sha256": "b72ec24c94dbf7d79415bca838025dd0f2381c66ccae00c5344df20c272188a8"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/PageNavigation.kt",
+        "sha256": "d16a8bbab6e0a8f95c4784b7a373fce405183612cb726c1a71d2327a3d5bc15b"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/PlainGalleryControl.kt",
+        "sha256": "7fe1f563c51b0b299cf32e0b2438f931c241662fe3ec82b81b08c248a8a516b9"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/Players.kt",
+        "sha256": "d16099fe087c9e18854214a642fa927371519e9cb5934588befb61616a3b1d7e"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/QweaNavigationView.kt",
+        "sha256": "bb45a456823089d68a80f409de0fa75a3a70004f6ca601e92932bcaf65e0aa87"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/ReviewVideoChrome.kt",
+        "sha256": "98e88c1e06e6735d11b82423deda788f853e9ee106bfcded81a6d655a4c13604"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/SettingsCardColor.kt",
+        "sha256": "2b302807707daadf58e5f159d5da764be2b08fc33dfdab0a95ffcfe6daf27063"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/SettingsPages.kt",
+        "sha256": "25876f4f62df26735c15beb95a0582601bd8ffec9e150c37cb321b401a195d06"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/SettingsStore.kt",
+        "sha256": "a65da3befdba4a096a4f5ffb972b3d3c6d5dac4c6a3a86c1b629d25095a3df5c"
+      },
+      {
+        "path": "app/src/main/java/bbs/binmt/cc/StorageService.kt",
+        "sha256": "bb17a87534caf3d1575ea0591cf9bd3bd0ac4ff5d50b5de989530ddb8d371b0f"
+      }
+    ]
+  },
+  "源社区": {
+    "versionName": "2.0.3",
+    "files": [
+      {
+        "path": "app/src/main/java/ycoo/net/php/AppearanceTemplate.kt",
+        "sha256": "da8425968057b9e25cbd5671c5ffc7cda870b4411dfbf3e1fa1582072abd5617"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/BackdropNavigation.kt",
+        "sha256": "713717985d175fb8f5d074063749b3154067f44e98a473654fefba770ffbcd4c"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/FontSizeSetting.kt",
+        "sha256": "d13e2e6f350d80ae9c0b93cdbf52525b04a0830b641b09d4d214550ba370bcbe"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/FontWeightSetting.kt",
+        "sha256": "040598ae4922038284747d2511f9958b21dbc100d71f004c64aa8d6d1e0c5ad5"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/GalleryUi.kt",
+        "sha256": "869d03a8fed50f1f58307b18010fb077b876be6ea07c8a8f3ae978840a9aa1b5"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/GlassShadow.kt",
+        "sha256": "2fcb2666c6b0fecbdbd09e3bfc4bb31c1c90c98be8bd89f163acc1f05b0a6ba7"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/LegacyGlass.kt",
+        "sha256": "12a8c5c36ea4c2ec837ed9f06763cc259e0fdbca7d301b8a4c032f469b05cd24"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/MediaStorage.kt",
+        "sha256": "de5acc83b9a98f60ac1386801153e5462e9508873f1f9ddb3de6c4170416bea2"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/NavigationGlass.kt",
+        "sha256": "2758b7e40db994607718cabc2e0b33699fde4a9c30f728b879bc386fb2d510d0"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/NavigationGlassChoice.kt",
+        "sha256": "ff56c381b3bc0376735307dada9dcbe72792f9783c64c7d57712c69823b45170"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/NavigationGlassMaterial.kt",
+        "sha256": "27a8cdbc6533476bfd50a3bc42c50cd5fc92ed0e8f75835d786e2743b7d3f3b0"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/PlainGalleryControl.kt",
+        "sha256": "d5d575552dbc89eeb1eeb04aa212ef1e6366554a4f2cc4285e29808273401439"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/QweaNavigationView.kt",
+        "sha256": "cf115c0763a785fe2733c46dff4aca94c7721be434f6f0272f6a7427649ad1d5"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/ReviewVideoChrome.kt",
+        "sha256": "29f29e2f6f935072ee95570f2b526a7f742c8f0c9ab721ceabda915f16df8908"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/SettingsCardColor.kt",
+        "sha256": "e39701a541fdd6bb7f67d427fbb222d3d62ab047be1c0d8016eb606e234f1688"
+      },
+      {
+        "path": "app/src/main/java/ycoo/net/php/VideoTrackChoices.kt",
+        "sha256": "80e48ab4491558a63faaeab396bb87448d7dc9ea1a74f23ba9d3b83e08e3e545"
+      }
+    ]
+  },
+  "Xime": {
+    "versionName": "3.5.0-alpha.4",
+    "files": [
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/association/UserNgramCache.kt",
+        "sha256": "4c321a42c87ee850508944b72768da32b1aeae5bf5073b6217535ad0e8ae0e55"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/model/ModelDownloader.kt",
+        "sha256": "ff7e7481d1f9c6e8e461fe6515f43240bedb978679f8cb6c90a56455550a12bd"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/model/ModelStorage.kt",
+        "sha256": "e30d5f5514506e277a025a2a591c9c7fa08bf97dfa26ea9536002ea8a14df024"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/password/BitwardenProviderSettingsActivity.kt",
+        "sha256": "bd4017678e407c82eabef9fc0299a6e526003f2bf79035b2e8d3426096f0c43c"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/settings/BackupManager.kt",
+        "sha256": "77c606638d87ff83cc250eb148e2049123d2a49bfc0ca8ecec9214535e61b1bf"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/settings/SettingsPreferences.kt",
+        "sha256": "950733b6a0cd0c7fc021984e5fc30b3bf81527042cd1124f314c8dd1c4ec6f42"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/settings/StorageStats.kt",
+        "sha256": "49a6ed6a7456f4f2f26c9213b7d544c4713d827b3fc4c4ab4ef996b4281b8b72"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/DictionarySettingsViewModel.kt",
+        "sha256": "51a4dae088bfdd7154941aae166be2503c20303b300c2b24470e04769fe0b81b"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/KeyEffectSettingsViewModel.kt",
+        "sha256": "266e4c59ad35984f3aefd80fe80bdd787741ba53afadf419a74706343a0f1613"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/PluginsSettingsViewModel.kt",
+        "sha256": "4081a01f50858adf5b0f522f385bbb7392ed2a434d8a0f8051fed5dc239f4c52"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/SchemaSettingsViewModel.kt",
+        "sha256": "1e7d325df01d3480efd46a60d6eab388944e5ea15c72b7b1350b3b1b6059699e"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/SmartPredictionSettingsViewModel.kt",
+        "sha256": "667e4d930d212887b4ec4a9d10e01fc34de0e2746eda7ce0749fa86d2fe59ea4"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/StorageSpaceViewModel.kt",
+        "sha256": "699bbe90c071c46ec3194fdb9942833ace4c1cd37a3f55e68bbe4cbd6d779109"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/viewmodel/ThemeSettingsViewModel.kt",
+        "sha256": "c7eb63da9fffaab20c620ae62b99a64a5601e96a9b2907487e330591cd76d088"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/keyboard/Fonts.kt",
+        "sha256": "fd6bc971f2fd6f8d2ab69bd325acdcb320c109f4fa3165ff7b74428ad7468460"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/BackupOutcomeDialog.kt",
+        "sha256": "e54520c2d0d9cd204b0a7fca6154d1e7f1ad4e28fa112abbbfe67dd4f63b5d39"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/BackupSettingsScreen.kt",
+        "sha256": "17fe5bbf8d7029e3fd3aaf367bdd8fc57dd53ca89d0d85ccd08aa51a49747644"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/ClipboardSettingsScreen.kt",
+        "sha256": "3b15b8f6c1c4d8fce53d3f6e9d4d36e472f014c0e9cf513488d9d99b5ad0837d"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/ClipboardSyncSettingsScreen.kt",
+        "sha256": "2c9140fa98293def7cb53edcb86fca55dfb5c51fd2c023efe359e602f4264dbf"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/CorrectionSettingsScreen.kt",
+        "sha256": "df349006cf9adafde93f6bd4f0c92b487b6ca95e51253d23dd9f1262e33a9f9a"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/DictionarySettingsScreen.kt",
+        "sha256": "571dc0e83ad4ae7f349ab845c48e871522341a8da930bddd0e43ab638eff27ad"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/FuzzyPinyinSettingsScreen.kt",
+        "sha256": "7014a0d86ec43716d3548e9e87b1841f2efb2bb8bbc231afd1cea1199fd666b7"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/HapticStepSlider.kt",
+        "sha256": "2e97ab42c0be04d69b9ef24e2ca53d57aa41eb7add97c2d5b052578e1dc87d61"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/InputAndPasswordSettingsScreen.kt",
+        "sha256": "8217781568942a03cfaef5b74936a855e1b5f32b9e190bb9762b69dfdbb00e33"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/KeyEffectSettingsScreen.kt",
+        "sha256": "c913ea6f0051b11df3361e1d058efc2fef975d207158c27dc7f8cb9662b6b78c"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/LayoutDisplaySettingsScreen.kt",
+        "sha256": "9a3838b85dfd7fff05fbd2d80788538bd98e64a60373ff65f374c7c43ce48a67"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/OfflineAsrSettings.kt",
+        "sha256": "a989588b9d816a6c86f51136ba1f56f3a38d51333996f4a4cb4a4d7cf6da050d"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/OfflineAsrSettingsSupport.kt",
+        "sha256": "d690b670f9918afcacf9bc94bfecdbf483849c527e99683469e6fdf550be4e33"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/PluginSettingsSchema.kt",
+        "sha256": "cd56931ae76dad879add64fc0149c5c238268ba9eeecc93e7dd90c930cb16d19"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/PluginsSettingsScreen.kt",
+        "sha256": "f16497431a449b6b5c64d92a1d2267a2ecc3e4eec4d7f2e22669d8a9924e97ab"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SchemaSettingsScreen.kt",
+        "sha256": "f8228b7b4650d9bfab5e8b6d5d64c25cea1115750f6ba2371aa847c0737b9e04"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsCardColor.kt",
+        "sha256": "c05a6a9c7b4fab26828fa9bb918dbef4894e2682b987f88d812228ed0b4e50f2"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsCommonUi.kt",
+        "sha256": "fa5d5d2ef089930224660129685ea6679d9d5ddb6f50b4d4cff1aa03c45a0a42"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsComponents.kt",
+        "sha256": "888a78d54c41b0f98e2efda183dc0753dc6582935a7b29d389783bda56fb3d41"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsMainScreen.kt",
+        "sha256": "a607abe9d870cb55bd311fcf19d79f6882b7742c6e519faa037720d04b2b18ba"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsRoutes.kt",
+        "sha256": "d28c76a4191d6290228466ff21a0c9a0f7251da4685a4155cd6d05131adabd93"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SettingsScreen.kt",
+        "sha256": "5a11eb2e0d566d19504ff17dd67c5a9418a17773909dde85b0f881157def876d"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SmartPredictionSettingsScreen.kt",
+        "sha256": "289b4c016fe3ae6ecc24880fb5f9305b663e661163f0682189c1b6d6f7465730"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/SpeechToTextSettingsScreen.kt",
+        "sha256": "236473d4bdf10c73b94811c0e73be0c4c0426042508b60e135d3c62b3d9788e5"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/StorageSpaceScreen.kt",
+        "sha256": "136795c772fa211007f0a347177655fa277f1f97119fc2ff255526b833e41706"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/ThemePreviewSheet.kt",
+        "sha256": "57f2bdf7bbe0c0053c0aeaa253ae8e7a0703b44789ecbb7533b43c2c488bf54c"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/ThemeSettingsScreen.kt",
+        "sha256": "c2b848857737e5165a602553f50185aa7640c2be009ee49f43dd3128020a0da2"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/settings/ToolbarSettingsScreen.kt",
+        "sha256": "78db0bfaf974748412b8e2bdd6b400303f986bda2ea18bc5c18ce15c605c692b"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/theme/DynamicThemes.kt",
+        "sha256": "962c0cdfef015fc2150e6a826820073338cba00318a4cb8edc56979957f656cc"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/theme/KeyboardTheme.kt",
+        "sha256": "85e583d822cee79641ed800e0a2317be2b26d92765c4b52327aae0a10f39faa0"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/theme/Theme.kt",
+        "sha256": "2ef2cefb46639b3c13f5acecbf07e325557f5eef4bdb2b4ae9ef883fe00fbf2c"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/ui/theme/XimeHapticIndication.kt",
+        "sha256": "b1c11376a1dcad70f931637b0928816fbf7398f5cc134cfd99448c37b27b5c4c"
+      },
+      {
+        "path": "app/src/main/java/com/kingzcheung/xime/plugin/http/BackupDownload.kt",
+        "sha256": "902849e71cf591084db91ee155ac261c142044e34cc33d009118b22d3c87648b"
+      }
+    ]
+  }
+}

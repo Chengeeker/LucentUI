@@ -1,0 +1,2 @@
+-keepattributes Signature,InnerClasses,EnclosingMethod
+-keep class dev.chengeeker.lucent.demo.MainActivity { *; }

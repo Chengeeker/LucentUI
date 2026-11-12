@@ -1,0 +1,51 @@
+[
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/AppearanceTemplate.kt",
+    "sha256": "e1c88d3e9f5dc3f9b9d7be3991ffa5188bbd5034ca071babc2ed785b06563e9f",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/FontSizeSetting.kt",
+    "sha256": "d2f3aceb480db9cdfe77285e5b04e77bc2019e129d5204d7fe46d304200454b6",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/FontWeightSetting.kt",
+    "sha256": "28249ec7e9a0d43cf980828eabc2cdc9125726b9c263c7df861c6e41aea51778",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/LiquidGlass.kt",
+    "sha256": "17b9633b758ab479d85bf98ff7c11a578d05ec50ee3cbc312c605862f304f8e8",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/ReviewVideoChrome.kt",
+    "sha256": "fd14e27e37c8df7d4e60fcb99ecad05bf13a17b59bc89ac7579eb0aebf5a84d4",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/java/com/review/compose/WebDavTransport.kt",
+    "sha256": "7024f5a4af967fc62e58a88a4a633e1ec9828b06c9b551e41ed18d830aa24d57",
+    "license": "MIT",
+    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
+  },
+  {
+    "sourceProject": "Review",
+    "path": "app/src/main/assets/glass/premium_glass.agsl",
+    "sha256": "ad20d1125602c4e7a27b9f2fb3742f10ebd9520a07d8d4d5049f6d1014fd55b2",
+    "license": "MIT",
+    "adaptation": "Preserved shader and author headers."
+  }
+]
