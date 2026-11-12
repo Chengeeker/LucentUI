@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.2+4
+
+Synced the UI source code for Lucent UI 0.2.2+4.
+
+- Fixed timeline navigation, local post composition, and per-post actions.
+- Connected settings, saved posts, history, search, and documentation to their intended destinations.
+
 ## 0.2.1+3
 
 Synced the UI source code for Lucent UI 0.2.1+3.

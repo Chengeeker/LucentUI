@@ -1,10 +1,10 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.1",
-  "versionCode": 3,
+  "versionName": "0.2.2",
+  "versionCode": 4,
   "reference": "Review 3.17.5+278",
-  "apkBytes": 5995493,
-  "sha256": "33f63ea8dcb6b020ba523075a439bb07ed3494f5bc58e8ba51fb4ac85f560af5",
+  "apkBytes": 6012753,
+  "sha256": "6f9899c5ba089e8ce08e5d15fa8ecd9cef4458861b10283ec27df1c0acace085",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -15,74 +15,61 @@
   "testCount": 23,
   "suites": [
     {
+      "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
       "tests": 9,
       "failures": 0,
       "errors": 0,
-      "skipped": 0,
-      "suite": "dev.chengeeker.lucent.demo.data.BackupTest"
+      "skipped": 0
     },
     {
+      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest",
       "tests": 2,
       "failures": 0,
       "errors": 0,
-      "skipped": 0,
-      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest"
+      "skipped": 0
     },
     {
+      "suite": "dev.chengeeker.lucent.demo.data.SavedTitlesTest",
       "tests": 3,
       "failures": 0,
       "errors": 0,
-      "skipped": 0,
-      "suite": "dev.chengeeker.lucent.demo.data.SavedTitlesTest"
+      "skipped": 0
     },
     {
+      "suite": "dev.chengeeker.lucent.demo.data.TransportTest",
       "tests": 4,
       "failures": 0,
       "errors": 0,
-      "skipped": 0,
-      "suite": "dev.chengeeker.lucent.demo.data.TransportTest"
+      "skipped": 0
     },
     {
+      "suite": "dev.chengeeker.lucent.ContractsTest",
       "tests": 5,
       "failures": 0,
       "errors": 0,
-      "skipped": 0,
-      "suite": "dev.chengeeker.lucent.ContractsTest"
+      "skipped": 0
     }
   ],
   "lintErrors": 0,
   "lintWarnings": 9,
-  "lintScope": "Full Release lint on the changed Kotlin code; final assembleRelease included updated specification assets only",
-  "testScope": "Host unit tests and same-signature release APK runtime flows; no debug APK",
-  "hdrFixtureSha256": "4691ba5c27cb92ce8a6b0c8d80ee83780f6cbce75a9805faf00409d54ab106e5",
-  "hdrGainmapDecodedOnApi35": [
-    1,
-    2,
-    4
-  ],
+  "installedApkSha256MatchesDelivery": true,
   "runtimeChecks": [
-    "0.2.0 to 0.2.1 same-signature upgrade",
-    "Feed image indices 1/2/3 open directly",
-    "Article image opens directly and returns",
-    "Source expand/return frames and normal-speed recording",
-    "Reopen during interrupted return",
-    "Gallery paging and source restoration",
-    "Catalog long-image zoom and animated GIF playback",
-    "HDR card/fullscreen/thumbnail labels",
-    "Image save picker cancellation",
-    "More menu inert on open/dismiss",
-    "Bookmark persistence over process restart and removal",
-    "Clipboard text pasted and compared",
-    "Native share chooser",
-    "Final delivery APK installed bytes match project-root APK; HDR and menu retested"
+    "Android 15 same-signature upgrade from 0.2.1 and legacy bookmark retained",
+    "Feed title scrolls to top, arrow opens group picker, image and video filters select the correct cards",
+    "Search uses its own action and the glass quick result opens the glass lab",
+    "Blank post cannot publish, exiting saves the draft, restart retains it, publishing clears the draft and retains the post",
+    "Post body and comment shortcuts use the selected post, and replies attach to the selected comment",
+    "Favorites and history open their original posts, including the pre-upgrade bookmark",
+    "HDR thumbnail inside the selected post opens the right image and returns to the same detail page",
+    "Component menu opens settings and the sheet separates reading and composition",
+    "Documentation chapters return to the directory using toolbar and system back",
+    "Fourteen catalog routes and eight settings routes plus icon and frame-rate subpages opened their expected content",
+    "Episode selection, next episode and keyboard preview exercised",
+    "No crash recorded during the tested emulator flows"
   ],
   "notVerified": [
-    "Physical HDR luminance and GPU rendering",
-    "Physical haptics",
-    "API 26-32 devices",
-    "Personal WebDAV server; unchanged in this patch"
+    "Physical Android devices and HDR luminance",
+    "User WebDAV servers and real accounts"
   ],
-  "crashBuffer": "No crashes recorded in tested emulator flows",
-  "evidence": "gallery-fix-evidence.md",
-  "installedApkSha256MatchesDelivery": true
+  "evidence": "interaction-audit.md"
 }

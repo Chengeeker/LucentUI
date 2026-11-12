@@ -9,6 +9,8 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.chengeeker.lucent.LucentStyle
+import dev.chengeeker.lucent.demo.*
+import org.json.JSONArray
 import java.io.File
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -366,18 +368,77 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun set(key: String, value: Any) {
+    val posts by derivedStateOf { readLocalPosts(document.optJSONArray("posts")) + samplePosts }
+    val postDraft get() = document.optString("postDraft")
+    val postLikes = mutableStateMapOf<String, Boolean>()
+    private val comments = mutableStateMapOf<String, List<DemoComment>>()
+    private val commentDrafts = mutableMapOf<String, String>()
+
+    fun findPost(id: String) = if (id.isEmpty() || id == sampleArticle.id) sampleArticle else posts.firstOrNull { it.id == id }
+    fun filterWords() = str("filter").split(',', '，').map(String::trim).filter(String::isNotEmpty)
+    fun commentsFor(id: String) = comments[id].orEmpty()
+    fun commentDraft(id: String) = if (id == sampleArticle.id) str("draft") else commentDrafts[id].orEmpty()
+    fun saveCommentDraft(id: String, text: String) {
+        if (id == sampleArticle.id) set("draft", text) else commentDrafts[id] = text
+    }
+    fun addComment(id: String, body: String, parent: String?) {
+        val list = commentsFor(id)
+        comments[id] = list + DemoComment("local-${list.size}", str("account").ifBlank { "我" }, body.trim(), parent)
+    }
+
+    fun recordVisit(key: String) {
+        if (!bool("history")) return
+        updateDocument {
+            val settings = it.getJSONObject("settings")
+            if (settings.optBoolean("history", true)) {
+                val keys = settings.optString("historyItems").lineSequence().filter { entry -> entry.isNotBlank() && entry != key }
+                settings.put("historyItems", (sequenceOf(key) + keys).take(30).joinToString("\n"))
+            }
+        }
+    }
+
+    fun savePostDraft(text: String, finished: (Boolean) -> Unit) =
+        updateDocument(finished) { it.put("postDraft", text) }
+
+    fun publishPost(text: String, finished: (Boolean) -> Unit) = updateDocument(finished) { next ->
+        val body = text.trim()
+        require(body.isNotEmpty() && body.length <= PostBodyLimit)
+        val records = next.optJSONArray("posts") ?: JSONArray()
+        require(records.length() < LocalPostLimit)
+        records.put(JSONObject()
+            .put("id", "local-${java.util.UUID.randomUUID()}")
+            .put("author", str("account").ifBlank { "我" }.take(40))
+            .put("body", body)
+            .put("created", System.currentTimeMillis()))
+        next.put("posts", records).put("postDraft", "")
+    }
+
+    fun set(key: String, value: Any, onSaved: () -> Unit = {}) =
+        saveSettings(mapOf(key to value), onSaved)
+
+    fun saveSettings(changes: Map<String, Any>, onSaved: () -> Unit = {}) =
+        updateDocument({ if (it) onSaved() }) { next ->
+            val settings = next.getJSONObject("settings")
+            changes.forEach { (key, value) -> settings.put(key, value) }
+        }
+
+    private fun updateDocument(finished: (Boolean) -> Unit = {}, change: (JSONObject) -> Unit) {
         viewModelScope.launch {
-            try {
+            val saved = try {
                 mutex.withLock {
                     val next = JSONObject(document.toString())
-                    next.getJSONObject("settings").put(key, value)
+                    change(next)
                     DemoDefaults.validate(next.getJSONObject("settings"))
                     commit(next)
                 }
+                true
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
-                report("保存失败", "原有设置已保留，请检查存储空间。")
+                report("保存失败", "原有数据已保留，请检查存储空间。")
+                false
             }
+            finished(saved)
         }
     }
 
@@ -459,7 +520,7 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
                 BackupCodec.decode(bytes, password.takeIf { it.isNotEmpty() })
             }
         mutex.withLock {
-            val next = JSONObject(parsed.toString())
+            val next = JSONObject(document.toString()).put("settings", parsed.getJSONObject("settings"))
             next.put(
                 "secret",
                 withContext(Dispatchers.IO) { secrets.encrypt(parsed.optString("secret")) },
@@ -538,6 +599,9 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
                     readFailure = false
                 }
                 commit(JSONObject().put("settings", DemoDefaults.fresh()).put("secret", ""))
+                postLikes.clear()
+                comments.clear()
+                commentDrafts.clear()
             }
             "已重置 Demo 设置，不影响其他应用和云端文件。"
         }

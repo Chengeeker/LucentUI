@@ -5,6 +5,8 @@ import androidx.activity.compose.PredictiveBackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.ui.draw.rotate
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -48,16 +50,35 @@ val settingRoutes =
     )
 val patternRoutes =
     listOf(
-        DemoRoute("article", "阅读与评论", "长内容、磨砂顶栏、回复、收藏与编辑"),
+        DemoRoute("article", "阅读与评论", "长内容、磨砂顶栏、回复与收藏"),
         DemoRoute("images", "图片浏览器", "共享位置过渡、缩放、长图与动图"),
         DemoRoute("video", "普通视频", "真实本地播放、画质、倍速和手势"),
         DemoRoute("music", "音乐与歌词", "队列、播放模式、迷你播放器与展开"),
         DemoRoute("drama", "剧集播放器", "定制模式：竖屏视频与选集"),
         DemoRoute("search", "搜索与消息", "搜索建议、结果、未读与会话"),
         DemoRoute("devices", "设备与传输", "设备卡片、连接、任务进度与取消"),
-        DemoRoute("plugins", "插件与键盘", "启停、配置、导入流程与键盘预览"),
+        DemoRoute("plugins", "插件与键盘", "启停、配置与键盘预览"),
     )
 
+
+private val extraRoutes = listOf(
+    DemoRoute("settings", "设置", "全部通用设置"),
+    DemoRoute("draft", "写帖子", "本地发帖与草稿"),
+    DemoRoute("favorites", "收藏", "打开已收藏的动态"),
+    DemoRoute("history", "浏览记录", "打开最近浏览的动态"),
+    DemoRoute("controls", "基础组件", "菜单、输入与状态"),
+    DemoRoute("glass", "玻璃与动画", "磨砂顶栏与液态玻璃"),
+    DemoRoute("cache", "缓存管理", "缓存占用及清理"),
+    DemoRoute("icons", "自定义应用图标", "桌面图标"),
+    DemoRoute("refresh", "屏幕帧率设置", "刷新率"),
+)
+internal val searchableRoutes = settingRoutes + patternRoutes + extraRoutes
+internal val specChapters = linkedMapOf(
+    "foundations" to "基础与设计变量", "glass" to "玻璃与背景采样",
+    "components" to "组件与状态", "motion" to "手势与动画", "media" to "媒体浏览",
+    "settings" to "设置与备份", "patterns" to "页面模板", "integration" to "接入代码",
+    "quality" to "兼容性与验收", "scope-and-sources" to "范围与来源", "licenses" to "开源许可",
+)
 
 val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
 
@@ -65,7 +86,12 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
  val routes=remember{mutableStateListOf(ReviewRoute(0,"root"))}
  var nextKey by remember {mutableLongStateOf(1)}
  var tab by rememberSaveable {mutableIntStateOf(0)}
- fun open(name:String){if(routes.last().name!=name)routes.add(ReviewRoute(nextKey++,name))}
+ var group by rememberSaveable { mutableStateOf(FeedGroup.Latest) }
+ val feedList = rememberLazyListState()
+ fun open(name: String) {
+  check(name.substringBefore(':') == "comments" || searchableRoutes.any { it.id == name.substringBefore(':') }) { "Unknown route: $name" }
+  if (routes.last().name != name) routes.add(ReviewRoute(nextKey++, name))
+ }
  fun back(){if(routes.size>1)routes.removeAt(routes.lastIndex)}
  val context=LocalContext.current;val activity=context.activity();val colors=MaterialTheme.colorScheme
  val drawer=rememberDrawerState(DrawerValue.Closed);val scope=rememberCoroutineScope()
@@ -96,7 +122,7 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
   }.onFailure { model.report("图标切换失败", "当前桌面不支持切换，请稍后重试。") }
  }
  val tabStates=rememberSaveableStateHolder()
- val titles=(settingRoutes+patternRoutes).associate{it.id to it.title}+mapOf("webdav" to "WebDAV云端备份与恢复","reading" to "内容样式","storage" to "存储设置","cache" to "缓存管理","notifications" to "订阅消息提醒","icons" to "自定义应用图标","refresh" to "屏幕帧率设置","controls" to "基础组件","glass" to "玻璃与动画")
+ val titles=searchableRoutes.associate{it.id to it.title}+mapOf("webdav" to "WebDAV云端备份与恢复","reading" to "内容样式","storage" to "存储设置","cache" to "缓存管理","notifications" to "订阅消息提醒","icons" to "自定义应用图标","refresh" to "屏幕帧率设置","controls" to "基础组件","glass" to "玻璃与动画")
  GalleryHost(model) {
  BoxWithConstraints {
  ModalNavigationDrawer(drawerState=drawer,gesturesEnabled=routes.size==1,drawerContent={
@@ -105,33 +131,72 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
     Box(Modifier.size(56.dp).clip(CircleShape).background(colors.primaryContainer),contentAlignment=Alignment.Center){Text("L",color=colors.onPrimaryContainer,fontSize=24.sp,fontWeight=FontWeight.Bold)}
     Spacer(Modifier.height(12.dp));Text("Lucent UI",fontWeight=FontWeight.Bold,fontSize=18.sp);Text("本地演示",color=colors.onSurfaceVariant,fontSize=13.sp)
    }
-   listOf("阅读与评论" to "article","收藏" to "reading","搜索" to "search","图片浏览器" to "images","普通视频" to "video","设计规范" to "about").forEach{(title,id)->NavigationDrawerItem(label={Text(title)},selected=false,onClick=hapticClick{scope.launch{drawer.close()};open(id)})}
+   listOf("阅读与评论" to "article","收藏" to "favorites","搜索" to "search","图片浏览器" to "images","普通视频" to "video","设计规范" to "about").forEach{(title,id)->NavigationDrawerItem(label={Text(title)},selected=false,onClick=hapticClick{scope.launch{drawer.close()};open(id)})}
   }
  }) {
  PageStack(routes.toList()){route->
-  val root=route.name=="root"
+  val screen = route.name.substringBefore(':')
+  val target = route.name.substringAfter(':', "")
+  if (screen == "draft") {
+   PostComposer(model) {
+    if (routes.lastOrNull() === route) {
+     back()
+     if (it) {
+      group = FeedGroup.Latest
+      tab = 0
+      scope.launch { feedList.scrollToItem(0) }
+     }
+    }
+   }
+   return@PageStack
+  }
+  val root=screen=="root"
   val landscape=LocalConfiguration.current.orientation==android.content.res.Configuration.ORIENTATION_LANDSCAPE
   val hideVideoBar=route.name=="video" && landscape
   val top=if(root && tab==2 || hideVideoBar)0.dp else WindowInsets.statusBars.asPaddingValues().calculateTopPadding()+56.dp
   CompositionLocalProvider(LocalDemoContentTop provides top,dev.chengeeker.lucent.review.LocalContentTop provides top) {
    BackdropHost(overlay={
     if(root){
-     if(tab==0) ReferenceFeedHeader({scope.launch{drawer.open()}},{open("search")},{open("article")})
+     if(tab==0) ReferenceFeedHeader(
+      group = group,
+      drawer = { scope.launch { drawer.open() } },
+      search = { open("search") },
+      publish = { open("draft") },
+      scrollToTop = { scope.launch { feedList.animateScrollToItem(0) } },
+      selectGroup = { selected ->
+       if (group != selected) {
+        group = selected
+        scope.launch { feedList.scrollToItem(0) }
+       }
+      },
+     )
      else if(tab==1) LucentHeader("组件与功能")
      Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth()) {
       LucentNavigation(listOf(LucentDestination("时间线",Icons.Outlined.DynamicFeed,Icons.Rounded.DynamicFeed),LucentDestination("组件",Icons.Outlined.LocalFireDepartment,Icons.Rounded.LocalFireDepartment),LucentDestination("设置",Icons.Outlined.Settings,Icons.Rounded.Settings)),tab,{tab=it})
      }
-    }else if(!hideVideoBar)LucentHeader(titles[route.name]?:route.name,::back)
+    } else if (!hideVideoBar) {
+     val title = when {
+      screen == "article" && target.isNotEmpty() -> "动态详情"
+      screen == "comments" -> "评论"
+      screen == "about" && target.isNotEmpty() -> specChapters.getValue(target)
+      else -> titles.getValue(screen)
+     }
+     LucentHeader(title, ::back)
+    }
    }) {
     Box(Modifier.fillMaxSize().then(if(!root && route.name!="video") Modifier.navigationBarsPadding() else Modifier).clipToBounds()) {
-    if(root)tabStates.SaveableStateProvider(tab){when(tab){0->ReviewFeed(model,::open);1->ReviewCatalog(::open);else->ReviewSettingsRoot(model,::open)}}
-    else when(route.name){
+    if(root)tabStates.SaveableStateProvider(tab){when(tab){0->ReviewFeed(model,group,feedList,::open);1->ReviewCatalog(::open);else->ReviewSettingsRoot(model,::open)}}
+    else when(screen){
+     "settings" -> ReviewSettingsRoot(model, ::open, embedded = true)
+     "article", "comments" -> ArticlePage(model, model.findPost(target), screen == "comments") { open("video") }
+     "favorites", "history" -> SavedPostsPage(model, screen == "favorites", ::open)
+     "about" -> AboutPage(target, ::open)
      "appearance"->ReviewAppearance(model,::open)
      "icons","refresh"->DevicePreviewSettings(route.name,model)
      "controls"->ComponentsPage(model,::open)
      "glass"->GlassLab(model)
      "cache"->SettingsPage("cache",model,::open)
-     "reading","media","storage","webdav","local","notifications","network","privacy","account","about"->SettingsPage(route.name,model,::open)
+     "reading","media","storage","webdav","local","notifications","network","privacy","account"->SettingsPage(route.name,model,::open)
      else->PatternPage(route.name,model,::open)
     }
     }
@@ -145,12 +210,56 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
  model.result?.let{(title,body)->LucentResult(title,body,model::dismiss)}
 }
 
-@Composable private fun ReferenceFeedHeader(drawer:()->Unit,search:()->Unit,publish:()->Unit) {
- Box(Modifier.frostedBackdrop(MaterialTheme.colorScheme.background)) {
- TopAppBar(title={Row(Modifier.padding(horizontal=8.dp,vertical=4.dp),verticalAlignment=Alignment.CenterVertically){Text("最新动态",fontSize=18.sp,fontWeight=reviewWeight(FontWeight.Bold));Spacer(Modifier.width(4.dp));IconButton(onClick=hapticClick(search),modifier=Modifier.size(32.dp)){Icon(Icons.Rounded.ArrowDropDown,"浏览内容",Modifier.size(24.dp))}}},
- navigationIcon={Box(Modifier.size(48.dp).padding(start=12.dp),contentAlignment=Alignment.Center){Box(Modifier.size(34.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer).lucentClick(onClick=drawer),contentAlignment=Alignment.Center){Icon(Icons.Rounded.Person,"打开侧栏",Modifier.size(20.dp),tint=MaterialTheme.colorScheme.onPrimaryContainer)}}},
- actions={IconButton(onClick=hapticClick(publish)){Icon(Icons.Outlined.Edit,"编辑示例")};IconButton(onClick=hapticClick(search)){Icon(Icons.Rounded.Search,"搜索")}},expandedHeight=56.dp,colors=TopAppBarDefaults.topAppBarColors(containerColor=Color.Transparent))
- }
+@Composable
+private fun ReferenceFeedHeader(
+    group: FeedGroup,
+    drawer: () -> Unit,
+    search: () -> Unit,
+    publish: () -> Unit,
+    scrollToTop: () -> Unit,
+    selectGroup: (FeedGroup) -> Unit,
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val rotation by animateFloatAsState(if (expanded) 180f else 0f, label = "group-arrow")
+    Box(Modifier.frostedBackdrop(MaterialTheme.colorScheme.background)) {
+        TopAppBar(
+            title = {
+                Row(Modifier.padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(group.title, Modifier.lucentClick(onClick = scrollToTop).padding(vertical = 8.dp),
+                        fontSize = 18.sp, fontWeight = reviewWeight(FontWeight.Bold))
+                    Spacer(Modifier.width(4.dp))
+                    Box {
+                        IconButton(onClick = hapticClick { expanded = !expanded }, modifier = Modifier.size(40.dp)) {
+                            Icon(Icons.Rounded.ArrowDropDown, "切换分组", Modifier.rotate(rotation))
+                        }
+                        DropdownMenu(expanded, { expanded = false }) {
+                            FeedGroup.entries.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(item.title) },
+                                    onClick = hapticClick { expanded = false; selectGroup(item) },
+                                    trailingIcon = if (item == group) {{ Icon(Icons.Rounded.Check, "当前分组") }} else null,
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            navigationIcon = {
+                Box(Modifier.size(48.dp).padding(start = 12.dp), contentAlignment = Alignment.Center) {
+                    Box(Modifier.size(34.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer)
+                        .lucentClick(onClick = drawer), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Rounded.Person, "打开侧栏", Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+                    }
+                }
+            },
+            actions = {
+                IconButton(onClick = hapticClick(publish)) { Icon(Icons.Outlined.Edit, "写帖子") }
+                IconButton(onClick = hapticClick(search)) { Icon(Icons.Rounded.Search, "搜索") }
+            },
+            expandedHeight = 56.dp,
+            colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+        )
+    }
 }
 
 @Composable fun PageList(bottom:Int=104,content:LazyListScope.()->Unit) {

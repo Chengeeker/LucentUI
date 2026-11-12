@@ -185,17 +185,17 @@ fun ComponentsPage(model: DemoModel, open: (String) -> Unit) {
             Column(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
                 Text("当前对象的操作", style = MaterialTheme.typography.titleLarge)
                 LucentRow(
-                    "查看详情",
-                    onClick = {
-                        sheet = false
-                        expanded = true
-                    },
-                )
-                LucentRow(
-                    "编辑内容",
+                    "查看阅读示例",
                     onClick = {
                         sheet = false
                         open("article")
+                    },
+                )
+                LucentRow(
+                    "打开写帖编辑器",
+                    onClick = {
+                        sheet = false
+                        open("draft")
                     },
                 )
                 LucentRow("取消", onClick = { sheet = false })

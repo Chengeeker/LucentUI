@@ -59,7 +59,6 @@ fun PatternPage(page: String, model: DemoModel, open: (String) -> Unit) {
     when (page) {
         "images" -> ImagesPage(model)
         "video" -> VideoPage(model)
-        "article" -> ArticlePage(model)
         "music" -> MusicPage(model)
         "drama" -> DramaPage(model)
         "search" -> SearchPage(model, open)
@@ -117,166 +116,6 @@ private fun VideoPage(model: DemoModel) {
                 }
             }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ArticlePage(model: DemoModel) {
-    var editor by remember { mutableStateOf(false) }
-    var draft by remember { mutableStateOf(model.str("draft")) }
-    var comment by remember { mutableStateOf("") }
-    var replies by remember { mutableStateOf(listOf<String>()) }
-    var limit by remember { mutableIntStateOf(10) }
-    var refreshing by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val filter = model.str("filter").split(',', '，').map { it.trim() }.filter { it.isNotEmpty() }
-    val bookmarked = model.isBookmarked("流动的边界")
-    val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
-    val radius = if (model.bool("imageRound")) 24.dp else 0.dp
-    val origin = remember(radius) { dev.chengeeker.lucent.review.GalleryOrigin(radius) }
-    val articleMedia = remember { listOf(galleryItems[0].media()) }
-    LaunchedEffect(Unit) { if (model.bool("history")) model.set("historyItems", "流动的边界") }
-    LucentRefresh(
-        refreshing,
-        {
-            scope.launch {
-                refreshing = true
-                delay(600)
-                limit = 10
-                refreshing = false
-            }
-        },
-    ) {
-        PageList(bottom = 24) {
-            item {
-                Column(Modifier.padding(vertical = 20.dp)) {
-                    Text("流动的边界", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                    if (model.bool("avatar"))
-                        LucentRow("Lucent Design", "演示作者", Icons.Rounded.AccountCircle)
-                    if (model.bool("time"))
-                        Text(
-                            if (model.bool("relativeTime")) "今天 · 设计随笔" else "2026-11-12 · 设计随笔",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    GalleryThumbnail(articleMedia[0], origin,
-                        Modifier.fillMaxWidth().padding(vertical = 16.dp).height(220.dp)) {
-                        openGallery?.invoke(articleMedia, 0, mapOf(0 to origin))
-                    }
-                }
-            }
-            items(5) { n ->
-                Text(
-                    "${n+1}. 清晰优先于装饰。让重要的内容保持清楚，用空间和容器区分信息层级。玻璃在滚动时表达前后关系；动画负责解释位置变化。设置、阅读和媒体播放遵循同一套规则。",
-                    Modifier.padding(vertical = if (model.str("layout") == "紧凑") 4.dp else 12.dp),
-                    style =
-                        MaterialTheme.typography.bodyLarge.copy(
-                            lineHeight =
-                                androidx.compose.ui.unit.TextUnit(
-                                    16f * model.str("bodySpacing").toFloat(),
-                                    androidx.compose.ui.unit.TextUnitType.Sp,
-                                )
-                        ),
-                )
-            }
-            item {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LucentAction(
-                        if (bookmarked) "已收藏" else "收藏",
-                        { model.toggleBookmark("流动的边界") },
-                        primary = bookmarked,
-                    )
-                    LucentAction("写评论", { editor = true }, primary = false)
-                    LucentAction(
-                        if (refreshing) "刷新中" else "刷新",
-                        {
-                            scope.launch {
-                                refreshing = true
-                                delay(600)
-                                limit = 10
-                                refreshing = false
-                            }
-                        },
-                        enabled = !refreshing,
-                        primary = false,
-                    )
-                }
-            }
-            item {
-                Text(
-                    "评论",
-                    Modifier.padding(top = 24.dp, bottom = 12.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            }
-            items(
-                (replies + List(limit) { "读者 ${it+1}：评论也应进入磨砂背景采样，滚到顶栏时不会露出清晰原字。" }).filter { t ->
-                    filter.none { t.contains(it, true) }
-                }
-            ) { reply ->
-                val colors = MaterialTheme.colorScheme
-                Row(Modifier.fillMaxWidth().lucentClick { editor = true }.padding(vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                        Box(Modifier.size(36.dp).clip(CircleShape).background(colors.primaryContainer), contentAlignment = Alignment.Center) { Text(reply.take(1), fontSize = 16.sp, fontWeight = FontWeight.Bold) }
-                    }
-                    Column(Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(reply.substringBefore('：'), Modifier.weight(1f), fontSize = 13.5.sp, fontWeight = FontWeight.Bold)
-                            var liked by remember(reply) { mutableStateOf(false) }
-                            Icon(if(liked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder, "赞评论", Modifier.size(24.dp).lucentClick { liked = !liked }.padding(4.dp), tint = if(liked) Color(0xFFEC407A) else colors.onSurfaceVariant)
-                        }
-                        Spacer(Modifier.height(2.dp)); Text("刚刚  来自本地示例", fontSize = 11.5.sp, color = colors.onSurfaceVariant)
-                        Spacer(Modifier.height(6.dp)); Text(reply.substringAfter('：'), fontSize = 14.sp, lineHeight = 19.6.sp)
-                        if(model.bool("preview")) {
-                            Spacer(Modifier.height(14.dp))
-                            Text("示例作者：这里展示回复的内容。", Modifier.fillMaxWidth().background(colors.surfaceContainerHighest.copy(alpha = .4f), RoundedCornerShape(8.dp)).padding(8.dp), fontSize = 12.5.sp)
-                            Text("共1条回复  ›", Modifier.padding(horizontal = 8.dp, vertical = 8.dp), fontSize = 12.5.sp, color = colors.primary)
-                        }
-                    }
-                }
-
-            }
-            item { LucentAction("加载更多", { limit += 10 }, Modifier.fillMaxWidth(), primary = false) }
-        }
-    }
-    if (editor)
-        ModalBottomSheet(
-            onDismissRequest = {
-                model.set("draft", draft)
-                editor = false
-            }
-        ) {
-            Column(Modifier.fillMaxWidth().imePadding().padding(16.dp)) {
-                Text("发表评论", style = MaterialTheme.typography.titleLarge)
-                OutlinedTextField(
-                    draft,
-                    { draft = it.take(4000) },
-                    Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                    label = { Text("想说点什么") },
-                    minLines = 3,
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    LucentAction(
-                        "保存草稿",
-                        {
-                            model.set("draft", draft)
-                            editor = false
-                        },
-                    )
-                    LucentAction(
-                        "发布到 Demo",
-                        {
-                            replies = listOf("我：$draft") + replies
-                            draft = ""
-                            model.set("draft", "")
-                            editor = false
-                        },
-                        enabled = draft.isNotBlank(),
-                        primary = false,
-                    )
-                }
-            }
-        }
 }
 
 @Composable
@@ -375,7 +214,6 @@ private fun DramaPage(model: DemoModel) {
 @Composable
 private fun SearchPage(model: DemoModel, open: (String) -> Unit) {
     var query by remember { mutableStateOf("") }
-    var messages by remember { mutableStateOf(false) }
     var unread by remember { mutableStateOf(true) }
     var chat by remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf("") }
@@ -391,15 +229,14 @@ private fun SearchPage(model: DemoModel, open: (String) -> Unit) {
                 singleLine = true,
             )
         }
-        if (query.isNotBlank())
-            items(
-                (settingRoutes + patternRoutes).filter {
-                    it.title.contains(query, true) || it.detail.contains(query, true)
-                }
-            ) { r ->
+        if (query.isNotBlank()) {
+            val term = query.trim()
+            val matches = searchableRoutes.filter { it.id != "search" && (it.title.contains(term, true) || it.detail.contains(term, true)) }
+            if (matches.isEmpty()) item { LucentEmpty("没有匹配的页面", "试试页面名称或其他关键词。") }
+            items(matches, key = { it.id }) { r ->
                 LucentCard { LucentRow(r.title, r.detail, onClick = { open(r.id) }) }
             }
-        else {
+        } else {
             item {
                 LucentSection("快速入口") {
                     listOf("玻璃", "WebDAV", "字号").forEach { word ->
@@ -454,9 +291,16 @@ private fun DevicesPage(model: DemoModel) {
             LucentSection("我的设备") {
                 LucentRow(
                     "Studio Desktop",
-                    if (connected) "已连接 · 演示状态" else "等待连接",
+                    if (connected) "已连接 · 点击断开" else "等待连接 · 点击连接",
                     Icons.Rounded.Computer,
-                    onClick = { connected = !connected },
+                    onClick = {
+                        connected = !connected
+                        if (!connected && job?.isActive == true) {
+                            job?.cancel()
+                            job = null
+                            progress = 0f
+                        }
+                    },
                 )
                 LucentRow("当前手机", "本机界面示例", Icons.Rounded.Smartphone)
             }
@@ -491,6 +335,8 @@ private fun DevicesPage(model: DemoModel) {
                         "取消",
                         {
                             job?.cancel()
+                            job = null
+                            progress = 0f
                             model.report("传输已取消", "演示任务已停止，没有实际发送文件。")
                         },
                         enabled = job?.isActive == true,

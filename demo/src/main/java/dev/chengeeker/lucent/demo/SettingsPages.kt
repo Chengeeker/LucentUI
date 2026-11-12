@@ -76,7 +76,6 @@ fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
         "notifications" -> NotificationPage(model)
         "network" -> NetworkPage(model)
         "account" -> AccountPage(model)
-        "about" -> AboutPage()
         else ->
             PageList(bottom = 24) {
                 when (page) {
@@ -107,14 +106,15 @@ fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
                                 LucentAction(
                                     "保存过滤规则",
                                     {
-                                        model.set("filter", filter)
-                                        model.report("已保存", "阅读与评论示例将应用这些过滤词。")
+                                        model.set("filter", filter) {
+                                            model.report("已保存", "时间线和评论将应用这些屏蔽词。")
+                                        }
                                     },
                                     Modifier.padding(16.dp),
                                 )
                                 LucentRow("预览阅读页", onClick = { open("article") })
-                                LucentRow("收藏", model.str("bookmarks").ifBlank { "暂无收藏" })
-                                LucentRow("浏览记录", model.str("historyItems").ifBlank { "暂无记录" })
+                                LucentRow("收藏", onClick = { open("favorites") })
+                                LucentRow("浏览记录", onClick = { open("history") })
                             }
                         }
                     }
@@ -162,8 +162,9 @@ fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
                                 LucentRow(
                                     "清空浏览记录",
                                     onClick = {
-                                        model.set("historyItems", "")
-                                        model.report("已清空", "只清除了 Demo 的浏览记录。")
+                                        model.set("historyItems", "") {
+                                            model.report("已清空", "只清除了 Demo 的浏览记录。")
+                                        }
                                     },
                                 )
                             }
@@ -173,12 +174,12 @@ fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
                             LucentSection("重置") {
                                 LucentRow(
                                     "重置 Demo 数据",
-                                    "清除设置、草稿、收藏和本机连接凭据；不删除云端文件。",
+                                    "清除设置、本地动态、草稿、收藏和本机连接凭据。",
                                     onClick = { confirm = true },
                                 )
                             }
                             if (confirm)
-                                Confirm("重置 Demo？", "此操作仅影响本应用。建议先导出备份。", { confirm = false }) {
+                                Confirm("重置 Demo？", "本地动态和发帖草稿将永久清除。设置与收藏可先导出备份。", { confirm = false }) {
                                     confirm = false
                                     model.reset()
                                 }
@@ -570,6 +571,10 @@ private fun NotificationPage(model: DemoModel) {
                                             PendingIntent.FLAG_IMMUTABLE or
                                                 PendingIntent.FLAG_UPDATE_CURRENT,
                                         )
+                                    if (manager.getNotificationChannel("demo")?.importance == NotificationManager.IMPORTANCE_NONE) {
+                                        model.report("演示通知已关闭", "请在系统通知设置中开启演示通知类别。")
+                                        return@runCatching
+                                    }
                                     manager.notify(
                                         1,
                                         NotificationCompat.Builder(context, "demo")
@@ -577,7 +582,7 @@ private fun NotificationPage(model: DemoModel) {
                                                 dev.chengeeker.lucent.demo.R.drawable.ic_launcher
                                             )
                                             .setContentTitle("Lucent UI")
-                                            .setContentText("备份已完成 · 这是本地通知示例")
+                                            .setContentText("这是 Lucent UI 的本地通知预览。")
                                             .setAutoCancel(true)
                                             .setContentIntent(pending)
                                             .build(),
@@ -625,9 +630,9 @@ private fun NetworkPage(model: DemoModel) {
                                     host.isNotBlank() &&
                                     host.none { it.isWhitespace() || it == '/' || it == '@' }
                             ) {
-                                model.set("proxyHost", host)
-                                model.set("proxyPort", port)
-                                model.report("已保存", "用于 WebDAV 和网络诊断请求。")
+                                model.saveSettings(mapOf("proxyHost" to host, "proxyPort" to port)) {
+                                    model.report("已保存", "用于 WebDAV 和网络诊断请求。")
+                                }
                             } else model.report("输入无效", "请填写有效主机和 1–65535 端口。")
                         },
                         Modifier.padding(16.dp),
@@ -716,64 +721,31 @@ private fun AccountPage(model: DemoModel) {
 }
 
 @Composable
-private fun AboutPage() {
+fun AboutPage(chapter: String, open: (String) -> Unit) {
     val context = LocalContext.current
-    var selected by remember { mutableStateOf<String?>(null) }
-    androidx.activity.compose.BackHandler(selected != null) { selected = null }
-    val chapters =
-        listOf(
-            "foundations" to "基础与设计变量",
-            "glass" to "玻璃与背景采样",
-            "components" to "组件与状态",
-            "motion" to "手势与动画",
-            "media" to "媒体浏览",
-            "settings" to "设置与备份",
-            "patterns" to "页面模板",
-            "integration" to "接入代码",
-            "quality" to "兼容性与验收",
-            "scope-and-sources" to "范围与来源",
-        )
-    if (selected != null) {
-        val text =
-            remember(selected) {
-                runCatching {
-                        context.assets.open("spec/${selected}.md").bufferedReader().use {
-                            it.readText()
-                        }
-                    }
-                    .getOrDefault("文档未打包")
-            }
+    if (chapter.isNotEmpty()) {
+        val text = remember(chapter) {
+            runCatching { context.assets.open("spec/$chapter.md").bufferedReader().use { it.readText() } }
+                .getOrDefault("文档未打包")
+        }
         PageList(bottom = 24) {
-            item { LucentAction("返回文档目录", { selected = null }, primary = false) }
-            item {
-                Text(
-                    text,
-                    Modifier.padding(vertical = 16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+            item { Text(text, Modifier.padding(vertical = 16.dp), style = MaterialTheme.typography.bodyMedium) }
+        }
+    } else PageList(bottom = 24) {
+        item {
+            LucentSection("Lucent UI") {
+                LucentRow("Material 3 · Glass & Motion", "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) · Review 视觉基准与功能示例")
+                LucentRow("开源许可", "MIT / Apache-2.0", onClick = { open("about:licenses") })
             }
         }
-    } else
-        PageList(bottom = 24) {
-            item {
-                LucentSection("Lucent UI") {
-                    LucentRow("Material 3 · Glass & Motion", "0.2.1 (3) · Review 视觉基准与功能示例")
-                    LucentRow("设计原则", "清晰内容、明确层级、克制反馈、可解释的动效。")
-                    LucentRow(
-                        "开源许可",
-                        "MIT / Apache-2.0 · 查看作者署名与许可全文",
-                        onClick = { selected = "licenses" },
-                    )
-                }
-            }
-            item {
-                LucentSection("离线设计规范") {
-                    chapters.forEach { (id, title) ->
-                        LucentRow(title, onClick = { selected = id })
-                    }
+        item {
+            LucentSection("离线设计规范") {
+                specChapters.filterKeys { it != "licenses" }.forEach { (id, title) ->
+                    LucentRow(title, onClick = { open("about:$id") })
                 }
             }
         }
+    }
 }
 
 @Composable private fun CacheSettingsPage(model: DemoModel) {
