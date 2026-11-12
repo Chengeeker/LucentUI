@@ -350,6 +350,22 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
             floating = bool("floating"),
         )
 
+    fun isBookmarked(title: String) = title in str("bookmarks").lineSequence()
+
+    fun toggleBookmark(title: String) {
+        viewModelScope.launch {
+            try {
+                mutex.withLock {
+                    val next = JSONObject(document.toString())
+                    val settings = next.getJSONObject("settings")
+                    settings.put("bookmarks", toggleSavedTitle(settings.getString("bookmarks"), title))
+                    DemoDefaults.validate(settings)
+                    commit(next)
+                }
+            } catch (_: Exception) { report("保存失败", "原有收藏已保留，请检查存储空间。") }
+        }
+    }
+
     fun set(key: String, value: Any) {
         viewModelScope.launch {
             try {

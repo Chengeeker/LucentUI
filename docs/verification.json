@@ -1,10 +1,10 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.0",
-  "versionCode": 2,
+  "versionName": "0.2.1",
+  "versionCode": 3,
   "reference": "Review 3.17.5+278",
-  "apkBytes": 4324003,
-  "sha256": "1ddfe47a3abfc71f1b33fa23673f5ba5942d321ef20e34306fc40463998c4552",
+  "apkBytes": 5995493,
+  "sha256": "33f63ea8dcb6b020ba523075a439bb07ed3494f5bc58e8ba51fb4ac85f560af5",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -12,66 +12,77 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 20,
+  "testCount": 23,
   "suites": [
     {
-      "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
       "tests": 9,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "suite": "dev.chengeeker.lucent.demo.data.BackupTest"
     },
     {
-      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest",
       "tests": 2,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest"
     },
     {
-      "suite": "dev.chengeeker.lucent.demo.data.TransportTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "suite": "dev.chengeeker.lucent.demo.data.SavedTitlesTest"
+    },
+    {
       "tests": 4,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "suite": "dev.chengeeker.lucent.demo.data.TransportTest"
     },
     {
-      "suite": "dev.chengeeker.lucent.ContractsTest",
       "tests": 5,
       "failures": 0,
       "errors": 0,
-      "skipped": 0
+      "skipped": 0,
+      "suite": "dev.chengeeker.lucent.ContractsTest"
     }
   ],
   "lintErrors": 0,
   "lintWarnings": 9,
-  "composeAlignmentEntries": 73,
-  "sourceTreeSha256": "1867db9164309b5c86a924064f4f035d9ce25b083dc90c4c02f32a5f6cbfa160",
-  "notVerified": [
-    "Physical GPU and haptics",
-    "API 26-32 device rendering",
-    "HDR content",
-    "Personal WebDAV server"
+  "lintScope": "Full Release lint on the changed Kotlin code; final assembleRelease included updated specification assets only",
+  "testScope": "Host unit tests and same-signature release APK runtime flows; no debug APK",
+  "hdrFixtureSha256": "4691ba5c27cb92ce8a6b0c8d80ee83780f6cbce75a9805faf00409d54ab106e5",
+  "hdrGainmapDecodedOnApi35": [
+    1,
+    2,
+    4
   ],
   "runtimeChecks": [
-    "0.1.0 to 0.2.0 same-signature upgrade",
-    "Android 15 cold start",
-    "Review settings and appearance visual comparison",
-    "WebDAV empty input error feedback",
-    "Gallery thumbnail selection and reopen",
-    "Video playback and 720p/480p selection",
-    "1.5x speed and single-quality button removal",
-    "Dynamic dark settings card visibility",
-    "Liquid navigation switch",
-    "Comments included in frosted header",
-    "Cache page navigation",
-    "Final build startup and settings navigation",
-    "150% text scaling on personalization and settings",
-    "Launcher icon switches to LauncherLight",
-    "Final fresh defaults screenshot capture"
+    "0.2.0 to 0.2.1 same-signature upgrade",
+    "Feed image indices 1/2/3 open directly",
+    "Article image opens directly and returns",
+    "Source expand/return frames and normal-speed recording",
+    "Reopen during interrupted return",
+    "Gallery paging and source restoration",
+    "Catalog long-image zoom and animated GIF playback",
+    "HDR card/fullscreen/thumbnail labels",
+    "Image save picker cancellation",
+    "More menu inert on open/dismiss",
+    "Bookmark persistence over process restart and removal",
+    "Clipboard text pasted and compared",
+    "Native share chooser",
+    "Final delivery APK installed bytes match project-root APK; HDR and menu retested"
   ],
-  "crashBuffer": "No crashes recorded during the tested emulator flows",
-  "lintScope": "Full Release lint before final safe-area-only change; final assembleRelease also ran lintVitalRelease",
-  "testScope": "Host unit tests; no separate debug APK was built",
+  "notVerified": [
+    "Physical HDR luminance and GPU rendering",
+    "Physical haptics",
+    "API 26-32 devices",
+    "Personal WebDAV server; unchanged in this patch"
+  ],
+  "crashBuffer": "No crashes recorded in tested emulator flows",
+  "evidence": "gallery-fix-evidence.md",
   "installedApkSha256MatchesDelivery": true
 }

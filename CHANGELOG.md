@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1+3
+
+Synced the UI source code for Lucent UI 0.2.1+3.
+
+- Fixed source-image expand and return transitions across the feed, article and image catalog, including rapid reopening.
+- Added a real Ultra HDR sample with matching feed, gallery and thumbnail badges and gain-map-preserving image display.
+- Fixed post action menus, independent persistent bookmarks, clipboard copy and native sharing.
+
 ## 0.2.0+2
 
 Synced the UI source code for Lucent UI 0.2.0+2.

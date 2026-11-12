@@ -46,7 +46,7 @@ fun ReviewSettingsRoot(model:DemoModel,open:(String)->Unit) {
    LucentRow(if(model.str("account").isBlank())"登录账号" else "账号管理",icon=Icons.Outlined.Login,onClick={open("account")})
   }
   ReferenceGroup("关于与支持") {
-   LucentRow("关于 Lucent UI","版本 0.2.0",Icons.Outlined.Info,onClick={open("about")})
+   LucentRow("关于 Lucent UI","版本 0.2.1",Icons.Outlined.Info,onClick={open("about")})
   }
  }
 }
@@ -102,8 +102,11 @@ fun ReviewCatalog(open:(String)->Unit) {
 
 // Review PostCard geometry, metadata and action row; body is an application-owned slot.
 @Composable
-fun ReferencePost(author:String,text:String,index:Int=0,detail:Boolean=false,onOpen:()->Unit,onImage:()->Unit,onVideo:()->Unit,onReply:()->Unit,onBookmark:()->Unit) {
+fun ReferencePost(author:String,text:String,index:Int=0,detail:Boolean=false,onOpen:()->Unit,onVideo:()->Unit,onShare:()->Unit,onMore:()->Unit) {
  val colors=MaterialTheme.colorScheme
+ val media = remember { listOf(galleryItems[0], galleryItems.last(), galleryItems[2]).map { it.media() } }
+ val origins = remember { media.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(8.dp) } }
+ val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
  var liked by remember { mutableStateOf(false) }
  Surface(color=colors.surfaceContainerLowest,shape=RoundedCornerShape(22.dp),shadowElevation=if(detail)0.dp else 1.dp,
   modifier=(if(detail)Modifier else Modifier.padding(horizontal=8.dp,vertical=4.dp)).fillMaxWidth()) {
@@ -127,16 +130,18 @@ fun ReferencePost(author:String,text:String,index:Int=0,detail:Boolean=false,onO
     }
    } else if(index%3==0) {
     Row(horizontalArrangement=Arrangement.spacedBy(4.dp)) { repeat(3) { i ->
-     AsyncImage("file:///android_asset/media/landscape-$i.jpg","打开图片 ${i+1}",Modifier.weight(1f).aspectRatio(1f).clip(RoundedCornerShape(8.dp)).lucentClick(onClick=onImage),contentScale=ContentScale.Crop)
+     GalleryThumbnail(media[i], origins.getValue(i), Modifier.weight(1f).aspectRatio(1f)) {
+      openGallery?.invoke(media, i, origins)
+     }
     }}
    }
    if(!detail) {
     Spacer(Modifier.height(12.dp));ReviewDivider();Spacer(Modifier.height(4.dp))
     Row(Modifier.fillMaxWidth(),horizontalArrangement=Arrangement.SpaceAround,verticalAlignment=Alignment.CenterVertically) {
-     ReferencePostAction(Icons.Rounded.Repeat,"转发",2,colors.onSurfaceVariant,onReply)
+     ReferencePostAction(Icons.Rounded.Repeat,"转发",2,colors.onSurfaceVariant,onShare)
      ReferencePostAction(Icons.Rounded.ChatBubbleOutline,"评论",8,colors.onSurfaceVariant,onOpen)
      ReferencePostAction(if(liked)Icons.Rounded.ThumbUp else Icons.Outlined.ThumbUp,"点赞",if(liked)13 else 12,if(liked)colors.primary else colors.onSurfaceVariant){liked=!liked}
-     ReferencePostAction(Icons.Rounded.MoreHoriz,"更多",0,colors.onSurfaceVariant,onBookmark)
+     ReferencePostAction(Icons.Rounded.MoreHoriz,"更多",0,colors.onSurfaceVariant,onMore)
     }
    }
   }
@@ -147,12 +152,44 @@ fun ReferencePost(author:String,text:String,index:Int=0,detail:Boolean=false,onO
   Icon(icon,label,Modifier.size(18.dp),tint=color);Spacer(Modifier.width(5.dp));Text(if(count>0)count.toString() else label,fontSize=12.sp,color=color)
  }
 }
+private val feedAuthors = listOf("山间来信", "生活记录", "Lucent Design")
+private val feedBodies = listOf("在路上，记录一些普通又值得记住的片刻。光线、山色和远处的风。",
+ "一段短片，一次慢下来的机会。点开视频可以体验播放、画质、倍速和全屏。",
+ "写下一点想法，再看看大家的回复。正文、评论与顶栏共享同一份背景。\n这是一条本地示例动态。")
+
 @Composable fun ReviewFeed(model:DemoModel,open:(String)->Unit) {
  var refresh by remember {mutableStateOf(false)}
+ var selectedPost by remember { mutableStateOf<Int?>(null) }
+ val context = androidx.compose.ui.platform.LocalContext.current
+ fun share(index: Int) {
+  val intent = android.content.Intent(android.content.Intent.ACTION_SEND).setType("text/plain")
+   .putExtra(android.content.Intent.EXTRA_TEXT, feedAuthors[index%3] + "\n" + feedBodies[index%3])
+  runCatching { context.startActivity(android.content.Intent.createChooser(intent, "分享动态")) }
+   .onFailure { model.report("无法分享", "当前设备没有可用的分享应用。") }
+ }
  LaunchedEffect(refresh){if(refresh){kotlinx.coroutines.delay(500);refresh=false}}
  LucentRefresh(refresh,{refresh=true}) {
- LazyColumn(Modifier.fillMaxSize(),contentPadding=PaddingValues(top=LocalDemoContentTop.current+4.dp,bottom=104.dp)) {
-  items(8){i->ReferencePost(listOf("山间来信","生活记录","Lucent Design")[i%3],listOf("在路上，记录一些普通又值得记住的片刻。光线、山色和远处的风。","一段短片，一次慢下来的机会。点开视频可以体验播放、画质、倍速和全屏。","写下一点想法，再看看大家的回复。正文、评论与顶栏共享同一份背景。\n这是一条本地示例动态。")[i%3],i,onOpen={open("article")},onImage={open("images")},onVideo={open("video")},onReply={open("article")},onBookmark={model.set("bookmarks","本地示例动态");model.report("已收藏","可在阅读与内容中查看。")})}
+  LazyColumn(Modifier.fillMaxSize(),contentPadding=PaddingValues(top=LocalDemoContentTop.current+4.dp,bottom=104.dp)) {
+   items(8, key={it}) { i -> ReferencePost(feedAuthors[i%3], feedBodies[i%3], i,
+    onOpen={open("article")}, onVideo={open("video")}, onShare={share(i)}, onMore={selectedPost=i}) }
+  }
  }
+ selectedPost?.let { index ->
+  val title = "${feedAuthors[index%3]} · 动态 ${index+1}"
+  val bookmarked = model.isBookmarked(title)
+  ModalBottomSheet(onDismissRequest={selectedPost=null}) {
+   Column(Modifier.fillMaxWidth().padding(horizontal=16.dp).padding(bottom=24.dp)) {
+    Text(title, Modifier.padding(16.dp), style=MaterialTheme.typography.titleMedium)
+    LucentRow(if(bookmarked) "取消收藏" else "收藏", icon=if(bookmarked) Icons.Outlined.BookmarkRemove else Icons.Outlined.BookmarkBorder,
+     onClick={selectedPost=null;model.toggleBookmark(title)})
+    LucentRow("复制正文", icon=Icons.Outlined.ContentCopy, onClick={
+     val clipboard=context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+     clipboard.setPrimaryClip(android.content.ClipData.newPlainText(title,feedBodies[index%3]))
+     selectedPost=null
+     android.widget.Toast.makeText(context,"正文已复制",android.widget.Toast.LENGTH_SHORT).show()
+    })
+    LucentRow("分享", icon=Icons.Outlined.Share, onClick={selectedPost=null;share(index)})
+   }
+  }
  }
 }

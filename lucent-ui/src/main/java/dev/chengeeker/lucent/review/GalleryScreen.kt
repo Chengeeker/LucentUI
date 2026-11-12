@@ -6,6 +6,8 @@ import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.os.Build
 import android.widget.ImageView
+import coil.compose.SubcomposeAsyncImageContent
+import androidx.core.graphics.drawable.toBitmap
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.Animatable
@@ -49,6 +51,7 @@ import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -66,7 +69,7 @@ import kotlin.math.abs
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.isSpecified
 
-internal val LocalGalleryOpenFrom = staticCompositionLocalOf<((List<GalleryMedia>, Int, Map<Int, GalleryOrigin>) -> Unit)?> { null }
+val LocalGalleryOpenFrom = staticCompositionLocalOf<((List<GalleryMedia>, Int, Map<Int, GalleryOrigin>) -> Unit)?> { null }
 internal fun GalleryMedia.galleryPreviewUrl(): String = (if (long || (width > 0 && height.toFloat() / width > 2f)) url else preview.ifBlank { url })
     .let { if (gif) it else it }
 internal fun galleryDoubleTapScale(scale: Float, long: Boolean): Float = when {
@@ -153,8 +156,18 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                 androidx.core.view.WindowCompat.setDecorFitsSystemWindows(this, false)
                 androidx.core.view.WindowCompat.getInsetsController(this, view).apply { isAppearanceLightStatusBars = false; isAppearanceLightNavigationBars = false }
             }
+            val bars = window?.let { androidx.core.view.WindowCompat.getInsetsController(it, view) }
+            val lightStatus = bars?.isAppearanceLightStatusBars
+            val lightNavigation = bars?.isAppearanceLightNavigationBars
+            bars?.apply { isAppearanceLightStatusBars = false; isAppearanceLightNavigationBars = false }
             val status = androidx.core.view.WindowInsetsCompat.Type.statusBars()
-            onDispose { if (!inDialog && window != null) androidx.core.view.WindowCompat.getInsetsController(window, view).show(status) }
+            onDispose {
+                if (!inDialog) bars?.apply {
+                    show(status)
+                    isAppearanceLightStatusBars = lightStatus ?: false
+                    isAppearanceLightNavigationBars = lightNavigation ?: false
+                }
+            }
         }
         LaunchedEffect(window, showControls) {
             window?.let {
@@ -298,9 +311,9 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
         }
         }
     }
-    run {
+    if (sources.isEmpty()) {
         Dialog(onDismissRequest = ::close, properties = DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false)) { Content(true) }
-    }
+    } else Content(false)
 }
 
 private fun galleryRatio(media: GalleryMedia): Float = if (media.width > 0 && media.height > 0) media.width.toFloat() / media.height else 1f
@@ -357,7 +370,7 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
 
 
 data class GalleryMedia(val url: String, val preview: String = "", val width: Int = 0, val height: Int = 0,
-    val long: Boolean = false, val gif: Boolean = false, val hdr: Boolean = false)
+    val long: Boolean = false, val gif: Boolean = false, val hdr: Boolean = false, val description: String = "图片")
 
 @Composable private fun GalleryMediaImage(media: GalleryMedia, description: String, modifier: Modifier) {
     coil.compose.AsyncImage(media.url, description, modifier, contentScale = androidx.compose.ui.layout.ContentScale.Crop)
@@ -367,14 +380,37 @@ data class GalleryMedia(val url: String, val preview: String = "", val width: In
     var attempt by remember(media.url) { mutableIntStateOf(0) }
     val request = coil.request.ImageRequest.Builder(LocalContext.current).data(media.url).allowHardware(false).build()
     key(media.url, attempt) {
-        coil.compose.SubcomposeAsyncImage(request, "图片", modifier.graphicsLayer { alpha = if (showImage) 1f else 0f },
+        coil.compose.SubcomposeAsyncImage(request, media.description, modifier.graphicsLayer { alpha = if (showImage) 1f else 0f },
             contentScale = androidx.compose.ui.layout.ContentScale.Fit,
-            onSuccess = { state -> (state.result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap?.let(onBitmap) },
+            onSuccess = { state -> onBitmap(state.result.drawable.galleryBitmap()) },
+            success = { state ->
+                val bitmap = (state.result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
+                if (bitmap == null) SubcomposeAsyncImageContent()
+                else AndroidView(
+                    factory = { ImageView(it).apply { scaleType = ImageView.ScaleType.FIT_CENTER } },
+                    modifier = Modifier.fillMaxSize(),
+                    update = { it.setImageBitmap(bitmap); it.contentDescription = media.description },
+                    onRelease = { it.setImageDrawable(null) },
+                )
+            },
             loading = { Box(contentAlignment = Alignment.Center) { CircularProgressIndicator(Modifier.size(24.dp), color = Color.White) } },
             error = { Box(contentAlignment = Alignment.Center) { TextButton(onClick = hapticClick { attempt++ }) { Text("图片加载失败，点击重试", color = Color.White) } } })
     }
 }
 
-@Composable private fun HdrBadge(modifier: Modifier, description: String = "HDR 图片", compact: Boolean = false) {
-    Text("HDR", modifier.background(Color.Black.copy(alpha = .65f), RoundedCornerShape(3.dp)).padding(horizontal = 4.dp, vertical = 2.dp), color = Color.White, fontSize = if (compact) 8.sp else 10.sp)
+@Composable
+fun HdrBadge(modifier: Modifier = Modifier, description: String = "HDR 图片", compact: Boolean = false) {
+    Text("HDR", modifier.semantics { contentDescription = description }
+        .background(Color.Black.copy(alpha = .4f), RoundedCornerShape(4.dp))
+        .padding(horizontal = if (compact) 3.dp else 6.dp, vertical = if (compact) 1.dp else 2.dp),
+        color = Color.White, fontSize = if (compact) 8.sp else 10.sp, lineHeight = if (compact) 9.sp else 12.sp,
+        fontWeight = FontWeight.Normal)
+}
+
+internal fun android.graphics.drawable.Drawable.galleryBitmap(): Bitmap {
+    if (this is android.graphics.drawable.BitmapDrawable) return bitmap
+    val width = intrinsicWidth.coerceAtLeast(1)
+    val height = intrinsicHeight.coerceAtLeast(1)
+    val scale = minOf(1f, 1024f / maxOf(width, height))
+    return toBitmap((width * scale).toInt().coerceAtLeast(1), (height * scale).toInt().coerceAtLeast(1))
 }

@@ -42,6 +42,7 @@ val galleryItems =
         listOf(
             GalleryItem("file:///android_asset/media/long.jpg", "长图示例"),
             GalleryItem("file:///android_asset/media/motion.gif", "动态山峦"),
+            GalleryItem("file:///android_asset/media/hdr-lamps.jpg", "灯光 · HDR", hdr = true),
         )
 
 fun videoSources(model: DemoModel): List<VideoSource> {
@@ -69,59 +70,20 @@ fun PatternPage(page: String, model: DemoModel, open: (String) -> Unit) {
 
 @Composable
 private fun ImagesPage(model: DemoModel) {
-    var index by remember { mutableStateOf<Int?>(null) }
-    val origins = remember { galleryItems.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(24.dp) } }
-    val context = LocalContext.current
-    var export by remember { mutableStateOf<GalleryItem?>(null) }
-    val save =
-        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("image/*")) { uri
-            ->
-            val item = export
-            if (uri != null && item != null)
-                model.run("保存图片") {
-                    withContext(Dispatchers.IO) {
-                        context.assets.open(item.uri.substringAfter("android_asset/")).use { input
-                            ->
-                            context.contentResolver.openOutputStream(uri)?.use { input.copyTo(it) }
-                                ?: error("无法保存")
-                        }
-                    }
-                    "图片已保存。"
-                }
-        }
+    val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
+    val media = remember { galleryItems.map { it.media() } }
+    val origins = remember { media.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(24.dp) } }
     PageList(bottom = 24) {
-        item {
-            Text(
-                "点击打开。双击或双指缩放，左右切换，原始倍率下上下拖动退出。",
-                Modifier.padding(vertical = 20.dp),
-                style = MaterialTheme.typography.bodyLarge,
-            )
-        }
-        itemsIndexed(galleryItems) { i, item ->
-            val source = origins.getValue(i)
+        item { Text("点击原图展开，返回缩回原位。双击或双指缩放，左右切换；含长图、动图和 HDR 图片。",
+            Modifier.padding(vertical = 20.dp), style = MaterialTheme.typography.bodyLarge) }
+        itemsIndexed(media) { i, item ->
             LucentCard {
-                AsyncImage(
-                    coil.request.ImageRequest.Builder(context).data(item.uri).allowHardware(false).build(),
-                    item.description,
-                    Modifier.fillMaxWidth()
-                        .height(210.dp)
-                        .onGloballyPositioned { source.coordinates = it }
-                        .graphicsLayer { alpha = if (source.covered) 0f else 1f }
-                        .lucentClick {
-                            index = i
-                        },
-                    contentScale = ContentScale.Crop,
-                    onSuccess = { source.bitmap = (it.result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap },
-                )
-                LucentRow(item.description)
+                GalleryThumbnail(item, origins.getValue(i), Modifier.fillMaxWidth().height(210.dp)) {
+                    openGallery?.invoke(media, i, origins)
+                }
+                LucentRow(item.description, onClick = { openGallery?.invoke(media, i, origins) })
             }
         }
-    }
-    index?.let { start ->
-        LucentGallery(galleryItems, start, origins, onDismiss = { index = null }, onSave = {
-            export = it
-            save.launch(it.uri.substringAfterLast('/'))
-        })
     }
 }
 
@@ -168,7 +130,11 @@ private fun ArticlePage(model: DemoModel) {
     var refreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val filter = model.str("filter").split(',', '，').map { it.trim() }.filter { it.isNotEmpty() }
-    val bookmarked = model.str("bookmarks").contains("流动的边界")
+    val bookmarked = model.isBookmarked("流动的边界")
+    val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
+    val radius = if (model.bool("imageRound")) 24.dp else 0.dp
+    val origin = remember(radius) { dev.chengeeker.lucent.review.GalleryOrigin(radius) }
+    val articleMedia = remember { listOf(galleryItems[0].media()) }
     LaunchedEffect(Unit) { if (model.bool("history")) model.set("historyItems", "流动的边界") }
     LucentRefresh(
         refreshing,
@@ -192,17 +158,10 @@ private fun ArticlePage(model: DemoModel) {
                             if (model.bool("relativeTime")) "今天 · 设计随笔" else "2026-11-12 · 设计随笔",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                    AsyncImage(
-                        galleryItems[0].uri,
-                        "蓝色山谷",
-                        Modifier.fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                            .height(220.dp)
-                            .clip(
-                                RoundedCornerShape(if (model.bool("imageRound")) 24.dp else 0.dp)
-                            ),
-                        contentScale = ContentScale.Crop,
-                    )
+                    GalleryThumbnail(articleMedia[0], origin,
+                        Modifier.fillMaxWidth().padding(vertical = 16.dp).height(220.dp)) {
+                        openGallery?.invoke(articleMedia, 0, mapOf(0 to origin))
+                    }
                 }
             }
             items(5) { n ->
@@ -223,7 +182,7 @@ private fun ArticlePage(model: DemoModel) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     LucentAction(
                         if (bookmarked) "已收藏" else "收藏",
-                        { model.set("bookmarks", if (bookmarked) "" else "流动的边界") },
+                        { model.toggleBookmark("流动的边界") },
                         primary = bookmarked,
                     )
                     LucentAction("写评论", { editor = true }, primary = false)

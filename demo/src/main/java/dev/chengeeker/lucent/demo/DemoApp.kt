@@ -97,6 +97,7 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
  }
  val tabStates=rememberSaveableStateHolder()
  val titles=(settingRoutes+patternRoutes).associate{it.id to it.title}+mapOf("webdav" to "WebDAV云端备份与恢复","reading" to "内容样式","storage" to "存储设置","cache" to "缓存管理","notifications" to "订阅消息提醒","icons" to "自定义应用图标","refresh" to "屏幕帧率设置","controls" to "基础组件","glass" to "玻璃与动画")
+ GalleryHost(model) {
  BoxWithConstraints {
  ModalNavigationDrawer(drawerState=drawer,gesturesEnabled=routes.size==1,drawerContent={
   ModalDrawerSheet(Modifier.width(minOf(maxWidth*.62f,280.dp)),drawerContainerColor=colors.background) {
@@ -136,6 +137,7 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
     }
    }
   }
+ }
  }
  }
  }

@@ -7,7 +7,7 @@ Kotlin / kotlinx.coroutines: Copyright JetBrains s.r.o. and contributors, Apache
 Coil: Copyright Coil Contributors, Apache-2.0.
 OkHttp / Okio: Copyright Square, Inc. and contributors, Apache-2.0.
 
-Demo images, animation and audio/video fixtures were generated for Lucent UI. Dependency notices remain subject to their upstream license files.
+The landscape images, animation and audio/video fixtures were generated for Lucent UI. The unmodified Ultra HDR lamp photograph is from the Android Open Source Project platform-samples, Apache-2.0 (2023); source: https://github.com/android/platform-samples/blob/main/samples/graphics/ultrahdr/src/main/assets/gainmaps/lamps.jpg. Its license is also bundled at assets/licenses/platform-samples.txt. Dependency notices remain subject to their upstream license files.
 
 ## Review-MIT.txt
 

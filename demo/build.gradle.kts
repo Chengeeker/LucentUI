@@ -5,7 +5,7 @@ val signing = signingFile?.takeIf { it.isFile }?.let { Properties().apply { it.i
 android {
     namespace = "dev.chengeeker.lucent.demo"
     compileSdk { version = release(37) { minorApiLevel = 2 } }
-    defaultConfig { applicationId = "dev.chengeeker.lucent.demo"; minSdk = 26; targetSdk = 36; versionCode = 2; versionName = "0.2.0"; ndk { abiFilters += "arm64-v8a" } }
+    defaultConfig { applicationId = "dev.chengeeker.lucent.demo"; minSdk = 26; targetSdk = 36; versionCode = 3; versionName = "0.2.1"; ndk { abiFilters += "arm64-v8a" } }
     signingConfigs { if (signing != null) create("release") { storeFile = signingFile!!.parentFile.resolve(signing.getProperty("storeFile")); storePassword = signing.getProperty("storePassword"); keyAlias = signing.getProperty("keyAlias"); keyPassword = signing.getProperty("keyPassword") } }
     buildTypes { release { signingConfig = signingConfigs.findByName("release"); isMinifyEnabled = true; isShrinkResources = true; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }

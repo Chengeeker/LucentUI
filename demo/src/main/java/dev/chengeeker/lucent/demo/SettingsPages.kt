@@ -757,7 +757,7 @@ private fun AboutPage() {
         PageList(bottom = 24) {
             item {
                 LucentSection("Lucent UI") {
-                    LucentRow("Material 3 · Glass & Motion", "0.2.0 (2) · Review 视觉基准与功能示例")
+                    LucentRow("Material 3 · Glass & Motion", "0.2.1 (3) · Review 视觉基准与功能示例")
                     LucentRow("设计原则", "清晰内容、明确层级、克制反馈、可解释的动效。")
                     LucentRow(
                         "开源许可",
