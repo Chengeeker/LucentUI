@@ -13,6 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -37,7 +44,7 @@ private fun Choice(model: DemoModel, key: String, title: String, options: List<S
     var show by remember { mutableStateOf(false) }
     LucentRow(title, model.str(key), onClick = { show = true })
     if (show)
-        AlertDialog(
+        dev.chengeeker.lucent.review.ReviewAlertDialog(
             onDismissRequest = { show = false },
             title = { Text(title) },
             text = {
@@ -61,10 +68,11 @@ private fun Choice(model: DemoModel, key: String, title: String, options: List<S
 @Composable
 fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
     when (page) {
-        "appearance" -> Appearance(model)
+        "appearance" -> ReviewAppearance(model, open)
         "webdav",
         "local" -> BackupPage(page == "webdav", model)
         "storage" -> StoragePage(model)
+        "cache" -> CacheSettingsPage(model)
         "notifications" -> NotificationPage(model)
         "network" -> NetworkPage(model)
         "account" -> AccountPage(model)
@@ -182,84 +190,8 @@ fun SettingsPage(page: String, model: DemoModel, open: (String) -> Unit) {
 }
 
 @Composable
-private fun Appearance(model: DemoModel) {
-    PageList(bottom = 24) {
-        item {
-            Spacer(Modifier.height(24.dp))
-            LucentAppearanceModes(
-                listOf("system", "light", "dark").indexOf(model.str("mode")),
-                { model.set("mode", listOf("system", "light", "dark")[it]) },
-                model.bool("black"),
-                { model.set("black", it) },
-            )
-        }
-        item {
-            Spacer(Modifier.height(16.dp))
-            LucentAppearancePalette(
-                model.bool("dynamic"),
-                { model.set("dynamic", it) },
-                model.number("seed").toInt(),
-                { model.set("seed", it) },
-            )
-        }
-        item {
-            Spacer(Modifier.height(16.dp))
-            LucentFontSizeSetting(model.number("font").toFloat()) {
-                model.set("font", it.toDouble())
-            }
-        }
-        item {
-            Spacer(Modifier.height(16.dp))
-            LucentFontWeightSetting(
-                model.bool("weightCustom"),
-                model.number("weight").toInt() * 100,
-                "Lucent UI",
-                hapticsEnabled = model.bool("haptics"),
-                onReset = {
-                    model.set("weight", 0)
-                    model.set("weightCustom", false)
-                },
-                onCommit = {
-                    model.set("weight", it / 100)
-                    model.set("weightCustom", true)
-                },
-            )
-        }
-        item {
-            LucentSection("底部导航") {
-                LucentAppearanceToggle(
-                    "使用悬浮底栏",
-                    "dock",
-                    model.bool("floating"),
-                    change = { model.set("floating", it) },
-                )
-                LucentAppearanceToggle(
-                    "使用液态玻璃效果",
-                    "blur_on",
-                    model.bool("glass"),
-                    change = { model.set("glass", it) },
-                )
-                LucentGlassChoice(model.bool("translucent")) { model.set("translucent", it) }
-            }
-        }
-        item {
-            LucentSection("交互与显示") {
-                Toggle(model, "motion", "交互动画", "关闭后取消位移与弹性动画；同时尊重系统动画设置。")
-                LucentAppearanceToggle(
-                    "触感与震动反馈",
-                    "vibration",
-                    model.bool("haptics"),
-                    change = { model.set("haptics", it) },
-                )
-                Choice(model, "refresh", "屏幕帧率设置", listOf("系统默认", "60 Hz", "90 Hz", "120 Hz"))
-            }
-        }
-    }
-}
-
-@Composable
 fun Confirm(title: String, body: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
-    AlertDialog(
+    dev.chengeeker.lucent.review.ReviewAlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = { Text(body) },
@@ -279,6 +211,7 @@ private fun BackupPage(webdav: Boolean, model: DemoModel) {
     LaunchedEffect(savedCredential) {
         if (savedCredential.isFailure) model.report("连接密码无法读取", "原有数据已保留，请重新输入授权密码后保存连接。")
     }
+    var directory by remember(model.str("webdavDirectory")) { mutableStateOf(model.str("webdavDirectory")) }
     var full by remember { mutableStateOf(false) }
     var password by remember { mutableStateOf("") }
     var confirmation by remember { mutableStateOf("") }
@@ -317,128 +250,56 @@ private fun BackupPage(webdav: Boolean, model: DemoModel) {
     LaunchedEffect(pendingBytes, model.result) {
         if (pendingBytes != null && model.result == null) confirmation = "import"
     }
-    PageList(bottom = 24) {
-        if (webdav)
-            item {
-                LucentSection("连接信息") {
-                    OutlinedTextField(
-                        url,
-                        { url = it },
-                        Modifier.fillMaxWidth().padding(16.dp),
-                        label = { Text("服务器目录 URL") },
-                        keyboardOptions =
-                            androidx.compose.foundation.text.KeyboardOptions(
-                                keyboardType = androidx.compose.ui.text.input.KeyboardType.Uri,
-                                autoCorrectEnabled = false,
-                            ),
-                        placeholder = { Text("https://example.com/dav/") },
-                        singleLine = true,
-                    )
-                    OutlinedTextField(
-                        user,
-                        { user = it },
-                        Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                        label = { Text("账号") },
-                        singleLine = true,
-                    )
-                    OutlinedTextField(
-                        authPassword,
-                        { authPassword = it },
-                        Modifier.fillMaxWidth().padding(16.dp),
-                        label = { Text("授权密码") },
-                        singleLine = true,
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions =
-                            androidx.compose.foundation.text.KeyboardOptions(
-                                keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
-                                autoCorrectEnabled = false,
-                            ),
-                    )
-                    LucentAction(
-                        "保存连接",
-                        {
-                            keyboard?.hide()
-                            model.saveWebDav(url, user, authPassword)
-                        },
-                        Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                        enabled =
-                            model.busy == null &&
-                                (savedCredential.isSuccess || authPassword.isNotEmpty()),
-                    )
-                    LucentRow(
-                        "测试已保存的连接",
-                        onClick = {
-                            keyboard?.hide()
-                            model.testDav()
-                        },
-                        enabled = model.str("webdavUrl").isNotBlank(),
-                    )
-                }
-            }
-        item {
-            LucentSection("备份范围") {
-                LucentRow(
-                    "安全备份",
-                    "设置、草稿和收藏；排除账号及连接凭据。",
-                    onClick = { full = false },
-                    trailing = { RadioButton(!full, null) },
-                )
-                LucentRow(
-                    "加密全量备份",
-                    "另含演示账号与 WebDAV 连接凭据。使用独立密码加密，可换机恢复。",
-                    onClick = { full = true },
-                    trailing = { RadioButton(full, null) },
-                )
-                OutlinedTextField(
-                    password,
-                    { password = it },
-                    Modifier.fillMaxWidth().padding(16.dp),
-                    label = { Text(if (full) "备份密码（至少 8 字符）" else "恢复加密备份时填写密码") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions =
-                        androidx.compose.foundation.text.KeyboardOptions(
-                            keyboardType = androidx.compose.ui.text.input.KeyboardType.Password,
-                            autoCorrectEnabled = false,
-                        ),
-                    singleLine = true,
-                )
-                Text(
-                    "忘记备份密码无法恢复全量文件。不会备份缓存、安装包或旧设备的存储授权。",
-                    Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                )
+    val colors = MaterialTheme.colorScheme
+    val ready = model.busy == null && (savedCredential.isSuccess || authPassword.isNotEmpty())
+    Column(Modifier.fillMaxSize().imePadding().verticalScroll(rememberScrollState()).padding(start = 16.dp, end = 16.dp, top = LocalDemoContentTop.current + 14.dp, bottom = 24.dp)) {
+        Surface(shape = RoundedCornerShape(16.dp), color = colors.primaryContainer.copy(alpha = .4f)) {
+            Row(Modifier.fillMaxWidth().padding(14.dp)) {
+                Icon(Icons.Outlined.CloudSync, null, tint = colors.primary)
+                Spacer(Modifier.width(12.dp))
+                Column { Text("备份内容", style = MaterialTheme.typography.titleMedium, color = colors.primary, fontWeight = FontWeight.Bold); Spacer(Modifier.height(4.dp)); Text("备份设置、草稿、收藏和浏览历史，不含图片和视频缓存。", style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant) }
             }
         }
-        item {
-            LucentSection(if (webdav) "云端操作" else "文件操作") {
-                LucentRow(
-                    if (webdav) "上传到云端" else "导出到文件",
-                    if (webdav) "将覆盖同目录的 lucent-ui-backup.json" else "使用系统文件选择器保存。",
-                    enabled =
-                        (!full || password.length >= 8) &&
-                            (!webdav || model.str("webdavUrl").isNotBlank()),
-                    onClick = {
-                        keyboard?.hide()
-                        confirmation = "export"
-                    },
-                )
-                LucentRow(
-                    if (webdav) "从云端恢复" else "导入备份文件",
-                    "校验通过后替换当前 Demo 数据。",
-                    enabled = !webdav || model.str("webdavUrl").isNotBlank(),
-                    onClick = {
-                        keyboard?.hide()
-                        if (webdav) confirmation = "restore"
-                        else
-                            importer.launch(
-                                arrayOf(
-                                    "application/json",
-                                    "text/plain",
-                                    "application/octet-stream",
-                                )
-                            )
-                    },
-                )
+        Spacer(Modifier.height(16.dp))
+        Surface(shape = RoundedCornerShape(24.dp), color = colors.surfaceContainerLowest) {
+            Column(Modifier.selectableGroup()) {
+                listOf(false, true).forEach { selected ->
+                    Row(Modifier.fillMaxWidth().selectable(full == selected, interactionSource = null, indication = null, role = androidx.compose.ui.semantics.Role.RadioButton, onClick = dev.chengeeker.lucent.review.hapticClick { full = selected }).padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text(if(selected) "加密全量备份" else "全量安全备份", style = MaterialTheme.typography.titleMedium)
+                            Text(if(selected) "含演示账号及 WebDAV 密码" else "不含账号及 WebDAV 密码", style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+                            if(selected) Text("使用独立密码加密，请妥善保管", style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+                        }
+                        Spacer(Modifier.width(12.dp)); RadioButton(full == selected, null, Modifier.size(24.dp))
+                    }
+                }
+            }
+        }
+        Spacer(Modifier.height(16.dp))
+        if(webdav) {
+            Surface(shape = RoundedCornerShape(24.dp), color = colors.surfaceContainerLowest) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text("WebDAV 服务器配置", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                    OutlinedTextField(url, { url = it }, Modifier.fillMaxWidth(), label = { Text("服务器 URL") }, placeholder = { Text("https://example.com/dav/") }, leadingIcon = { Icon(Icons.Outlined.Link, null) }, singleLine = true)
+                    OutlinedTextField(user, { user = it }, Modifier.fillMaxWidth(), label = { Text("账号 / 邮箱") }, leadingIcon = { Icon(Icons.Outlined.PersonOutline, null) }, singleLine = true)
+                    OutlinedTextField(authPassword, { authPassword = it }, Modifier.fillMaxWidth(), label = { Text("应用密码 / Token") }, leadingIcon = { Icon(Icons.Outlined.Lock, null) }, singleLine = true, visualTransformation = PasswordVisualTransformation(), keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Password, autoCorrectEnabled = false))
+                    OutlinedTextField(directory, { directory = it }, Modifier.fillMaxWidth(), label = { Text("备份文件夹名称（可留空）") }, leadingIcon = { Icon(Icons.Outlined.Folder, null) }, singleLine = true)
+                    OutlinedButton(onClick = dev.chengeeker.lucent.review.hapticClick { keyboard?.hide(); model.testDav(url, user, authPassword, directory) }, enabled = ready, modifier = Modifier.fillMaxWidth()) {
+                        Icon(Icons.Outlined.WifiTethering, null, Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text("测试服务器连接")
+                    }
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+        }
+        Surface(shape = RoundedCornerShape(24.dp), color = colors.surfaceContainerLowest) {
+            Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(if(webdav) "云端备份与还原操作" else "本地备份与还原操作", fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
+                OutlinedTextField(password, { password = it }, Modifier.fillMaxWidth(), label = { Text(if(full) "备份密码（至少 8 字符）" else "恢复加密备份时填写密码") }, singleLine = true, visualTransformation = PasswordVisualTransformation(), keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Password, autoCorrectEnabled = false))
+                if(full) Text("忘记密码无法恢复全量文件，请妥善保管文件和密码。", style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(onClick = dev.chengeeker.lucent.review.hapticClick { keyboard?.hide(); confirmation = "export" }, enabled = ready && (!full || password.length >= 8) && (!webdav || url.isNotBlank()), modifier = Modifier.weight(1f), contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)) { Icon(Icons.Outlined.CloudUpload, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)); Text(if(webdav) "上传备份" else "导出备份") }
+                    FilledTonalButton(onClick = dev.chengeeker.lucent.review.hapticClick { keyboard?.hide(); if(webdav) confirmation = "restore" else importer.launch(arrayOf("application/json", "text/plain", "application/octet-stream")) }, enabled = ready && (!webdav || url.isNotBlank()), modifier = Modifier.weight(1f), contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp)) { Icon(Icons.Outlined.CloudDownload, null, Modifier.size(18.dp)); Spacer(Modifier.width(6.dp)); Text(if(webdav) "下载还原" else "导入备份") }
+                }
             }
         }
     }
@@ -457,9 +318,9 @@ private fun BackupPage(webdav: Boolean, model: DemoModel) {
             confirmation = ""
             when (action) {
                 "export" ->
-                    if (webdav) model.upload(full, password)
+                    if (webdav) model.upload(full, password, url, user, authPassword, directory)
                     else exporter.launch("LucentUI-backup.json")
-                "restore" -> model.download(password)
+                "restore" -> model.download(password, url, user, authPassword, directory)
                 "import" -> {
                     val bytes = pendingBytes
                     pendingBytes = null
@@ -482,13 +343,10 @@ internal fun java.io.InputStream.readBytesLimited(max: Int): ByteArray {
 }
 
 @Composable
-private fun StoragePage(model: DemoModel) {
+private fun StoragePage(model: DemoModel, cacheOnly: Boolean = false) {
     val context = LocalContext.current
-    var bytes by remember {
-        mutableLongStateOf(
-            context.cacheDir.walkTopDown().filter { it.isFile }.sumOf { it.length() }
-        )
-    }
+    var bytes by remember { mutableLongStateOf(0) }
+    LaunchedEffect(Unit) { bytes = withContext(Dispatchers.IO) { context.cacheDir.walkTopDown().filter { it.isFile }.sumOf { it.length() } } }
     var progress by remember { mutableFloatStateOf(0f) }
     var clear by remember { mutableStateOf(false) }
     val choose =
@@ -505,7 +363,7 @@ private fun StoragePage(model: DemoModel) {
                     .onFailure { model.report("选择失败", "未获得目录写入权限，请重新选择。") }
         }
     PageList(bottom = 24) {
-        item {
+        if (!cacheOnly) item {
             LucentSection("存储位置") {
                 LucentRow(
                     "图片与视频目录",
@@ -518,7 +376,7 @@ private fun StoragePage(model: DemoModel) {
                 Choice(model, "downloadNaming", "文件命名", listOf("时间戳", "示例标题"))
             }
         }
-        item {
+        if (!cacheOnly) item {
             LucentSection("任务反馈") {
                 LucentRow(
                     "保存离线样片",
@@ -899,7 +757,7 @@ private fun AboutPage() {
         PageList(bottom = 24) {
             item {
                 LucentSection("Lucent UI") {
-                    LucentRow("Material 3 · Glass & Motion", "0.1.0 (1) · 可复用 Compose 组件与功能示例")
+                    LucentRow("Material 3 · Glass & Motion", "0.2.0 (2) · Review 视觉基准与功能示例")
                     LucentRow("设计原则", "清晰内容、明确层级、克制反馈、可解释的动效。")
                     LucentRow(
                         "开源许可",
@@ -916,4 +774,44 @@ private fun AboutPage() {
                 }
             }
         }
+}
+
+@Composable private fun CacheSettingsPage(model: DemoModel) {
+    val context = LocalContext.current
+    val colors = MaterialTheme.colorScheme
+    var bytes by remember { mutableLongStateOf(0) }
+    var loading by remember { mutableStateOf(true) }
+    var confirm by remember { mutableStateOf(false) }
+    var revision by remember { mutableIntStateOf(0) }
+    LaunchedEffect(revision) {
+        loading = true
+        try { bytes = withContext(Dispatchers.IO) { context.cacheDir.walkTopDown().filter { it.isFile }.sumOf { it.length() } } }
+        finally { loading = false }
+    }
+    Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(start=16.dp,end=16.dp,top=LocalDemoContentTop.current+12.dp,bottom=32.dp)) {
+        LucentCard {
+            Column(Modifier.fillMaxWidth().padding(horizontal=20.dp,vertical=24.dp),horizontalAlignment=Alignment.CenterHorizontally) {
+                Surface(Modifier.size(56.dp),shape=androidx.compose.foundation.shape.CircleShape,color=colors.primaryContainer) { Box(contentAlignment=Alignment.Center){ Icon(Icons.Outlined.CleaningServices,null,Modifier.size(30.dp),tint=colors.onPrimaryContainer) } }
+                Spacer(Modifier.height(16.dp))
+                if(loading) CircularProgressIndicator(Modifier.size(24.dp),strokeWidth=2.5.dp) else Text("${bytes/1024} KiB",style=MaterialTheme.typography.headlineMedium,fontWeight=FontWeight.Bold)
+                Spacer(Modifier.height(4.dp)); Text("可管理的 Demo 临时缓存",color=colors.onSurfaceVariant)
+                Spacer(Modifier.height(8.dp)); Text("不包含草稿、设置及已导出文件",style=MaterialTheme.typography.bodySmall,color=colors.onSurfaceVariant)
+            }
+        }
+        Spacer(Modifier.height(16.dp))
+        LucentCard { Button(onClick=dev.chengeeker.lucent.review.hapticClick{confirm=true},enabled=!loading&&model.busy==null,modifier=Modifier.padding(16.dp).fillMaxWidth().height(48.dp),shape=RoundedCornerShape(12.dp)){Icon(Icons.Outlined.DeleteSweep,null);Spacer(Modifier.width(8.dp));Text("清理临时缓存")} }
+        Spacer(Modifier.height(24.dp));Text("自动清理规则",Modifier.padding(horizontal=16.dp),style=MaterialTheme.typography.titleMedium,fontWeight=FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        LucentCard { Choice(model,"cacheLimit","启动时自动清理阈值",listOf("关闭","16 MiB","64 MiB","256 MiB")) }
+        Spacer(Modifier.height(24.dp))
+        LucentCard { Text("仅清理本应用的临时缓存；已保存的图片、视频、设置、备份与演示账号资料会保留。",Modifier.padding(16.dp),color=colors.onSurfaceVariant) }
+        Spacer(Modifier.height(16.dp));TextButton(onClick=dev.chengeeker.lucent.review.hapticClick{revision++},modifier=Modifier.align(Alignment.CenterHorizontally)){Icon(Icons.Outlined.Refresh,null);Text("刷新缓存占用")}
+    }
+    if(confirm) Confirm("清理临时缓存？","不会删除已保存的媒体及个人设置。",{confirm=false}) {
+        confirm=false
+        model.run("清理缓存") {
+            withContext(Dispatchers.IO) { context.cacheDir.listFiles()?.forEach { check(it.deleteRecursively()) { "缓存文件正在使用，请稍后重试" } } }
+            revision++; "已清理 Demo 临时缓存。"
+        }
+    }
 }

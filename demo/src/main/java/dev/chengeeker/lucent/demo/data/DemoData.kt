@@ -30,15 +30,15 @@ object DemoDefaults {
     val values =
         linkedMapOf<String, Any>(
             "mode" to "system",
-            "dynamic" to true,
+            "dynamic" to false,
             "seed" to 0,
             "black" to false,
             "font" to 1.0,
             "weight" to 0,
             "weightCustom" to false,
             "floating" to true,
-            "glass" to true,
-            "translucent" to true,
+            "glass" to false,
+            "translucent" to false,
             "motion" to true,
             "haptics" to true,
             "refresh" to "系统默认",
@@ -61,6 +61,7 @@ object DemoDefaults {
             "networkTimeout" to "30",
             "webdavUrl" to "",
             "webdavUser" to "",
+            "webdavDirectory" to "",
             "account" to "",
             "draft" to "",
             "bookmarks" to "",
@@ -118,6 +119,7 @@ object DemoDefaults {
         require(out.getString("downloadRate") in setOf("0", "128", "512", "2048"))
         require(out.getString("bodySpacing") in setOf("1.3", "1.5", "1.8"))
         require(out.getString("lyricsSize") in setOf("18", "22", "26", "30"))
+        validateDavDirectory(out.getString("webdavDirectory"))
         return out
     }
 }
@@ -139,7 +141,7 @@ object BackupCodec {
             body
                 .getJSONObject("settings")
                 .put("account", "")
-                .put("webdavUser", "")
+                .put("webdavUser", "").put("webdavDirectory", "")
                 .put("webdavUrl", "")
                 .put("downloadTree", "")
         else {
@@ -185,7 +187,7 @@ object BackupCodec {
         val settings = DemoDefaults.validate(obj.getJSONObject("settings"))
         if (!encrypted) {
             require(!obj.has("secret")) { "安全备份不能包含明文凭据" }
-            settings.put("account", "").put("webdavUrl", "").put("webdavUser", "")
+            settings.put("account", "").put("webdavUrl", "").put("webdavUser", "").put("webdavDirectory", "")
         }
         require(!obj.has("secret") || obj.get("secret") is String)
         // SAF grants belong to the old installation and must be selected again on this device.
@@ -415,27 +417,16 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun saveWebDav(url: String, user: String, password: String) =
-        run("保存连接") {
-            val target = url.trim().toHttpUrl()
-            require(
-                target.isHttps &&
-                    target.username.isEmpty() &&
-                    target.password.isEmpty() &&
-                    target.query == null &&
-                    target.fragment == null
-            )
-            mutex.withLock {
-                val next = JSONObject(document.toString())
-                next
-                    .getJSONObject("settings")
-                    .put("webdavUrl", target.toString())
-                    .put("webdavUser", user)
-                next.put("secret", withContext(Dispatchers.IO) { secrets.encrypt(password) })
-                commit(next)
-            }
-            "连接信息已加密保存在本机。"
+    private suspend fun saveWebDav(url: String, user: String, password: String, directory: String) {
+        val target = davBaseUrl(url, "")
+        validateDavDirectory(directory)
+        mutex.withLock {
+            val next = JSONObject(document.toString())
+            next.getJSONObject("settings").put("webdavUrl", target.toString()).put("webdavUser", user).put("webdavDirectory", directory.trim())
+            next.put("secret", withContext(Dispatchers.IO) { secrets.encrypt(password) })
+            commit(next)
         }
+    }
 
     fun savedPassword() = secrets.decrypt(document.optString("secret"))
 
@@ -485,37 +476,36 @@ class DemoModel(app: Application) : AndroidViewModel(app) {
 
     private fun transport() = WebDavTransport(httpClient(), BackupCodec.LIMIT.toLong())
 
-    private fun base() =
-        str("webdavUrl")
-            .toHttpUrl()
-            .newBuilder()
-            .apply { if (!str("webdavUrl").endsWith('/')) addPathSegment("") }
-            .build()
-
+    private fun base() = davBaseUrl(str("webdavUrl"), str("webdavDirectory"))
     private fun fileUrl() = base().newBuilder().addPathSegment("lucent-ui-backup.json").build()
-
     private fun auth() = Credentials.basic(str("webdavUser"), savedPassword())
 
-    fun testDav() =
-        run("连接测试") {
-            transport().request(base(), "PROPFIND", auth()).requireStatus("连接", setOf(200, 207))
-            "服务器已确认目录可以访问。"
-        }
+    private suspend fun ensureDirectory() {
+        if (str("webdavDirectory").isBlank()) return
+        val response = transport().request(base(), "PROPFIND", auth())
+        if (response.code == 404) transport().request(base(), "MKCOL", auth()).requireStatus("创建备份目录", setOf(201, 405))
+        else response.requireStatus("访问备份目录", setOf(200, 207))
+    }
 
-    fun upload(full: Boolean, password: String) =
-        run("上传备份") {
-            transport()
-                .request(fileUrl(), "PUT", auth(), backup(full, password))
-                .requireStatus("上传", setOf(200, 201, 204))
-            "服务器已确认写入 lucent-ui-backup.json。"
-        }
+    fun testDav(url: String, user: String, credential: String, directory: String) = run("连接测试") {
+        saveWebDav(url, user, credential, directory)
+        ensureDirectory()
+        transport().request(base(), "PROPFIND", auth()).requireStatus("连接", setOf(200, 207))
+        "服务器已确认目录可以访问，配置已加密保存在本机。"
+    }
 
-    fun download(password: String) =
-        run("恢复备份") {
-            val response =
-                transport().request(fileUrl(), "GET", auth()).requireStatus("下载", setOf(200))
-            restore(response.bytes, password)
-        }
+    fun upload(full: Boolean, password: String, url: String, user: String, credential: String, directory: String) = run("上传备份") {
+        saveWebDav(url, user, credential, directory)
+        ensureDirectory()
+        transport().request(fileUrl(), "PUT", auth(), backup(full, password)).requireStatus("上传", setOf(200, 201, 204))
+        "服务器已确认写入 lucent-ui-backup.json。"
+    }
+
+    fun download(password: String, url: String, user: String, credential: String, directory: String) = run("恢复备份") {
+        saveWebDav(url, user, credential, directory)
+        val response = transport().request(fileUrl(), "GET", auth()).requireStatus("下载", setOf(200))
+        restore(response.bytes, password)
+    }
 
     fun reset() =
         run("重置 Demo") {

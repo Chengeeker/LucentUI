@@ -1,10 +1,13 @@
 package dev.chengeeker.lucent
+import dev.chengeeker.lucent.review.*
+import androidx.compose.material.icons.outlined.*
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.*
@@ -21,175 +24,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
 @Composable
-fun Modifier.lucentClick(
-    enabled: Boolean = true,
-    role: Role = Role.Button,
-    onClick: () -> Unit,
-): Modifier {
-    val style = LocalLucentStyle.current
-    val haptic = LocalHapticFeedback.current
-    return clickable(
-        remember { MutableInteractionSource() },
-        null,
-        enabled = enabled,
-        role = role,
-    ) {
-        if (style.haptics) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-        onClick()
-    }
-}
+fun Modifier.lucentClick(enabled:Boolean=true,role:Role?=null,onClick:()->Unit):Modifier = reviewClickable(enabled=enabled,role=role,onClick=onClick)
 
 @Composable
-fun LucentCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    Column(
-        modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.cardColor()),
-        content = content,
-    )
+fun LucentCard(modifier:Modifier=Modifier,content:@Composable ColumnScope.()->Unit) {
+ Box(modifier.fillMaxWidth()) { SettingsCard(content) }
 }
-
 @Composable
-fun LucentSection(title: String, content: @Composable ColumnScope.() -> Unit) {
-    Column(Modifier.fillMaxWidth()) {
-        Text(
-            title,
-            Modifier.padding(start = 16.dp, top = 24.dp, bottom = 12.dp),
-            color = MaterialTheme.colorScheme.primary,
-            style = MaterialTheme.typography.titleSmall,
-        )
-        LucentCard(content = content)
-    }
+fun LucentSection(title:String,content:@Composable ColumnScope.()->Unit) { SettingsSection(title,content) }
+@Composable
+fun LucentRow(title:String,subtitle:String?=null,icon:ImageVector?=null,enabled:Boolean=true,onClick:(()->Unit)?=null,trailing:(@Composable ()->Unit)?=null) {
+ val colors=MaterialTheme.colorScheme
+ SettingsTile(headlineContent={Text(title,fontSize=15.sp,lineHeight=20.25.sp,color=colors.onSurface.copy(alpha=if(enabled)1f else .38f))},
+ supportingContent=subtitle?.takeIf{it.isNotBlank()}?.let { {Text(it,fontSize=12.5.sp,lineHeight=17.5.sp)} },
+ leadingContent=icon?.let { {Icon(it,null,tint=colors.onSurfaceVariant)} },
+ trailingContent=trailing ?: onClick?.let { {Icon(Icons.Outlined.ChevronRight,null,tint=colors.onSurfaceVariant)} },
+ modifier=if(onClick!=null) Modifier.lucentClick(enabled,onClick=onClick) else Modifier)
 }
-
 @Composable
-fun LucentRow(
-    title: String,
-    subtitle: String? = null,
-    icon: ImageVector? = null,
-    enabled: Boolean = true,
-    onClick: (() -> Unit)? = null,
-    trailing: (@Composable () -> Unit)? = null,
-) {
-    val click = if (onClick != null) Modifier.lucentClick(enabled, onClick = onClick) else Modifier
-    Row(
-        Modifier.fillMaxWidth()
-            .then(click)
-            .heightIn(min = if (subtitle == null) 56.dp else 72.dp)
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        if (icon != null) {
-            Icon(icon, null, Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
-            Spacer(Modifier.width(16.dp))
-        }
-        Column(Modifier.weight(1f)) {
-            Text(
-                title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight =
-                    FontWeight(
-                        (600 +
-                                (if (LocalLucentStyle.current.customWeight)
-                                    LocalLucentStyle.current.weight * 100
-                                else 0))
-                            .coerceIn(100, 900)
-                    ),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = if (enabled) 1f else .38f),
-            )
-            if (subtitle != null)
-                Text(
-                    subtitle,
-                    Modifier.padding(top = 4.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-        }
-        if (trailing != null) {
-            Spacer(Modifier.width(12.dp))
-            trailing()
-        } else if (onClick != null) Icon(Icons.AutoMirrored.Rounded.KeyboardArrowRight, null)
-    }
+fun LucentToggle(title:String,value:Boolean,onChange:(Boolean)->Unit,subtitle:String?=null,enabled:Boolean=true) {
+ SettingsTile(headlineContent={Text(title,fontSize=16.sp,fontWeight=reviewWeight(FontWeight.SemiBold))},
+ supportingContent=subtitle?.takeIf{it.isNotBlank()}?.let{{Text(it,fontSize=14.sp,lineHeight=19.6.sp)}},
+ trailingContent={Switch(value,null,modifier=Modifier.padding(horizontal=4.dp),enabled=enabled)},
+ modifier=Modifier.reviewToggleable(value,enabled,onChange).padding(vertical=3.dp))
 }
-
 @Composable
-fun LucentToggle(
-    title: String,
-    value: Boolean,
-    onChange: (Boolean) -> Unit,
-    subtitle: String? = null,
-    enabled: Boolean = true,
-) {
-    Row(
-        Modifier.fillMaxWidth()
-            .lucentClick(enabled, Role.Switch) { onChange(!value) }
-            .semantics {
-                stateDescription = if (value) "已开启" else "已关闭"
-                toggleableState =
-                    if (value) androidx.compose.ui.state.ToggleableState.On
-                    else androidx.compose.ui.state.ToggleableState.Off
-            }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(Modifier.weight(1f)) {
-            Text(
-                title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight =
-                    FontWeight(
-                        (600 +
-                                (if (LocalLucentStyle.current.customWeight)
-                                    LocalLucentStyle.current.weight * 100
-                                else 0))
-                            .coerceIn(100, 900)
-                    ),
-            )
-            if (subtitle != null)
-                Text(
-                    subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-        }
-        Spacer(Modifier.width(12.dp))
-        Switch(value, onCheckedChange = null, enabled = enabled)
-    }
-}
-
-@Composable
-fun LucentAction(
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    primary: Boolean = true,
-    icon: ImageVector? = null,
-) {
-    val c = MaterialTheme.colorScheme
-    Row(
-        modifier
-            .heightIn(min = 48.dp)
-            .clip(CircleShape)
-            .background(
-                if (!enabled) c.onSurface.copy(alpha = .12f)
-                else if (primary) c.primary else c.secondaryContainer
-            )
-            .lucentClick(enabled, onClick = onClick)
-            .padding(horizontal = 20.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        val color =
-            if (!enabled) c.onSurface.copy(alpha = .38f)
-            else if (primary) c.onPrimary else c.onSecondaryContainer
-        if (icon != null) {
-            Icon(icon, null, Modifier.size(20.dp), tint = color)
-            Spacer(Modifier.width(8.dp))
-        }
-        Text(text, color = color, style = MaterialTheme.typography.labelLarge)
-    }
+fun LucentAction(text:String,onClick:()->Unit,modifier:Modifier=Modifier,enabled:Boolean=true,primary:Boolean=true,icon:ImageVector?=null) {
+ val click=hapticClick(onClick)
+ val body:@Composable RowScope.()->Unit={ if(icon!=null){Icon(icon,null,Modifier.size(18.dp));Spacer(Modifier.width(8.dp))};Text(text) }
+ if(primary) Button(onClick=click,modifier=modifier,enabled=enabled,content=body)
+ else TextButton(onClick=click,modifier=modifier,enabled=enabled,content=body)
 }
 
 @Composable
@@ -209,42 +73,19 @@ fun LucentIcon(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LucentHeader(
-    title: String,
-    onBack: (() -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {},
-) {
-    Column(Modifier.fillMaxWidth().frostedBackdrop(MaterialTheme.colorScheme.background)) {
-        Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
-        Row(
-            Modifier.fillMaxWidth().heightIn(min = 64.dp).padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (onBack != null)
-                LucentIcon(Icons.AutoMirrored.Rounded.ArrowBack, "返回", onClick = onBack)
-            else Spacer(Modifier.width(8.dp))
-            Text(
-                title,
-                Modifier.weight(1f).padding(horizontal = 8.dp),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight =
-                    FontWeight(
-                        (600 +
-                                (if (LocalLucentStyle.current.customWeight)
-                                    LocalLucentStyle.current.weight * 100
-                                else 0))
-                            .coerceIn(100, 900)
-                    ),
-            )
-            actions()
-        }
-    }
+fun LucentHeader(title:String,onBack:(()->Unit)?=null,actions:@Composable RowScope.()->Unit={}) {
+ Box(Modifier.frostedBackdrop(MaterialTheme.colorScheme.background)) {
+ TopAppBar(title={Text(title,Modifier.padding(start=16.dp),fontSize=18.sp,fontWeight=reviewWeight(FontWeight.Bold))},
+ navigationIcon={if(onBack!=null)IconButton(onClick=hapticClick(onBack)){Icon(Icons.AutoMirrored.Rounded.ArrowBack,"返回")}},
+ actions=actions,expandedHeight=56.dp,colors=TopAppBarDefaults.topAppBarColors(containerColor=Color.Transparent))
+ }
 }
 
 @Composable
 fun LucentResult(title: String, message: String, onDismiss: () -> Unit) {
-    AlertDialog(
+    ReviewAlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(title) },
         text = { Text(message) },
@@ -323,7 +164,7 @@ fun LucentGlassChoice(translucent: Boolean, onSelect: (Boolean) -> Unit) {
         onClick = { open = true },
     )
     if (open)
-        AlertDialog(
+        ReviewAlertDialog(
             onDismissRequest = { open = false },
             title = { Text("底栏玻璃样式") },
             text = {

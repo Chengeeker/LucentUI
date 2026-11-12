@@ -1,36 +1,19 @@
-# 接入与扩展
+# 接入与构建
 
-工程根目录为 Compose 多模块项目。`:lucent-ui` 是组件库；`:demo` 是可运行参考与设置功能实现。无平台账号/业务协议依赖的组件优先放入库，安全存储和业务数据留在应用层。
+`:lucent-ui` 提供主题、组件、背景采样及媒体UI；`:demo` 负责状态、加密存储、文件和网络操作。`review` 包保留 Review 源码组织，仅适配包名、资源和业务状态入口，避免再次造一套相似组件。
 
 ```kotlin
-dependencies { implementation(project(":lucent-ui")) }
-
-LucentTheme(LucentStyle(font = 1f, dynamic = true)) {
-    BackdropHost(overlay = { LucentHeader("设置") }) {
-        LazyColumn {
-            item {
-                LucentSection("偏好与功能") {
-                    LucentToggle("触感反馈", enabled, onEnabledChange)
-                    LucentRow("WebDAV", onClick = onOpenBackup)
-                }
-            }
-        }
+LucentTheme(LucentStyle()) {
+    BackdropHost(overlay = { LucentHeader("设置", onBack) }) {
+        SettingsContent()
     }
 }
 ```
 
-列表的顶部 padding 应包含系统状态栏 + 64 dp 顶栏；底部留出导航与系统安全区。不能重复提供 appFontScale。玻璃 overlay 与 content 分层，局部场景使用独立 BackdropHost。
+内容padding应包含状态栏和56dp顶栏，底部包含导航及系统安全区；设置首页没有顶栏。每个页面各自提供BackdropHost，避免采样自身或只采样部分卡片。应用字号只能由LucentTheme一次提供。
+图库调用方提供源图坐标、位图和保存回调；视频调用方提供有效源列表。接入已有应用时替换DemoModel为其现有Repository，不替换账号协议、签名或备份格式。
 
-媒体接口使用调用方提供的 URI 和描述。鉴权头、下载保存、分享、画质列表和源解析由接入方负责。没有多档有效源就不提供画质按钮。
+工具链对齐 Review：JDK21、Gradle9.8.2、AGP9.4.1、Kotlin/Compose插件2.4.21、BOM2026.09.00、compileSdk37.2、target36、min26；ARM64。API最低版本从0.1.0的24调整为26，这是复用当前Review实现的兼容性边界。
+保持Compose编译和运行时依赖一致。`verifyComposeAlignment` 在preBuild检查。私有签名属性通过 `LUCENT_SIGNING_PROPERTIES` 提供；仓库不存密钥或口令。正式包：`gradlew :demo:assembleRelease`，不构建另一包名/签名的测试APK。
 
-设置页面代码作为可复制的功能参考，不承诺与其他应用备份格式兼容。生产接入时将 DemoModel 替换为已有 ViewModel/Repository；保留原账号存储、恢复事务和数据迁移规则。
-
-## 构建
-
-JDK 21；Android SDK 36；AGP 8.11.1；Kotlin/Compose 插件 2.2.20；Compose BOM 2026.02.00。保持编译和运行依赖一致，不能只升级编译插件后忽略运行时。
-
-设置 `LUCENT_SIGNING_PROPERTIES` 指向本机私有 signing properties，内容包含 storeFile/storePassword/keyAlias/keyPassword。然后执行 `gradlew :demo:assembleRelease`。密钥和密码不进入仓库。APK 使用单一正式包名和 ARM64 依赖筛选。
-
-## 授权
-
-本工程 MIT。Review 派生代码保留 MIT 署名，AGSL 原作者许可见 `licenses/`。其他应用主要作为设计规则来源，不直接复制未明确兼容授权的业务源码。第三方库遵循其自身许可。
+业务接入顺序：主题与密度→页面宿主及生命周期→共享设置组件→媒体回调→账户/备份适配→真实设备验收。不要只复制颜色而漏掉交互及资源释放。

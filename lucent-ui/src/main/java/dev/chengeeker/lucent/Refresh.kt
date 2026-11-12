@@ -24,7 +24,7 @@ fun LucentRefresh(
         indicator = {
             PullToRefreshDefaults.Indicator(
                 modifier =
-                    Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(top = 64.dp),
+                    Modifier.align(Alignment.TopCenter).statusBarsPadding().padding(top = 56.dp),
                 isRefreshing = refreshing,
                 state = state,
             )

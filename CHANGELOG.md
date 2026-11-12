@@ -1,10 +1,13 @@
 # Changelog
 
-## 0.1.0 (1)
+## 0.2.0+2
 
-Sync the UI source for Lucent UI 0.1.0 (1).
+Synced the UI source code for Lucent UI 0.2.0+2.
 
-- Introduce reusable Material 3 themes, glass surfaces, navigation and interaction patterns.
-- Add image, video and music examples with bundled offline media.
-- Add shared settings, encrypted portable backups, WebDAV and local restore workflows.
-- Include design tokens, component contracts, integration guidance and source provenance.
+- Aligned themes, settings, navigation, glass effects, and gallery interactions with Review.
+- Retained encrypted backups and functional settings in the demo.
+- Added source references and visual comparisons to the design specification.
+
+## 0.1.0+1
+
+Initial local design-system demo. Its visual layout has been superseded by 0.2.0.

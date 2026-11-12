@@ -10,7 +10,7 @@ $oldOptions=$env:JAVA_TOOL_OPTIONS
 $env:JAVA_TOOL_OPTIONS="$oldOptions `"-Djava.io.tmpdir=$tempPath`" `"-Djdk.net.unixdomain.tmpdir=$tempPath`""
 Push-Location $projectRoot
 try {
-    $buildArguments=@(':demo:testReleaseUnitTest',':lucent-ui:testReleaseUnitTest',':demo:lintRelease',':demo:assembleRelease','--no-daemon','--console=plain')
+    $buildArguments=@(':demo:testDebugUnitTest',':lucent-ui:testDebugUnitTest',':demo:lintRelease',':demo:assembleRelease','--no-daemon','--console=plain')
     if($Offline){$buildArguments+='--offline'}
     & ./gradlew.bat @buildArguments
     if($LASTEXITCODE -ne 0){throw 'Build or checks failed. The existing root APK was preserved.'}
@@ -33,5 +33,14 @@ try {
     $target=Join-Path $projectRoot "LucentUI_v${version}_arm64-v8a.apk"
     if(Test-Path -LiteralPath $target){$rollback=Join-Path $projectRoot ('build/rollback/'+(Get-Date -Format 'yyyyMMdd-HHmmss'));New-Item -ItemType Directory -Force -Path $rollback | Out-Null;Copy-Item -LiteralPath $target -Destination $rollback}
     Copy-Item -LiteralPath $source -Destination $target -Force
+    $archiveRoot=[IO.Path]::GetFullPath((Join-Path $projectRoot 'build/rollback'))
+    if(-not $archiveRoot.StartsWith($projectRoot+[IO.Path]::DirectorySeparatorChar,[StringComparison]::OrdinalIgnoreCase)){throw 'Invalid rollback path.'}
+    New-Item -ItemType Directory -Force -Path $archiveRoot | Out-Null
+    Get-ChildItem -LiteralPath $projectRoot -File -Filter 'LucentUI_v*_arm64-v8a.apk' | Where-Object {$_.FullName -ne $target} | ForEach-Object {
+        $old=[IO.Path]::GetFullPath($_.FullName)
+        if([IO.Path]::GetDirectoryName($old) -ne $projectRoot){throw 'Unexpected artifact location.'}
+        $destination=Join-Path $archiveRoot ($_.BaseName+'-'+(Get-Date -Format 'yyyyMMdd-HHmmss')+'.apk')
+        Move-Item -LiteralPath $old -Destination $destination
+    }
     Get-FileHash -LiteralPath $target -Algorithm SHA256
 } finally { Pop-Location; $env:JAVA_TOOL_OPTIONS=$oldOptions }

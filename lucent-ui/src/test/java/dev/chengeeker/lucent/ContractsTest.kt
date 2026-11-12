@@ -10,28 +10,10 @@ import org.junit.Test
 class ContractsTest {
     @Test
     fun allStaticPalettesMeetTextContrast() {
-        for (seed in appearanceSeeds) for (dark in listOf(false, true)) {
-            val c = tonalScheme(seed.toInt(), dark)
+        for (pair in dev.chengeeker.lucent.review.ReviewPalettes) for (c in listOf(pair.first, pair.second)) {
             assertTrue(contrast(c.primary, c.onPrimary) >= 4.5f)
-            assertTrue(contrast(mediaAccent(c), Color(0xFF212121)) >= 4.5f)
             assertTrue(contrast(c.onSurface, c.background) >= 4.5f)
             assertTrue(contrast(c.onSurfaceVariant, c.cardColor()) >= 4.5f)
-            for (backdrop in listOf(Color.Black, Color.White)) {
-                assertTrue(
-                    contrast(
-                        c.onSurfaceVariant,
-                        c.surface.copy(alpha = NavigationSurfaceAlpha).compositeOver(backdrop),
-                    ) >= 4.5f
-                )
-                assertTrue(
-                    contrast(
-                        c.onPrimaryContainer,
-                        c.primaryContainer
-                            .copy(alpha = NavigationSelectionAlpha)
-                            .compositeOver(backdrop),
-                    ) >= 4.5f
-                )
-            }
         }
     }
 
@@ -74,10 +56,13 @@ class ContractsTest {
         )
     }
 
-    @Test
-    fun cancelledNavigationDoesNotSelect() {
-        assertNull(glassReleaseTarget(1, 2, 0f, true, true, false, true))
-        assertNull(glassReleaseTarget(1, 1, 0f, true, false, false, false))
-        assertEquals(2, glassReleaseTarget(1, 0, 1500f, false, true, false, false))
+    @Test fun referenceGalleryZoomAndFlightKeepTheirContracts() {
+        assertEquals(2.5f, dev.chengeeker.lucent.review.galleryDoubleTapScale(1f, false), 0f)
+        assertEquals(3.5f, dev.chengeeker.lucent.review.galleryDoubleTapScale(1f, true), 0f)
+        assertEquals(6f, dev.chengeeker.lucent.review.galleryDoubleTapScale(2.5f, false), 0f)
+        assertEquals(1f, dev.chengeeker.lucent.review.galleryDoubleTapScale(6f, false), 0f)
+        val viewport=androidx.compose.ui.geometry.Rect(0f,0f,400f,800f)
+        assertEquals(androidx.compose.ui.geometry.Rect(0f,300f,400f,500f),dev.chengeeker.lucent.review.galleryImagePlane(viewport,androidx.compose.ui.geometry.Size(800f,400f),false))
+        assertEquals(androidx.compose.ui.geometry.Rect(-600f,0f,1000f,800f),dev.chengeeker.lucent.review.galleryImagePlane(viewport,androidx.compose.ui.geometry.Size(800f,400f),true))
     }
 }

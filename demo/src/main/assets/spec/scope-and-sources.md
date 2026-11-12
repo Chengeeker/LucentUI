@@ -1,18 +1,17 @@
 # 范围与来源
 
-基线来自 Review、Review X、GreenNote、RedNote、GreenMusic、RedMusic、RealDrama、Hinge、Lurk、MT论坛、源社区和 Xime 的当前 Compose 工程，以及用户已确认的共同规范。
+用户最新指令指定 Review 为单一基准。当前快照为 Review Compose 3.17.5+278，源路径以原仓库相对路径记录；源文件哈希见reference-review.json。此前12应用清单仅保留为功能覆盖来源，不再投票决定主题或布局。
 
-可通用规则进入组件库；业务特有页面使用演示数据和接入回调。Hinge 桌面端、Relay、订阅服务和 Worker 没有 Android 同构界面，不移植其后台或桌面功能。
+| 区域 | 来源 | 适配 |
+|---|---|---|
+| 主题及排版 | Components/Palettes/FontWeight | 参数替代业务Model |
+| 设置首页/个性化 | SettingsScreens/ThemeScreen/AppearanceTemplate | 路由、名称与Demo状态 |
+| 顶栏/底栏/页面 | Shell/PageStack/FrostedBackdrop | 三个Demo目的地、独立页面宿主 |
+| 液态玻璃 | GlassNavigation/BackdropNavigation/QweaNavigationView | 原依赖、shader和手势 |
+| 图库 | GalleryScreen/GalleryFlight/GalleryGlassButton | 本地图像加载及SAF保存，无平台媒体协议 |
+| 视频 | VideoChrome | 媒体源与播放状态适配 |
+| 动态/评论 | PostCard/CommentRow | 本地fixture与交互，无远端认证/富文本 |
+| WebDAV | BackupScreen | 表单结构对齐，保留Demo加密备份协议 |
 
-## 已确认规则
-
-- 个性化采用 Review Compose，跟随系统不附加解释小字；分组标题跟随主题色。
-- 设置卡片优先 surfaceContainerHigh，对比不足 1.12 时在实际页底上叠加 10% 正文色；文字对比单独验收。
-- 字号显示与实际默认均为 100%，叠加系统字号；85%–150%、5% 步进，拖动预览、松手保存。
-- 普通图册控件 48dp 点击区、44dp 渐变圆面、13sp 粗体页码、64dp 缩略条。
-- 普通视频按 Review Compose 控件结构，多种可用手动画质才显示画质入口；单档和未知画质只保留倍速等有效控制。
-- Review X、RealDrama 专用视频与 Xime 键盘是独立模板，不强行合并。
-- 磨砂取样包含背景、正文、评论及回复；禁止透出底层未经模糊的原字。
-- 普通按压无水波纹；选定的玻璃形变和单次有效触感保留。
-
-现有各应用不会因本项目而自动改变；需要后续明确的接入任务才能替换其组件。
+允许差异：应用名、图标、美术及业务数据；账号后端；加密全量密码输入；额外应用能力放在目录。禁止把允许差异扩展成另做首页/更换间距/重设玻璃效果。
+源码保留Review MIT署名及玻璃依赖许可。本次不修改任何原App，不创建GitHub仓库或Release。

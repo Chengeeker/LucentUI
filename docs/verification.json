@@ -1,165 +1,77 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.1.0",
-  "versionCode": 1,
-  "apkBytes": 4894817,
-  "sha256": "7ab81c17306084f8ca5b5df22651d5638774dcdd1138c1886e253fb7073e23ca",
+  "versionName": "0.2.0",
+  "versionCode": 2,
+  "reference": "Review 3.17.5+278",
+  "apkBytes": 4324003,
+  "sha256": "1ddfe47a3abfc71f1b33fa23673f5ba5942d321ef20e34306fc40463998c4552",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
-  "signatureMatchesLocalRelease": true,
+  "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
   "nativeAbis": [
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 18,
+  "testCount": 20,
   "suites": [
     {
       "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
       "tests": 9,
       "failures": 0,
-      "errors": 0
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
     },
     {
       "suite": "dev.chengeeker.lucent.demo.data.TransportTest",
       "tests": 4,
       "failures": 0,
-      "errors": 0
+      "errors": 0,
+      "skipped": 0
     },
     {
       "suite": "dev.chengeeker.lucent.ContractsTest",
       "tests": 5,
       "failures": 0,
-      "errors": 0
+      "errors": 0,
+      "skipped": 0
     }
   ],
-  "lintSummary": "0 errors, 8 warnings",
-  "sourceTreeSha256": "161782e8132fba053c7902f294a033c64cac32fb020fc055bfbcd30f305cd7a8",
-  "routeAudit": [
-    {
-      "page": "个性化",
-      "assertion": "字体大小",
-      "passed": true
-    },
-    {
-      "page": "阅读与内容",
-      "assertion": "卡片密度",
-      "passed": true
-    },
-    {
-      "page": "图片与视频",
-      "assertion": "默认画质",
-      "passed": true
-    },
-    {
-      "page": "存储与下载",
-      "assertion": "存储位置",
-      "passed": true
-    },
-    {
-      "page": "WebDAV 备份",
-      "assertion": "服务器目录 URL",
-      "passed": true
-    },
-    {
-      "page": "本地备份与迁移",
-      "assertion": "安全备份",
-      "passed": true
-    },
-    {
-      "page": "通知与后台",
-      "assertion": "启用通知",
-      "passed": true
-    },
-    {
-      "page": "网络",
-      "assertion": "连接方式",
-      "passed": true
-    },
-    {
-      "page": "隐私与数据",
-      "assertion": "保护屏幕内容",
-      "passed": true
-    },
-    {
-      "page": "账号管理",
-      "assertion": "演示账号",
-      "passed": true
-    },
-    {
-      "page": "关于与规范",
-      "assertion": "离线设计规范",
-      "passed": true
-    },
-    {
-      "page": "图片浏览器",
-      "assertion": "点击打开。",
-      "passed": true
-    },
-    {
-      "page": "普通视频",
-      "assertion": "播放控制",
-      "passed": true
-    },
-    {
-      "page": "音乐与歌词",
-      "assertion": "静谧之声",
-      "passed": true
-    },
-    {
-      "page": "剧集播放器",
-      "assertion": "山间来信",
-      "passed": true
-    },
-    {
-      "page": "搜索与消息",
-      "assertion": "快速入口",
-      "passed": true
-    },
-    {
-      "page": "设备与传输",
-      "assertion": "我的设备",
-      "passed": true
-    },
-    {
-      "page": "插件与键盘",
-      "assertion": "插件管理",
-      "passed": true
-    }
-  ],
-  "routeAuditBuildSha256": "cf1488b447c381a14defe202ec4b11dc10fc864daa625f7392b4e2dee8854935",
-  "finalNavigationRecheck": [
-    "light/dark surfaces",
-    "root navigation",
-    "glass lab on dark image",
-    "150 percent settings",
-    "component catalog"
-  ],
-  "runtimeEnvironment": {
-    "androidApi": 35,
-    "display": "720x1600",
-    "apk": "signed ARM64 release on x86_64 emulator with native bridge"
-  },
-  "runtimeChecks": [
-    "release install and cold starts",
-    "18 routes",
-    "license viewer",
-    "light/dark dynamic surfaces",
-    "150 percent font wrapping",
-    "gallery paging and vertical dismissal",
-    "actual offline video and quality controls",
-    "single-quality hides quality button",
-    "actual music progress and queue",
-    "comments under frosted header"
-  ],
-  "candidateIntegrationChecks": [
-    "fullscreen enter/exit and orientation restore",
-    "encrypted full backup exported, app data cleared, restored with fresh Keystore and credential readback"
-  ],
+  "lintErrors": 0,
+  "lintWarnings": 9,
+  "composeAlignmentEntries": 73,
+  "sourceTreeSha256": "1867db9164309b5c86a924064f4f035d9ce25b083dc90c4c02f32a5f6cbfa160",
   "notVerified": [
-    "physical ARM64 device, GPU and haptics",
-    "Android 7-12 runtime fallbacks",
-    "real user WebDAV provider/account",
-    "HDR and device-specific audio/video behavior",
-    "two-finger gestures and predictive-back feel on a physical device"
-  ]
+    "Physical GPU and haptics",
+    "API 26-32 device rendering",
+    "HDR content",
+    "Personal WebDAV server"
+  ],
+  "runtimeChecks": [
+    "0.1.0 to 0.2.0 same-signature upgrade",
+    "Android 15 cold start",
+    "Review settings and appearance visual comparison",
+    "WebDAV empty input error feedback",
+    "Gallery thumbnail selection and reopen",
+    "Video playback and 720p/480p selection",
+    "1.5x speed and single-quality button removal",
+    "Dynamic dark settings card visibility",
+    "Liquid navigation switch",
+    "Comments included in frosted header",
+    "Cache page navigation",
+    "Final build startup and settings navigation",
+    "150% text scaling on personalization and settings",
+    "Launcher icon switches to LauncherLight",
+    "Final fresh defaults screenshot capture"
+  ],
+  "crashBuffer": "No crashes recorded during the tested emulator flows",
+  "lintScope": "Full Release lint before final safe-area-only change; final assembleRelease also ran lintVitalRelease",
+  "testScope": "Host unit tests; no separate debug APK was built",
+  "installedApkSha256MatchesDelivery": true
 }

@@ -1,51 +1,179 @@
-[
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/AppearanceTemplate.kt",
-    "sha256": "e1c88d3e9f5dc3f9b9d7be3991ffa5188bbd5034ca071babc2ed785b06563e9f",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/FontSizeSetting.kt",
-    "sha256": "d2f3aceb480db9cdfe77285e5b04e77bc2019e129d5204d7fe46d304200454b6",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/FontWeightSetting.kt",
-    "sha256": "28249ec7e9a0d43cf980828eabc2cdc9125726b9c263c7df861c6e41aea51778",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/LiquidGlass.kt",
-    "sha256": "17b9633b758ab479d85bf98ff7c11a578d05ec50ee3cbc312c605862f304f8e8",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/ReviewVideoChrome.kt",
-    "sha256": "fd14e27e37c8df7d4e60fcb99ecad05bf13a17b59bc89ac7579eb0aebf5a84d4",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/java/com/review/compose/WebDavTransport.kt",
-    "sha256": "7024f5a4af967fc62e58a88a4a633e1ec9828b06c9b551e41ed18d830aa24d57",
-    "license": "MIT",
-    "adaptation": "Namespace, public API and Demo-independent state/callbacks; interactive target and lifecycle fixes where documented."
-  },
-  {
-    "sourceProject": "Review",
-    "path": "app/src/main/assets/glass/premium_glass.agsl",
-    "sha256": "ad20d1125602c4e7a27b9f2fb3742f10ebd9520a07d8d4d5049f6d1014fd55b2",
-    "license": "MIT",
-    "adaptation": "Preserved shader and author headers."
-  }
-]
+{
+  "baseline": "Review 3.17.5+278",
+  "files": [
+    {
+      "source": "app/src/main/java/com/review/compose/AppearanceTemplate.kt",
+      "sha256": "e1c88d3e9f5dc3f9b9d7be3991ffa5188bbd5034ca071babc2ed785b06563e9f",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/AppearanceTemplate.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/BackdropNavigation.kt",
+      "sha256": "6e8e9c794f1e2a9571100ec3fd50985fd4c63e628c4d45da3f490cc12650c747",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/BackdropNavigation.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/FontSizeSetting.kt",
+      "sha256": "d2f3aceb480db9cdfe77285e5b04e77bc2019e129d5204d7fe46d304200454b6",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/FontSizeSetting.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/FontWeight.kt",
+      "sha256": "e65220a139b8ecb0267ba67554f2eeb565324326afd0a45aa7d71941df19d0cc",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/FontWeight.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/FontWeightSetting.kt",
+      "sha256": "28249ec7e9a0d43cf980828eabc2cdc9125726b9c263c7df861c6e41aea51778",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/FontWeightSetting.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/FrostedBackdrop.kt",
+      "sha256": "2a216c7c6c920d85f05dc9adaf0762aeb2916e90194a1dfdbcc164de752f6dce",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/FrostedBackdrop.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GalleryFlight.kt",
+      "sha256": "3e5e4ecb370bd83363e05aadee2d47565c33061a8a7ed75bc94d5d8b19c76872",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GalleryFlight.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GalleryGlassButton.kt",
+      "sha256": "51625d409e280d33c9838781116ac996c1705ff85c093ef4e9c0802bda9cb9ba",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GalleryGlassButton.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GalleryScreen.kt",
+      "sha256": "bc8f5167e4010d1f9e73f1d9d030a43d7ae5ae6a2b758f8285da14d28a47af93",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GalleryScreen.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GlassGpu.kt",
+      "sha256": "0bd799958b63117ed0092f5cdc4f9e7b1a779632b1fdf1775094d9cfe554a96e",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GlassGpu.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GlassMotion.kt",
+      "sha256": "fb3ab8abf9596163587e83ba16e0621c80cbd852cb3c4b50e92777e9c1691e11",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GlassMotion.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GlassNavigation.kt",
+      "sha256": "a017223e5c9c792ebf4eb39bdc4bf99b7c9dddf4ba97ca5d986e401348d8fc4b",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GlassNavigation.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GlassShadow.kt",
+      "sha256": "57ee9ee46ac3289593798af41d314cd4c0838e72858874c789e87ced2ab7d8d6",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GlassShadow.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/GlassView.kt",
+      "sha256": "3a56b8977e262294009d5940018d194bc1013710d45a5a7f7c9bdd460820c736",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/GlassView.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/Haptics.kt",
+      "sha256": "18067593a29c5bbd77ce9a03d24c5c4dad356911ff0b515ab5ec10db87f3942b",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/Haptics.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/LiquidGlass.kt",
+      "sha256": "17b9633b758ab479d85bf98ff7c11a578d05ec50ee3cbc312c605862f304f8e8",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/LiquidGlass.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/NavigationGlassChoice.kt",
+      "sha256": "3f838dec22c8ee533399458a1f6c32eaf103392a04c413a5710594c11565938e",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/NavigationGlassChoice.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/NavigationGlassMaterial.kt",
+      "sha256": "20ed0ccc355ec9bf1cf63ee219c5965e559c0de909788b1ba23214a2b64ea89a",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/NavigationGlassMaterial.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/PageStack.kt",
+      "sha256": "2ecc09d95fd1a1047d972dfd1a343f153dcd7ec27f7ca3170a83bd1a065e3437",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/PageStack.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/Palettes.kt",
+      "sha256": "8d8fba1e4189eec83b533c742cb7faa053e898023e0c997e8fb13575fc52ac1a",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/Palettes.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/PlainGalleryControl.kt",
+      "sha256": "d6c2278fcfd3813d62fa5b118dd90623b75dd157d9b1dd638ebe127313251300",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/PlainGalleryControl.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/QweaNavigationView.kt",
+      "sha256": "cd7da5d7f214cb3c7edffabe991bc0b5b6c8ca4489a67401d34f7edb22fc22a4",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/QweaNavigationView.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/ReviewDialog.kt",
+      "sha256": "ab984dc3e2ad4d6e071f95c67d63149e3474b5be323ad10fb1edc3be1e7cbc97",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/ReviewDialog.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/SettingsCardColor.kt",
+      "sha256": "2715d9de153c4b04c91b49ee2eb540139538bbcf2fd74f82a997a50489ce194d",
+      "destination": "lucent-ui/src/main/java/dev/chengeeker/lucent/review/SettingsCardColor.kt",
+      "adapted": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/Components.kt",
+      "sha256": "08198bb7b0ceef9c7cf4ad5e6108112f00c3cc3e463a8f8583c7704bfd53b966",
+      "adaptedSections": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/Shell.kt",
+      "sha256": "58bf93178a9c482cec2e41fa76944f14c550fd874de9fc3b115a5d5951d0f443",
+      "adaptedSections": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/SettingsScreens.kt",
+      "sha256": "7ea3e7822be6a4e372897e4695b8aae8538b1f53bed4fa3189b5e959a2e77da9",
+      "adaptedSections": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/ThemeScreen.kt",
+      "sha256": "b50df3908bc30af2cc481d45a972029a92333bc3003f7bf09ffb97e8e951f9ab",
+      "adaptedSections": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/CommentRow.kt",
+      "sha256": "cbeecfbbb1ba4fdea32e68e290ab94f7addd3c605562414dd6d25833840726f7",
+      "adaptedSections": true
+    },
+    {
+      "source": "app/src/main/java/com/review/compose/BackupScreen.kt",
+      "sha256": "92ed852a24843318ba69f6dd32d80724db12211b793ba3f5911419bb9502bd0f",
+      "adaptedSections": true
+    }
+  ]
+}

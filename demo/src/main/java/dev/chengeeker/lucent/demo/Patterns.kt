@@ -17,6 +17,9 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.dp
@@ -67,7 +70,7 @@ fun PatternPage(page: String, model: DemoModel, open: (String) -> Unit) {
 @Composable
 private fun ImagesPage(model: DemoModel) {
     var index by remember { mutableStateOf<Int?>(null) }
-    var origin by remember { mutableStateOf<Rect?>(null) }
+    val origins = remember { galleryItems.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(24.dp) } }
     val context = LocalContext.current
     var export by remember { mutableStateOf<GalleryItem?>(null) }
     val save =
@@ -95,76 +98,30 @@ private fun ImagesPage(model: DemoModel) {
             )
         }
         itemsIndexed(galleryItems) { i, item ->
-            var rect by remember { mutableStateOf<Rect?>(null) }
+            val source = origins.getValue(i)
             LucentCard {
                 AsyncImage(
-                    item.uri,
+                    coil.request.ImageRequest.Builder(context).data(item.uri).allowHardware(false).build(),
                     item.description,
                     Modifier.fillMaxWidth()
                         .height(210.dp)
-                        .onGloballyPositioned { rect = it.boundsInRoot() }
+                        .onGloballyPositioned { source.coordinates = it }
+                        .graphicsLayer { alpha = if (source.covered) 0f else 1f }
                         .lucentClick {
-                            origin = rect
                             index = i
                         },
                     contentScale = ContentScale.Crop,
+                    onSuccess = { source.bitmap = (it.result.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap },
                 )
                 LucentRow(item.description)
             }
         }
     }
     index?.let { start ->
-        Dialog(
-            onDismissRequest = { index = null },
-            properties =
-                DialogProperties(usePlatformDefaultWidth = false, decorFitsSystemWindows = false),
-        ) {
-            LucentGallery(
-                galleryItems,
-                start,
-                origin,
-                onDismiss = { index = null },
-                onSave = {
-                    export = it
-                    save.launch(it.uri.substringAfterLast('/'))
-                },
-                onShare = { item ->
-                    model.run("准备分享") {
-                        val file =
-                            withContext(Dispatchers.IO) {
-                                File(context.cacheDir, "shared")
-                                    .apply { mkdirs() }
-                                    .resolve(item.uri.substringAfterLast('/'))
-                                    .also { f ->
-                                        context.assets
-                                            .open(item.uri.substringAfter("android_asset/"))
-                                            .use { input ->
-                                                f.outputStream().use { input.copyTo(it) }
-                                            }
-                                    }
-                            }
-                        val uri =
-                            FileProvider.getUriForFile(
-                                context,
-                                context.packageName + ".files",
-                                file,
-                            )
-                        context.startActivity(
-                            Intent.createChooser(
-                                Intent(Intent.ACTION_SEND)
-                                    .setType(
-                                        if (file.extension == "gif") "image/gif" else "image/jpeg"
-                                    )
-                                    .putExtra(Intent.EXTRA_STREAM, uri)
-                                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
-                                "分享图片",
-                            )
-                        )
-                        "已交给系统分享面板。"
-                    }
-                },
-            )
-        }
+        LucentGallery(galleryItems, start, origins, onDismiss = { index = null }, onSave = {
+            export = it
+            save.launch(it.uri.substringAfterLast('/'))
+        })
     }
 }
 
@@ -177,14 +134,14 @@ private fun VideoPage(model: DemoModel) {
         Modifier.fillMaxSize()
             .then(
                 if (landscape) Modifier
-                else Modifier.statusBarsPadding().padding(top = 64.dp).navigationBarsPadding()
+                else Modifier.statusBarsPadding().padding(top = 56.dp).navigationBarsPadding()
             )
     ) {
         // Keep the player at the same composition position across orientation changes.
         LucentVideo(
             sources,
             if (landscape) Modifier.fillMaxWidth().weight(1f)
-            else Modifier.fillMaxWidth().aspectRatio(16f / 10),
+            else Modifier.fillMaxWidth().aspectRatio(16f / 9),
             model.bool("autoplay"),
             model.str("speed").toFloat(),
             model.bool("loop"),
@@ -195,8 +152,6 @@ private fun VideoPage(model: DemoModel) {
                 LucentSection("播放控制") {
                     LucentToggle("仅提供一个有效画质", single, { single = it }, "开启后隐藏画质按钮，保留倍速。")
                     LucentRow("手势", "双击播放/暂停；横向拖动定位；左侧亮度、右侧音量；长按临时 2×。")
-                    LucentRow("真实离线媒体", "两档独立编码的 H.264/AAC 示例，不需要网络。")
-                    LucentRow("完整生命周期", "退出释放播放器；进入后台暂停；退出全屏还原方向和亮度。")
                 }
             }
     }
@@ -229,7 +184,7 @@ private fun ArticlePage(model: DemoModel) {
         PageList(bottom = 24) {
             item {
                 Column(Modifier.padding(vertical = 20.dp)) {
-                    Text("流动的边界", style = MaterialTheme.typography.headlineLarge)
+                    Text("流动的边界", fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     if (model.bool("avatar"))
                         LucentRow("Lucent Design", "演示作者", Icons.Rounded.AccountCircle)
                     if (model.bool("time"))
@@ -300,14 +255,27 @@ private fun ArticlePage(model: DemoModel) {
                     filter.none { t.contains(it, true) }
                 }
             ) { reply ->
-                LucentCard {
-                    LucentRow(
-                        reply,
-                        if (model.bool("preview")) "回复预览 · 点按打开编辑器" else null,
-                        if (model.bool("avatar")) Icons.Rounded.AccountCircle else null,
-                        onClick = { editor = true },
-                    )
+                val colors = MaterialTheme.colorScheme
+                Row(Modifier.fillMaxWidth().lucentClick { editor = true }.padding(vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
+                        Box(Modifier.size(36.dp).clip(CircleShape).background(colors.primaryContainer), contentAlignment = Alignment.Center) { Text(reply.take(1), fontSize = 16.sp, fontWeight = FontWeight.Bold) }
+                    }
+                    Column(Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(reply.substringBefore('：'), Modifier.weight(1f), fontSize = 13.5.sp, fontWeight = FontWeight.Bold)
+                            var liked by remember(reply) { mutableStateOf(false) }
+                            Icon(if(liked) Icons.Rounded.Favorite else Icons.Rounded.FavoriteBorder, "赞评论", Modifier.size(24.dp).lucentClick { liked = !liked }.padding(4.dp), tint = if(liked) Color(0xFFEC407A) else colors.onSurfaceVariant)
+                        }
+                        Spacer(Modifier.height(2.dp)); Text("刚刚  来自本地示例", fontSize = 11.5.sp, color = colors.onSurfaceVariant)
+                        Spacer(Modifier.height(6.dp)); Text(reply.substringAfter('：'), fontSize = 14.sp, lineHeight = 19.6.sp)
+                        if(model.bool("preview")) {
+                            Spacer(Modifier.height(14.dp))
+                            Text("示例作者：这里展示回复的内容。", Modifier.fillMaxWidth().background(colors.surfaceContainerHighest.copy(alpha = .4f), RoundedCornerShape(8.dp)).padding(8.dp), fontSize = 12.5.sp)
+                            Text("共1条回复  ›", Modifier.padding(horizontal = 8.dp, vertical = 8.dp), fontSize = 12.5.sp, color = colors.primary)
+                        }
+                    }
                 }
+
             }
             item { LucentAction("加载更多", { limit += 10 }, Modifier.fillMaxWidth(), primary = false) }
         }
@@ -389,7 +357,7 @@ private fun DramaPage(model: DemoModel) {
     var choose by remember { mutableStateOf(false) }
     var liked by remember { mutableStateOf(false) }
     Column(
-        Modifier.fillMaxSize().statusBarsPadding().padding(top = 64.dp).navigationBarsPadding()
+        Modifier.fillMaxSize().statusBarsPadding().padding(top = 56.dp).navigationBarsPadding()
     ) {
         Box(Modifier.fillMaxWidth().weight(1f).background(Color.Black)) {
             key(episode) {

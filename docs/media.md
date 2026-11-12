@@ -1,27 +1,15 @@
-# 图片、视频与音乐
+# 媒体浏览
 
-## 图片浏览器
+## 图片
 
-标准控件布局采用用户选定的 Review Flutter 版本，迁移为 Compose：48 dp 点击区、44 dp 圆面、13 sp 粗体页码、64 dp 缩略条。支持图片列表、来源位置、分页、双击和双指缩放、缩略图跳转、保存与系统分享回调。
+`GalleryItem(uri, description)`；`LucentGallery(items, start, sources, onDismiss, onSave)`。`sources` 是索引到 `GalleryOrigin` 的映射；调用方记录图像坐标、已解码位图及圆角，让真实源图飞入/飞回。`covered` 为true时隐藏源图像素，但不能移除其布局。
+高级入口 `review.ReviewGallery` 接受 `GalleryMedia` 的尺寸、长图、动图与HDR标记。Demo使用本地生成图，Coil加载器是业务边界适配；不包含 Review 的Cookie、平台图像下载与Live照片后端。HDR开关路径保留，但没有HDR样本验收。
 
-`GalleryItem(uri, description)`；`LucentGallery(items, initial, origin, onDismiss, onSave, onShare)`。库不自行索取存储权限或携带平台 Cookie。Demo 使用系统文件选择器保存、受限 FileProvider 分享。
-
-长图、动画图片、快速关闭重开必须作为独立场景验证。原图/HDR/鉴权属于图片解码器和应用后端能力，不能因统一控件而删除；Demo 内置的是 SDR 自制图像，不能作为 HDR 通过证据。
+顶栏为返回、居中页码、下载；没有上一版自行加入的分享按钮。页码黑45%底、16dp圆角、横14/竖6内边距。缩略条64dp高，每格为容器宽16%，选中项居中白色2dp描边，未选中叠白50%；拖动缩略条切换中心页。中间三分之一区域单击显隐控件，两侧单击退出。
+Demo保存使用系统文件选择器，用户取消不产生成功提示。原图缩放、长图、GIF、重试、快速进出见模拟器验收记录。
 
 ## 普通视频
 
-`LucentVideo(sources, autoplay, initialSpeed, loop, onSpeed)` 使用 Media3 ExoPlayer。普通控制结构采用 Review Compose，画质与倍速使用深色底部单选面板；进度轨道 4 dp、触摸区扩展至 48 dp。
-
-`manualQualities` 排除空标签、未知标签、空地址，并按实际地址去重。有效手动画质超过一档才显示画质按钮；单档仅保留倍速等有效控件。
-
-切换画质保留播放位置和播放/暂停状态。倍速为 0.5、0.75、1、1.25、1.5、2、3。缓冲有进度状态；错误可重试。后台暂停，退出释放播放器和监听，清除常亮，恢复窗口亮度及方向。
-
-Demo 包含两档独立编码的自制 12 秒 H.264/AAC 片段。离线素材说明编码/分辨率选择可用，不代表第三方接口支持画质或所有网络格式均已验收。
-
-## 专用模式
-
-- Review X、RealDrama 的定制视频不被普通播放器规范覆盖。剧集模板保留选集、喜欢、下一集等独立布局与回调。
-- 音乐模板应覆盖封面、迷你/展开、进度、队列、播放模式和歌词；实际媒体会话/后台服务由音乐应用接入。
-- 设备远程画面、键盘预览不套用普通图片/视频的交互假设。
-
-播放器生命周期参考：[Media3 ExoPlayer 入门](https://developer.android.com/media/media3/exoplayer/hello-world)。
+`LucentVideo` 使用调用方提供的 `VideoSource(label, uri)`，播放器控件沿用 ReviewVideoChrome；真实 Media3 实例管理暂停、跳转、倍速、方向和生命周期。Demo内置720p/480p独立H.264/AAC文件。
+只有至少两个标签及地址均有效且不同的画质才展示画质按钮；单源保留倍速。更换源保持位置、播放状态和倍速。支持双击播放、横拖定位、左亮度右音量、长按临时2倍、全屏。
+平台URL解析、账号鉴权和下载接口由宿主提供。Review X / RealDrama 特殊播放器不作为普通播放器基准，目录中的剧集示例保持独立，不能称为两者的完整克隆。

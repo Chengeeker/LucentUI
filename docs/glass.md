@@ -1,53 +1,25 @@
 # 玻璃与背景采样
 
-Demo → 玻璃实验室；代码：`Backdrop.kt`、`LiquidGlass.kt`、`Navigation.kt`。
+实现直接来自 Review：`FrostedBackdrop.kt`、`GlassNavigation.kt`、`BackdropNavigation.kt`、`NavigationGlassMaterial.kt`、`QweaNavigationView.kt` 与相关着色器。
 
-## 层级契约
+## 采样契约
 
-`BackdropHost` 的 content 包括**实色页底、所有正文、图片、评论和回复**。overlay 是顶栏、浮动导航等采样者。采样者不得录入同一个来源层，否则产生循环采样。
+`BackdropHost.content` 包含不透明页面底色、正文、图片和全部评论；`overlay` 包含顶栏和导航。不能把采样者再录进自身来源层。每个页面有自己的宿主，局部示例也用局部宿主。背景透明会让磨砂后再次透出清晰原字，这是必须保留的历史回归项。
 
 ```kotlin
-BackdropHost(
-    overlay = { LucentHeader("阅读", onBack = onBack) }
-) {
-    // Background is already part of the capture.
+BackdropHost(overlay = { LucentHeader("阅读", onBack) }) {
     ArticleAndComments()
 }
 ```
 
-局部玻璃预览需要局部 BackdropHost：把图片放进 content，玻璃控件放进 overlay。不能在全局来源层内部采样全局层。
+## 磨砂顶栏
 
-## 磨砂
-
-- Android 12+ 使用 GraphicsLayer + BlurEffect，默认模糊 20 dp；采样坐标由 root 坐标换算。
-- 顶栏叠加 45% 表面色、顶部 95% 到透明的垂直保护渐变；底边 0.5 dp、outlineVariant 24%。
-- 评论进入顶栏后与文章一起模糊。采样图层有实色底，不能让模糊结果的透明像素露出清晰原字。
-- 不在静止页面启动永久 CPU 截图/模糊循环；重绘由内容变化驱动。
+默认20dp模糊、45%表面色，顶部95%至透明保护渐变，0.5dp底边。API31+ 使用 GraphicsLayer / BlurEffect；API26–30 使用 Review 的四分之一尺寸采样及三轮 box blur。旧系统仅在来源 revision 变化时重新模糊，非活动页面暂停采样。
+磨砂顶栏独立于“液态玻璃”开关，关闭底栏液态玻璃不会取消顶栏模糊。
 
 ## 液态玻璃
 
-Android 13+ 使用 AGSL RuntimeShader。保留 MIT 原作者说明，光学实现来源于 Review 已采用的着色器。背景采样扩大 20 dp，避免边缘折射夹取产生硬边。
+API33+ 沿用 Kyant Backdrop；旧版本沿用 QWEA GLES；`NavigationGlassChoice` 提供磨砂和通透选择，含真实动画预览。图库按钮也使用 Review 的48dp阻尼和锚定拉伸。
+参数及 shader 以来源文件为准。0.1.0 自行增加的0.78底层与0.86透镜不透明度下限已移除，不能再当成 Review 标准。
 
-| 参数 | 导航主体 | 选中透镜 | 按钮 |
-|---|---:|---:|---:|
-| 折射率 | 1.19 | 1.18 | 1.24 |
-| 色散 | 0.008 | 0.025 | 0.025 |
-| 厚度基值 | 10 | 20 | 32 |
-| 光线方向 | -0.7071, -0.7071 | 相同 | 相同 |
-
-厚度按 density/3 换算。光学、形变和触摸反馈分别控制；关闭普通水波纹不能连带删除玻璃水珠形变。
-
-## 兼容性与降级
-
-| 系统 | 实际路径 |
-|---|---|
-| API 33+ | 实时折射 + 模糊 + 弹性形变 |
-| API 31–32 | 实时磨砂 + 弹性布局；无 AGSL 折射 |
-| API 24–30 | 不透明表面 + 相同操作；未移植旧应用的 GLES 光学后端 |
-| 用户关闭玻璃 | 语义实色卡片 |
-
-旧系统光学等效仍是扩展边界，不能称为像素一致。若需要补齐 GLES，必须测 GPU 资源释放、横竖屏、后台恢复和真实低端机帧耗时。
-
-官方接口参考：[Compose 绘制修饰符](https://developer.android.com/develop/ui/compose/graphics/draw/modifiers)。
-
-导航可读性约束：通透底层 surface alpha 至少0.78，磨砂0.90；选中透镜使用 primaryContainer alpha0.86 和 onPrimaryContainer。避免透镜直接采样深色图片时，主题色文字与背景合并。黑/白两端背景在八套预置色的明暗模式下均检查正文对比度≥4.5；AGSL边缘仍保留折射与高光。
+模拟器截图只能验证布局及当前软件渲染结果。GLES资源释放、触感强度、真实GPU折射及持续帧耗时仍需要实体设备验证。

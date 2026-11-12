@@ -1,65 +1,26 @@
-# 实际运行截图
+# Review 与 Lucent UI 实机界面对照
 
-Lucent UI 0.1.0 (1)，正式签名 APK；Android 15 专用模拟器，720 × 1600。截图展示实际运行结果，不是设计稿。动态配色取决于设备壁纸。大字号两张为150%，其余为默认100%。
+[打开并排对照页](visual-review.html)
 
-[并排浏览](visual-review.html) · [验证范围](implementation-status.md)
+同一台Android15模拟器，720×1600、100%字号。左侧Review 3.17.5+278，右侧Lucent UI 0.2.0+2。截图来自正式安装包，原应用源码未修改。
 
-## 探索首页与液态玻璃导航
+| 页面 | Review | Lucent UI |
+|---|---|---|
+| 设置首页 | ![](screenshots/review-settings.png) | ![](screenshots/lucent-settings.png) |
+| 个性化 | ![](screenshots/review-appearance.png) | ![](screenshots/lucent-appearance.png) |
+| WebDAV | ![](screenshots/review-webdav.png) | ![](screenshots/lucent-webdav.png) |
 
-![探索首页与液态玻璃导航](screenshots/home.png)
+设置首页卡片、分组及导航几何已对齐；个性化使用同一原组件，预览文案更换为Demo名称。WebDAV布局采用Review，保留Demo独立加密密码输入，不承诺两者备份格式互通。
 
-## 玻璃交互实验室
+实际运行补充：
 
-![玻璃交互实验室](screenshots/glass.png)
+- [动态取色与深色卡片](screenshots/lucent-appearance-dynamic-dark.png)
+- [液态玻璃底栏](screenshots/lucent-settings-glass-dark.png)
+- [图库](screenshots/lucent-gallery.png)
+- [视频](screenshots/lucent-video.png)
+- [评论磨砂采样](screenshots/lucent-comments-frost.png)
+- [缓存管理](screenshots/lucent-cache.png)
 
-## 通用设置目录
+未在真实Review账号下完成图库/视频/评论的同内容像素对照；这些区域依据当前源码适配和Demo运行检查。实体GPU、触感、HDR及低版本Android仍未实机验收。
 
-![通用设置目录](screenshots/settings.png)
-
-## 浅色个性化 · 默认100%
-
-![浅色个性化 · 默认100%](screenshots/appearance-light.png)
-
-## 深色个性化 · 动态取色
-
-![深色个性化 · 动态取色](screenshots/appearance-dark.png)
-
-## WebDAV 连接与备份
-
-![WebDAV 连接与备份](screenshots/webdav.png)
-
-## 图片浏览器
-
-![图片浏览器](screenshots/gallery.png)
-
-## 普通视频播放器
-
-![普通视频播放器](screenshots/video.png)
-
-## 统一画质选择面板
-
-![统一画质选择面板](screenshots/video-quality.png)
-
-## 音乐展开与播放进度
-
-![音乐展开与播放进度](screenshots/music.png)
-
-## 阅读与内容
-
-![阅读与内容](screenshots/article.png)
-
-## 评论区背景采样
-
-![评论区背景采样](screenshots/comments-frost.png)
-
-## 组件与状态
-
-![组件与状态](screenshots/components.png)
-
-## 字号150%
-
-![字号150%](screenshots/font-150.png)
-
-## 大字号设置换行
-
-![大字号设置换行](screenshots/settings-150.png)
+字号检查：[个性化150%](screenshots/lucent-font-150.png) · [设置150%](screenshots/lucent-settings-150.png)。最终交付包与模拟器已安装APK的SHA-256相同。

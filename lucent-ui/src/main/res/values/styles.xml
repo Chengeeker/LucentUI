@@ -1,0 +1,6 @@
+<resources>
+    <style name="ReviewDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/review_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/review_dialog_exit</item>
+    </style>
+</resources>

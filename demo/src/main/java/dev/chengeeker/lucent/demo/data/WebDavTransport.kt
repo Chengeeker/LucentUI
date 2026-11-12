@@ -10,6 +10,7 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONException
@@ -180,4 +181,18 @@ internal class WebDavTransport(client: OkHttpClient, private val maxBytes: Long)
                 }
             )
         }
+}
+
+internal fun validateDavDirectory(directory: String) {
+    require(directory.trim().let { it.length <= 128 && it !in setOf(".", "..") && it.none { c -> c == '/' || c == '\\' || c.isISOControl() } }) { "备份文件夹名称不合法" }
+}
+
+internal fun davBaseUrl(url: String, directory: String): okhttp3.HttpUrl {
+    val target = url.trim().toHttpUrl()
+    require(target.isHttps && target.username.isEmpty() && target.password.isEmpty() && target.query == null && target.fragment == null) { "请填写不含账号、查询参数或片段的 HTTPS 地址" }
+    validateDavDirectory(directory)
+    return target.newBuilder().apply {
+        if (!target.encodedPath.endsWith('/')) addPathSegment("")
+        if (directory.isNotBlank()) addPathSegment(directory.trim()).addPathSegment("")
+    }.build()
 }

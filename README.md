@@ -1,15 +1,9 @@
 # Lucent UI
 
-Material 3 · Glass & Motion
+A reusable Compose UI library and interactive demo based on Review.
 
-A reusable Android design system, an interactive component catalog, and a fully local demo of shared settings and product patterns.
+Themes, glass surfaces, navigation, media viewers, and functional settings.
 
-- `lucent-ui`: themes, semantic tokens, controls, backdrop glass, motion, image viewer and video player.
-- `demo`: interactive catalog, functional settings, WebDAV backup for demo data, and product examples.
-- [Design specification](docs/README.md) · [Implementation status](docs/implementation-status.md) · [Attributions](NOTICE.md)
+[Design specification](docs/README.md) · [Visual comparison](docs/visual-review.md) · [Attributions](NOTICE.md)
 
-Android 7.0+; advanced optical effects require Android 13+. Older versions retain readable surfaces and interaction behavior.
-
-Build with JDK 21 and the Gradle wrapper. Set `LUCENT_SIGNING_PROPERTIES` to your local signing properties to build a signed demo. No signing files or credentials are included.
-
-[Visual preview](docs/visual-review.md) · [Verification record](docs/verification.json)
+Android 8.0+. Build with JDK 21 and the Gradle wrapper. Set `LUCENT_SIGNING_PROPERTIES` to private local signing properties for a signed ARM64 demo. No credentials or signing material are included.

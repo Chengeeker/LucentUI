@@ -168,7 +168,7 @@ fun ComponentsPage(model: DemoModel, open: (String) -> Unit) {
                 LucentRow("触摸区域", "最小 48 dp；图库圆面 44 dp")
                 LucentRow("分组容器", "24 dp 圆角 · 16 dp 内边距")
                 LucentRow("字体", "默认 100% · 85–150% · 每档 5%")
-                LucentRow("动效", "350 ms 弹性移动 · 240 ms 退出 · 150 ms 拖动跟手")
+                LucentRow("动效", "320 ms 页面进入 · 220 ms 退出 · 240 ms 底栏切换")
             }
         }
     }
@@ -247,8 +247,7 @@ fun GlassLab(model: DemoModel) {
             LucentSection("玻璃层级") {
                 LucentToggle("光学效果", model.bool("glass"), { model.set("glass", it) })
                 LucentToggle("通透底栏", model.bool("translucent"), { model.set("translucent", it) })
-                LucentToggle("动画与弹性", model.bool("motion"), { model.set("motion", it) })
-                LucentRow("兼容性", "Android 13+：AGSL 折射；Android 12：模糊；Android 7–11：实色降级。")
+                LucentRow("兼容性", "Android 13+：Backdrop；Android 8–12：GLES 底栏。磨砂顶栏保留旧系统采样。")
             }
         }
         item {
