@@ -1,18 +1,19 @@
-# Lucent UI · Review 基准规范
+# Lucent UI 设计规范
 
-0.2.0 以 Review Compose 3.17.5+278 为唯一基础视觉基准。0.1.0 的独立首页、导航尺寸和玻璃遮罩规则已撤销；原有应用保持只读。
+Lucent UI 是面向 Android 和 Jetpack Compose 的开放设计系统。这份规范记录界面参数、组件状态和交互规则。可以结合 [Demo](https://github.com/Chengeeker/LucentUI/releases/latest) 体验完整流程，并在自己的应用中复用 [Compose 组件](../lucent-ui/)。
 
 | 章节 | 内容 |
-|---|---|
-| [基础](foundations.md) | 真实调色板、字号、尺寸与层级 |
-| [组件](components.md) | 设置行、卡片、顶栏、导航及状态 |
-| [玻璃](glass.md) | 背景采样、磨砂与两种液态玻璃后端 |
-| [动效](motion.md) | 页面栈、触感、图库飞行动画 |
-| [媒体](media.md) | 图片和普通视频接口与手势 |
-| [功能设置](settings.md) | 个性化、WebDAV、缓存及其他功能 |
-| [页面](patterns.md) | 时间线、评论、扩展目录 |
-| [接入](integration.md) | 模块、构建、业务适配边界 |
-| [验收](quality.md) | 回归项与真实验证边界 |
-| [来源](scope-and-sources.md) | 源码对应关系及允许差异 |
+| --- | --- |
+| [基础与设计变量](foundations.md) | 主题、调色板、字号、间距和形状 |
+| [组件](components.md) | 设置行、卡片、导航、弹窗与反馈状态 |
+| [玻璃效果](glass.md) | 背景采样、磨砂顶栏与液态玻璃导航 |
+| [动效与手势](motion.md) | 页面切换、返回、触感与图片过渡 |
+| [媒体浏览](media.md) | 图片浏览、HDR 标签、缩放和普通视频播放器 |
+| [设置与备份](settings.md) | 个性化、WebDAV、缓存和本地迁移 |
+| [页面与流程](patterns.md) | 时间线、阅读、评论与设置入口 |
+| [接入与构建](integration.md) | Compose 模块、页面宿主和业务接入 |
+| [验收](quality.md) | 交互、兼容性和设备验证 |
 
-机器可读参数见 [tokens.json](tokens.json)，来源及改动方式见 [reference-review.json](reference-review.json)。效果对照见 [visual-review.md](visual-review.md)。
+机器可读参数见 [设计变量](tokens.json)。复用组件时，可对照 [Demo 源码](../demo/) 和 [接入指南](integration.md) 检查状态、手势与反馈。
+
+实现出处见 [来源与适配](scope-and-sources.md)，许可见 [开源署名](../NOTICE.md)。Review 的 [界面对照记录](visual-review.md) 可用于追溯组件来源和历史验收。
