@@ -79,6 +79,11 @@ fun ReviewAppearance(model:DemoModel,open:(String)->Unit) {
   }
   SettingsSection("应用图标") {LucentRow("自定义应用图标",model.str("icon"),Icons.Outlined.AppShortcut,onClick={open("icons")})}
   SettingsSection("屏幕显示") {LucentRow("屏幕帧率设置",model.str("refresh"),Icons.Outlined.Speed,onClick={open("refresh")})}
+  if (android.os.Build.VERSION.SDK_INT >= 34) SettingsSection("手势与动效") {
+   ReferenceToggle("可预测性返回", "应用内页面随系统返回手势预览上一页", Icons.Outlined.Swipe, model.bool("predictiveBack")) {
+    model.set("predictiveBack", it)
+   }
+  }
   SettingsSection("触感与震动") {ReferenceToggle("触感与震动反馈","点击、长按和完成指定手势时轻振一次",Icons.Outlined.Vibration,model.bool("haptics")){model.set("haptics",it)}}
  }
 }

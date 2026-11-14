@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.3+5
+
+Synced the UI source code for Lucent UI 0.2.3+5.
+
+- Stabilized the gallery thumbnail strip and video controls in both orientations.
+- Restored video haptics and added an in-app predictive back setting.
+
 ## 0.2.2+4
 
 Synced the UI source code for Lucent UI 0.2.2+4.

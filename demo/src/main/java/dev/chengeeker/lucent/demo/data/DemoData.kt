@@ -42,6 +42,7 @@ object DemoDefaults {
             "glass" to false,
             "translucent" to false,
             "motion" to true,
+            "predictiveBack" to false,
             "haptics" to true,
             "refresh" to "系统默认",
             "icon" to "圆润",

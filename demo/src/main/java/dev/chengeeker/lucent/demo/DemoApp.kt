@@ -96,10 +96,20 @@ val LocalDemoContentTop = staticCompositionLocalOf { 0.dp }
  val context=LocalContext.current;val activity=context.activity();val colors=MaterialTheme.colorScheme
  val drawer=rememberDrawerState(DrawerValue.Closed);val scope=rememberCoroutineScope()
  BackHandler(drawer.isOpen){scope.launch{drawer.close()}}
- PredictiveBackHandler(routes.size>1 && !drawer.isOpen){events->
-  val route=routes.last()
-  try { events.collect {if(routes.lastOrNull()===route)route.backProgress=it.progress};if(routes.lastOrNull()===route)back() }
-  finally{route.backProgress=null}
+ val canReturn = routes.size > 1 && !drawer.isOpen
+ val predictive = android.os.Build.VERSION.SDK_INT >= 34 && model.bool("predictiveBack") && LocalLucentStyle.current.motion
+ val previewEnabled by rememberUpdatedState(canReturn && predictive)
+ BackHandler(canReturn && !predictive) { back() }
+ PredictiveBackHandler(canReturn && predictive) { events ->
+  if (previewEnabled) {
+   val route = routes.last()
+   try {
+    events.collect { if (previewEnabled && routes.lastOrNull() === route) route.backProgress = it.progress }
+    if (previewEnabled && routes.lastOrNull() === route) back()
+   } finally {
+    route.backProgress = null
+   }
+  }
  }
  val dark=colors.background.luminance()<.5f
  SideEffect {activity?.window?.let {w->WindowCompat.getInsetsController(w,w.decorView).apply{isAppearanceLightStatusBars=!dark;isAppearanceLightNavigationBars=!dark}}}

@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.media.AudioManager
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
@@ -19,6 +20,10 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import dev.chengeeker.lucent.review.reviewPulse
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
@@ -90,7 +95,8 @@ fun LucentVideo(
     var controls by remember { mutableStateOf(true) }
     var hint by remember { mutableStateOf("") }
     val audio = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
-    val initialOrientation = remember { activity?.requestedOrientation }
+    val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val pulse by rememberUpdatedState(reviewPulse())
     val initialBrightness = remember { activity?.window?.attributes?.screenBrightness ?: -1f }
     LaunchedEffect(valid) {
         quality = quality.coerceIn(valid.indices)
@@ -128,13 +134,9 @@ fun LucentVideo(
             lifecycle.lifecycle.removeObserver(observer)
             player.removeListener(listener)
             player.release()
-            activity?.requestedOrientation =
-                initialOrientation ?: ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
             activity?.window?.let { w ->
                 w.attributes = w.attributes.apply { screenBrightness = initialBrightness }
                 w.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                WindowCompat.getInsetsController(w, w.decorView)
-                    .show(WindowInsetsCompat.Type.systemBars())
             }
         }
     }
@@ -164,20 +166,41 @@ fun LucentVideo(
             hint = ""
         }
     }
+    DisposableEffect(activity, fullscreen) {
+        val window = activity?.window
+        if (!fullscreen || window == null) {
+            onDispose {}
+        } else {
+            val orientation = activity.requestedOrientation
+            val controller = WindowCompat.getInsetsController(window, window.decorView)
+            val behavior = controller.systemBarsBehavior
+            val insets = ViewCompat.getRootWindowInsets(window.decorView)
+            val status = WindowInsetsCompat.Type.statusBars()
+            val navigation = WindowInsetsCompat.Type.navigationBars()
+            val statusVisible = insets?.isVisible(status) != false
+            val navigationVisible = insets?.isVisible(navigation) != false
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.hide(status or navigation)
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            onDispose {
+                activity.requestedOrientation = orientation
+                controller.systemBarsBehavior = behavior
+                if (statusVisible) controller.show(status) else controller.hide(status)
+                if (navigationVisible) controller.show(navigation) else controller.hide(navigation)
+            }
+        }
+    }
     fun setFull(value: Boolean) {
         fullscreen = value
-        activity?.requestedOrientation =
-            if (value) ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            else initialOrientation ?: ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-        activity?.window?.let { w ->
-            val c = WindowCompat.getInsetsController(w, w.decorView)
-            if (value) c.hide(WindowInsetsCompat.Type.systemBars())
-            else c.show(WindowInsetsCompat.Type.systemBars())
+        controls = true
+        if (!value) {
+            menu = ""
+            onExitFullscreen()
         }
-        if (!value) onExitFullscreen()
     }
     BackHandler(fullscreen) { setFull(false) }
-    Box(modifier.background(Color.Black)) {
+    BoxWithConstraints(modifier.background(Color.Black)) {
+        val showChrome = controls && (!fullscreen || (landscape && maxWidth > maxHeight))
         AndroidView(
             factory = {
                 PlayerView(it).apply {
@@ -192,9 +215,10 @@ fun LucentVideo(
             Modifier.fillMaxSize()
                 .pointerInput(player, speed) {
                     detectTapGestures(
-                        onTap = { controls = !controls },
-                        onDoubleTap = { if (player.isPlaying) player.pause() else player.play() },
+                        onTap = { pulse(); controls = !controls },
+                        onDoubleTap = { pulse(); if (player.isPlaying) player.pause() else player.play() },
                         onLongPress = {
+                            pulse()
                             player.setPlaybackSpeed(2f)
                             hint = "2× 临时倍速"
                         },
@@ -287,7 +311,7 @@ fun LucentVideo(
                     .padding(12.dp),
                 color = Color.White,
             )
-        if (controls)
+        if (showChrome)
             LucentVideoBottom(
                 Modifier.align(Alignment.BottomCenter),
                 position,
@@ -312,8 +336,9 @@ fun LucentVideo(
                     position = target
                 },
             )
-        if (controls && fullscreen)
+        if (showChrome && fullscreen)
             LucentVideoTop(
+                modifier = Modifier.align(Alignment.TopCenter),
                 title = "Lucent · Mountain light",
                 fullscreen = true,
                 close = { setFull(false) },

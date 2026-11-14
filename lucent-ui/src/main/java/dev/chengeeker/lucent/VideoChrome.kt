@@ -32,21 +32,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.chengeeker.lucent.review.hapticClick
 
 internal val standardVideoSpeeds = listOf(3f, 2f, 1.5f, 1.25f, 1f, .75f, .5f)
 
 @Composable
-private fun videoAction(action: () -> Unit): () -> Unit {
-    val enabled = LocalLucentStyle.current.haptics
-    val feedback = androidx.compose.ui.platform.LocalHapticFeedback.current
-    return {
-        if (enabled)
-            feedback.performHapticFeedback(
-                androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove
-            )
-        action()
-    }
-}
+private fun videoAction(action: () -> Unit): () -> Unit = hapticClick(action)
 
 @Composable
 private fun VideoGlyph(
@@ -89,7 +80,10 @@ fun LucentVideoTop(
             .background(
                 Brush.verticalGradient(listOf(Color.Black.copy(alpha = .87f), Color.Transparent))
             )
-            .statusBarsPadding()
+            .windowInsetsPadding(
+                if (fullscreen) WindowInsets.displayCutout.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+                else WindowInsets.statusBars
+            )
             .padding(
                 start = if (fullscreen) 24.dp else 12.dp,
                 top = 8.dp,
@@ -166,7 +160,10 @@ fun LucentVideoBottom(
             .background(
                 Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = .87f)))
             )
-            .navigationBarsPadding()
+            .windowInsetsPadding(
+                if (fullscreen) WindowInsets.displayCutout.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                else WindowInsets(0)
+            )
             .padding(
                 start = if (fullscreen) 28.dp else 16.dp,
                 top = 12.dp,
@@ -174,7 +171,7 @@ fun LucentVideoBottom(
                 bottom = 12.dp,
             )
     ) {
-        LucentVideoTrack(position, duration, buffered, enabled, onSeekStart, onSeek, onSeekEnd)
+        LucentVideoTrack(position, duration, buffered, enabled, hapticClick(onSeekStart), onSeek, onSeekEnd)
         Spacer(Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
             LucentVideoAction(
@@ -379,7 +376,7 @@ private fun LucentVideoTrack(
         else Modifier
     Canvas(
         Modifier.fillMaxWidth()
-            .height(48.dp)
+            .height(16.dp)
             .testTag("video-progress")
             .onSizeChanged { width = it.width.coerceAtLeast(1) }
             .semantics {

@@ -1,10 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.2",
-  "versionCode": 4,
-  "reference": "Review 3.17.5+278",
-  "apkBytes": 6012753,
-  "sha256": "6f9899c5ba089e8ce08e5d15fa8ecd9cef4458861b10283ec27df1c0acace085",
+  "versionName": "0.2.3",
+  "versionCode": 5,
+  "apkBytes": 6013693,
+  "sha256": "84c288aa592fcaede8907f5fd3854e745c544e6071d28e87fc459b1e0424a04a",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -12,7 +11,7 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 23,
+  "testCount": 24,
   "suites": [
     {
       "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
@@ -43,6 +42,13 @@
       "skipped": 0
     },
     {
+      "suite": "dev.chengeeker.lucent.demo.VideoControlsTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
       "suite": "dev.chengeeker.lucent.ContractsTest",
       "tests": 5,
       "failures": 0,
@@ -51,25 +57,18 @@
     }
   ],
   "lintErrors": 0,
-  "lintWarnings": 9,
+  "lintWarnings": 10,
   "installedApkSha256MatchesDelivery": true,
   "runtimeChecks": [
-    "Android 15 same-signature upgrade from 0.2.1 and legacy bookmark retained",
-    "Feed title scrolls to top, arrow opens group picker, image and video filters select the correct cards",
-    "Search uses its own action and the glass quick result opens the glass lab",
-    "Blank post cannot publish, exiting saves the draft, restart retains it, publishing clears the draft and retains the post",
-    "Post body and comment shortcuts use the selected post, and replies attach to the selected comment",
-    "Favorites and history open their original posts, including the pre-upgrade bookmark",
-    "HDR thumbnail inside the selected post opens the right image and returns to the same detail page",
-    "Component menu opens settings and the sheet separates reading and composition",
-    "Documentation chapters return to the directory using toolbar and system back",
-    "Fourteen catalog routes and eight settings routes plus icon and frame-rate subpages opened their expected content",
-    "Episode selection, next episode and keyboard preview exercised",
-    "No crash recorded during the tested emulator flows"
+    "Android 15 original-signature upgrade from 0.2.2",
+    "Portrait and landscape 16dp video progress touch region and compact control row",
+    "Rotation frame samples and upper-edge fullscreen title",
+    "Playback, speed, quality, single-quality mode and two fullscreen exit paths",
+    "Thumbnail geometry fixed during main-image drag, strip drag selects image",
+    "Predictive back off by default, setting persists and edge-swipe follows only when enabled"
   ],
   "notVerified": [
-    "Physical Android devices and HDR luminance",
-    "User WebDAV servers and real accounts"
+    "Physical vibration motor and OEM-specific rotation behavior"
   ],
-  "evidence": "interaction-audit.md"
+  "evidence": "player-controls-audit.md"
 }

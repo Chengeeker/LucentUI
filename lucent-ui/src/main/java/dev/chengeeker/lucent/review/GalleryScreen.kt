@@ -1,5 +1,5 @@
 // Adapted from Review, Copyright 2026 Chengeeker, MIT.
-@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class, androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 package dev.chengeeker.lucent.review
 
 import android.content.pm.ActivityInfo
@@ -141,7 +141,6 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
 
 
 
-        var thumbnailScrolling by remember { mutableStateOf(false) }
         val mainDragging by pager.interactionSource.collectIsDraggedAsState()
 
         val density = LocalDensity.current
@@ -290,9 +289,8 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             }
             flight?.let { GalleryFlightImage(it, viewport.topLeft, motion.position) }
             val chrome = showControls && !morphing && !closing && dragFraction == 0f
-            val desiredThumbnailBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding() + 32.dp
-            var thumbnailBottom by remember { mutableStateOf(desiredThumbnailBottom) }
-            LaunchedEffect(desiredThumbnailBottom, thumbnailScrolling) { if (!thumbnailScrolling) thumbnailBottom = desiredThumbnailBottom }
+            val bottomInsets = WindowInsets.navigationBarsIgnoringVisibility.union(WindowInsets.displayCutout)
+                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
             if (chrome) Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
                 Spacer(Modifier.weight(1f))
@@ -302,11 +300,11 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                 Spacer(Modifier.weight(1f))
                 GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
             }
-            if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).navigationBarsPadding()
+            if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).windowInsetsPadding(bottomInsets)
                 .padding(end = 16.dp, bottom = if (media.size > 1) 110.dp else 24.dp))
             if (chrome && media.size > 1) GalleryThumbnails(media, pager,
-                Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(start = 12.dp, end = 12.dp, bottom = thumbnailBottom),
-                onScrolling = { thumbnailScrolling = it }, onUserDrag = {})
+                Modifier.align(Alignment.BottomCenter).fillMaxWidth().windowInsetsPadding(bottomInsets)
+                    .padding(start = 12.dp, end = 12.dp, bottom = 32.dp))
 
         }
         }
@@ -319,15 +317,13 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
 private fun galleryRatio(media: GalleryMedia): Float = if (media.width > 0 && media.height > 0) media.width.toFloat() / media.height else 1f
 
 @Composable
-internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compose.foundation.pager.PagerState, modifier: Modifier, onScrolling: (Boolean) -> Unit, onUserDrag: () -> Unit) {
+internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compose.foundation.pager.PagerState, modifier: Modifier) {
     val list = rememberLazyListState(pager.currentPage)
     val dragged by list.interactionSource.collectIsDraggedAsState()
     val mainDragged by pager.interactionSource.collectIsDraggedAsState()
     var ownsSelection by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val tick = reviewPulse()
-    LaunchedEffect(dragged) { if (dragged) onUserDrag() }
-    LaunchedEffect(list.isScrollInProgress) { onScrolling(list.isScrollInProgress) }
     LaunchedEffect(dragged, list.isScrollInProgress, mainDragged) {
         if (mainDragged) { ownsSelection = false; list.stopScroll() }
         else if (dragged) ownsSelection = true
@@ -341,8 +337,11 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
             layout.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2 - center) }?.index
         }.collectLatest { index -> if (index != null && index != pager.currentPage) { tick(); pager.scrollToPage(index) } }
     }
-    LaunchedEffect(pager.currentPage, ownsSelection, pager.isScrollInProgress) {
-        if (!ownsSelection && !pager.isScrollInProgress) list.scrollToItem(pager.currentPage)
+    // The main pager only moves the strip once it settles; touching the strip owns selection.
+    LaunchedEffect(pager.settledPage, ownsSelection, mainDragged) {
+        if (!ownsSelection && !mainDragged &&
+            (list.firstVisibleItemIndex != pager.settledPage || list.firstVisibleItemScrollOffset != 0)
+        ) list.animateScrollToItem(pager.settledPage)
     }
     BoxWithConstraints(modifier) {
         val cell = maxWidth * .16f
@@ -354,7 +353,7 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
                 Box(Modifier.width(cell).fillMaxHeight().padding(horizontal = 3.dp, vertical = 2.dp)
                     .then(if (selected) Modifier.border(2.dp, Color.White, outline) else Modifier)
                     .semantics { this.selected = selected }
-                    .reviewClickable { scope.launch { list.scrollToItem(index); pager.scrollToPage(index) } }) {
+                    .reviewClickable { scope.launch { pager.scrollToPage(index) } }) {
                     Box(Modifier.fillMaxSize().padding(2.dp).clip(RoundedCornerShape(6.dp))) {
                         val image = Modifier.fillMaxSize()
                         GalleryMediaImage(item.copy(url = item.preview.ifBlank { item.url }), "第 ${index + 1} 张图片", image)

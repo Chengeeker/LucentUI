@@ -28,3 +28,11 @@ The gallery uses the Review `PostContent.kt/HdrBadge` style: white regular text,
 HDR样片来自[Android platform-samples](https://github.com/android/platform-samples/blob/main/samples/graphics/ultrahdr/src/main/assets/gainmaps/lamps.jpg)，Apache-2.0，文件未经重编码，SHA-256 `4691ba5c27cb92ce8a6b0c8d80ee83780f6cbce75a9805faf00409d54ab106e5`。Android15下以1/2/4采样解码均确认 `Bitmap.hasGainmap() == true`。依据[Android HDR显示文档](https://developer.android.com/media/grow/ultra-hdr/display)按能力切换窗口；旧设备展示SDR基础图，标签说明文件格式。截图与录屏不能证明HDR屏幕峰值亮度，实体显示仍待验收。
 
 保存按原文件复制，包含HDR增益图，取消系统文件选择器不显示保存成功。图库关闭恢复系统栏显示及明暗图标。
+
+## 播放控件定位与触感（0.2.3）
+
+图库缩略图条以底部稳定安全区加32dp定位，轨道高64dp。主图滑动时保持轨道位置，主图停稳后平滑对齐选中缩略图。手拖缩略图时由缩略条控制当前页。
+
+普通视频进度区按 ReviewVideoChrome 使用16dp，轨迹高4dp，与操作行相隔4dp。内嵌播放器的进度和操作行贴播放器底部。全屏等待横向容器就绪后显示顶栏和操作行，边距取屏幕缺口的稳定安全区。退出恢复进入前的方向和系统栏状态。
+
+播放、倍速、清晰度、全屏与选项点击走共用触感反馈，进度条每次点按或拖动开始只振动一次。关闭个性化中的触感时同时关闭播放器反馈。
