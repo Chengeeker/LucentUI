@@ -1,5 +1,7 @@
 # Lucent UI
 
+English · [简体中文](README.zh-CN.md)
+
 Lucent UI is an open design system for Android, built with Jetpack Compose. It combines the structure and adaptive theming of Material 3 with frosted surfaces and liquid glass, shaped into a consistent set of components, interaction patterns, and reusable UI guidance.
 
 It includes a public specification, a Compose module, and a demo app that brings the pieces together in realistic screens and flows.
