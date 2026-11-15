@@ -257,7 +257,8 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                                 zoomAnimation?.cancel()
                                 val target = galleryDoubleTapScale(scale, picture.long)
                                 val from = pan
-                                val focus = Offset(tap.x - width / 2, tap.y - height / 2)
+                                val imageSize = displayedBitmap?.takeUnless(Bitmap::isRecycled)?.let { Size(it.width.toFloat(), it.height.toFloat()) }
+                                val focus = galleryDoubleTapFocus(Size(width, height), imageSize, scale, pan, dragY, tap)
                                 val destination = focus - (focus - from) * (target / scale)
                                 val boundX = width * (target - 1) / 2
                                 val boundY = height * (target - 1) / 2

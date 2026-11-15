@@ -1,9 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.3",
-  "versionCode": 5,
+  "versionName": "0.2.4",
+  "versionCode": 6,
   "apkBytes": 6013693,
-  "sha256": "84c288aa592fcaede8907f5fd3854e745c544e6071d28e87fc459b1e0424a04a",
+  "sha256": "530d2d9e82ff41bebf8daa257c999092e69491a279c9368fdee57b14fc3d1e1f",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -11,7 +11,7 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 24,
+  "testCount": 25,
   "suites": [
     {
       "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
@@ -50,7 +50,7 @@
     },
     {
       "suite": "dev.chengeeker.lucent.ContractsTest",
-      "tests": 5,
+      "tests": 6,
       "failures": 0,
       "errors": 0,
       "skipped": 0
@@ -58,17 +58,11 @@
   ],
   "lintErrors": 0,
   "lintWarnings": 10,
-  "installedApkSha256MatchesDelivery": true,
-  "runtimeChecks": [
-    "Android 15 original-signature upgrade from 0.2.2",
-    "Portrait and landscape 16dp video progress touch region and compact control row",
-    "Rotation frame samples and upper-edge fullscreen title",
-    "Playback, speed, quality, single-quality mode and two fullscreen exit paths",
-    "Thumbnail geometry fixed during main-image drag, strip drag selects image",
-    "Predictive back off by default, setting persists and edge-swipe follows only when enabled"
-  ],
+  "installedApkSha256MatchesDelivery": null,
+  "runtimeChecks": [],
   "notVerified": [
-    "Physical vibration motor and OEM-specific rotation behavior"
+    "Gallery double-tap focus was not checked on a device or emulator",
+    "This APK was not installed"
   ],
-  "evidence": "player-controls-audit.md"
+  "evidence": "gallery-double-tap-audit.md"
 }

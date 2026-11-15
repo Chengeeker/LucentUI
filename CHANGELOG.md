@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.4+6
+
+Synced the UI source code for Lucent UI 0.2.4+6.
+
+- Centered double-tap zoom when the gesture lands in the gallery's black letterbox area; taps on the rendered image still zoom around their position.
+- Reused the shared gallery implementation in the demo and added geometry regression coverage.
+
 ## 0.2.3+5
 
 Synced the UI source code for Lucent UI 0.2.3+5.
