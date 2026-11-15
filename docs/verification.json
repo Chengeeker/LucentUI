@@ -1,9 +1,10 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.4",
-  "versionCode": 6,
-  "apkBytes": 6013693,
-  "sha256": "530d2d9e82ff41bebf8daa257c999092e69491a279c9368fdee57b14fc3d1e1f",
+  "versionName": "0.2.8",
+  "versionCode": 10,
+  "apkFile": "LucentUI_v0.2.8_arm64-v8a.apk",
+  "apkBytes": 6014073,
+  "sha256": "6592e0f6fed4c3b08a076154d3c02dcd973b7bcf22000a4f433c1101a33b0986",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -11,38 +12,10 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 25,
+  "testCount": 7,
   "suites": [
     {
-      "suite": "dev.chengeeker.lucent.demo.data.BackupTest",
-      "tests": 9,
-      "failures": 0,
-      "errors": 0,
-      "skipped": 0
-    },
-    {
-      "suite": "dev.chengeeker.lucent.demo.data.DavDirectoryTest",
-      "tests": 2,
-      "failures": 0,
-      "errors": 0,
-      "skipped": 0
-    },
-    {
-      "suite": "dev.chengeeker.lucent.demo.data.SavedTitlesTest",
-      "tests": 3,
-      "failures": 0,
-      "errors": 0,
-      "skipped": 0
-    },
-    {
-      "suite": "dev.chengeeker.lucent.demo.data.TransportTest",
-      "tests": 4,
-      "failures": 0,
-      "errors": 0,
-      "skipped": 0
-    },
-    {
-      "suite": "dev.chengeeker.lucent.demo.VideoControlsTest",
+      "suite": "dev.chengeeker.lucent.demo.DemoPostsTest",
       "tests": 1,
       "failures": 0,
       "errors": 0,
@@ -56,13 +29,20 @@
       "skipped": 0
     }
   ],
+  "fullDemoTestRun": {
+    "tests": 20,
+    "failures": 10,
+    "reason": "Robolectric ASM rejects Java class file major version 70 under the only installed JDK 26.0.1."
+  },
   "lintErrors": 0,
-  "lintWarnings": 10,
+  "lintWarnings": 13,
   "installedApkSha256MatchesDelivery": null,
   "runtimeChecks": [],
   "notVerified": [
-    "Gallery double-tap focus was not checked on a device or emulator",
-    "This APK was not installed"
+    "Full Demo unit suite could not run under available JDK 26.0.1: Robolectric rejects class file major version 70; focused media/gallery tests passed.",
+    "Gallery swipe timing, video playback, return animation and button appearance were not checked on an emulator or device.",
+    "Physical HDR brightness, haptic motor and OEM-specific behavior remain unverified."
   ],
-  "evidence": "gallery-double-tap-audit.md"
+  "evidence": "docs/interaction-audit.md",
+  "buildJdk": "26.0.1"
 }

@@ -132,7 +132,7 @@ private fun ReferencePost(post: DemoPost, model: DemoModel, open: (String) -> Un
                 color = colors.onSurface, maxLines = 6, overflow = TextOverflow.Ellipsis)
             if (post.kind != PostKind.Text) {
                 Spacer(Modifier.height(10.dp))
-                PostMedia(post.kind, model.bool("imageRound"), onVideo = { open("video") })
+                PostMedia(post, model.bool("imageRound"), detail = false, onVideo = { open("video") })
             }
             Spacer(Modifier.height(12.dp))
             ReviewDivider()
@@ -152,28 +152,65 @@ private fun ReferencePost(post: DemoPost, model: DemoModel, open: (String) -> Un
 }
 
 @Composable
-internal fun PostMedia(kind: PostKind, rounded: Boolean, onVideo: () -> Unit) {
-    when (kind) {
+internal fun PostMedia(post: DemoPost, rounded: Boolean, detail: Boolean = false, onVideo: () -> Unit) {
+    when (post.kind) {
         PostKind.Video -> Box(Modifier.fillMaxWidth().aspectRatio(16f/9f)
             .clip(RoundedCornerShape(if (rounded) 12.dp else 0.dp)).lucentClick(onClick = onVideo)) {
             AsyncImage("file:///android_asset/media/landscape-1.jpg", null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
             Icon(Icons.Rounded.PlayCircle, "播放视频", Modifier.align(Alignment.Center).size(48.dp), tint = Color.White)
+            TimelineMediaBadge("00:24")
         }
         PostKind.Images -> {
-            val media = remember { listOf(galleryItems[0], galleryItems.last(), galleryItems[2]).map { it.media() } }
-            val radius = if (rounded) 8.dp else 0.dp
-            val origins = remember(radius) { media.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(radius) } }
-            val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
-            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                media.forEachIndexed { i, item ->
-                    GalleryThumbnail(item, origins.getValue(i), Modifier.weight(1f).aspectRatio(1f)) {
-                        openGallery?.invoke(media, i, origins)
+            val media = remember(post.media) { post.media.map { it.media() } }
+            if (media.isNotEmpty()) {
+                val visible = if (detail) media else media.take(9)
+                val columns = when (visible.size) { 1 -> 1; 2, 4 -> 2; else -> 3 }
+                val radius = if (rounded) if (columns == 1) 16.dp else 8.dp else 0.dp
+                val origins = remember(post.id, radius, detail, media.size) {
+                    visible.indices.associateWith { dev.chengeeker.lucent.review.GalleryOrigin(radius) }
+                }
+                val openGallery = dev.chengeeker.lucent.review.LocalGalleryOpenFrom.current
+
+                @Composable
+                fun Cell(index: Int, modifier: Modifier) {
+                    val item = visible[index]
+                    Box(modifier.clip(RoundedCornerShape(radius))) {
+                        GalleryThumbnail(item, origins.getValue(index), Modifier.fillMaxSize()) {
+                            openGallery?.invoke(media, index, origins)
+                        }
+                        if (item.gif) TimelineMediaBadge("GIF")
+                        else if (item.long) TimelineMediaBadge("长图")
+                        if (!detail && index == 8 && media.size > 9) {
+                            Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .45f)),
+                                contentAlignment = Alignment.Center) {
+                                Text("+" + (media.size - 9), color = Color.White, fontSize = 24.sp,
+                                    fontWeight = FontWeight.SemiBold)
+                            }
+                        }
+                    }
+                }
+
+                if (columns == 1) Cell(0, Modifier.width(260.dp).aspectRatio(1f))
+                else Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    visible.indices.chunked(columns).forEach { row ->
+                        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            row.forEach { index -> Cell(index, Modifier.weight(1f).aspectRatio(1f)) }
+                            repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
+                        }
                     }
                 }
             }
         }
         PostKind.Text -> Unit
     }
+}
+
+@Composable
+private fun BoxScope.TimelineMediaBadge(text: String) {
+    Text(text, Modifier.align(Alignment.BottomEnd).padding(4.dp)
+        .background(Color.Black.copy(alpha = .72f), RoundedCornerShape(4.dp))
+        .padding(horizontal = 5.dp, vertical = 2.dp),
+        color = Color.White, fontSize = 10.sp, fontWeight = FontWeight.Bold)
 }
 
 @Composable private fun ReferencePostAction(icon:androidx.compose.ui.graphics.vector.ImageVector,label:String,count:Int,color:Color,action:()->Unit) {

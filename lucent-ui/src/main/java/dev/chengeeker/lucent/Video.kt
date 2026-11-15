@@ -26,6 +26,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import dev.chengeeker.lucent.review.reviewPulse
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.*
@@ -60,6 +62,7 @@ fun LucentVideo(
     loop: Boolean = false,
     onSpeed: (Float) -> Unit = {},
     onExitFullscreen: () -> Unit = {},
+    onControlsHeight: (Int) -> Unit = {},
 ) {
     val valid = remember(sources) { manualQualities(sources) }
     if (valid.isEmpty()) {
@@ -313,7 +316,7 @@ fun LucentVideo(
             )
         if (showChrome)
             LucentVideoBottom(
-                Modifier.align(Alignment.BottomCenter),
+                Modifier.align(Alignment.BottomCenter).onSizeChanged { onControlsHeight(it.height) },
                 position,
                 duration,
                 player.bufferedPosition,

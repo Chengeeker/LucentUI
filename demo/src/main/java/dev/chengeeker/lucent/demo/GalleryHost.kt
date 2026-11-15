@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal fun GalleryItem.media() = GalleryMedia(uri, long = uri.endsWith("/long.jpg"),
-    gif = uri.endsWith(".gif", true), hdr = hdr, description = description)
+    gif = uri.endsWith(".gif", true), hdr = hdr, description = description, video = video, duration = duration)
 
 private data class GalleryRequest(val media: List<GalleryMedia>, val index: Int, val origins: Map<Int, GalleryOrigin>)
 

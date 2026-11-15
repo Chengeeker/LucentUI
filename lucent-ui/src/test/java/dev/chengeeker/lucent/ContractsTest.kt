@@ -67,11 +67,15 @@ class ContractsTest {
     }
 
     @Test fun galleryDoubleTapUsesImageBoundsAndCentersBlackBars() {
-        val viewport=androidx.compose.ui.geometry.Size(1000f,1000f)
-        val image=androidx.compose.ui.geometry.Size(500f,1000f)
-        assertEquals(androidx.compose.ui.geometry.Offset.Zero,dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport,image,1f,androidx.compose.ui.geometry.Offset.Zero,0f,androidx.compose.ui.geometry.Offset(100f,500f)))
-        assertEquals(androidx.compose.ui.geometry.Offset(-100f,0f),dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport,image,1f,androidx.compose.ui.geometry.Offset.Zero,0f,androidx.compose.ui.geometry.Offset(400f,500f)))
-        assertEquals(androidx.compose.ui.geometry.Offset(-400f,0f),dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport,image,2f,androidx.compose.ui.geometry.Offset.Zero,0f,androidx.compose.ui.geometry.Offset(100f,500f)))
-        assertEquals(androidx.compose.ui.geometry.Offset.Zero,dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport,null,1f,androidx.compose.ui.geometry.Offset.Zero,0f,androidx.compose.ui.geometry.Offset(100f,500f)))
+        val viewport = androidx.compose.ui.geometry.Size(1000f, 1000f)
+        val image = androidx.compose.ui.geometry.Size(500f, 1000f)
+        assertEquals(androidx.compose.ui.geometry.Offset.Zero, dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport, image, 1f,
+            androidx.compose.ui.geometry.Offset.Zero, 0f, androidx.compose.ui.geometry.Offset(100f, 500f)))
+        assertEquals(androidx.compose.ui.geometry.Offset(-100f, 0f), dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport, image, 1f,
+            androidx.compose.ui.geometry.Offset.Zero, 0f, androidx.compose.ui.geometry.Offset(400f, 500f)))
+        assertEquals(androidx.compose.ui.geometry.Offset(-400f, 0f), dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport, image, 2f,
+            androidx.compose.ui.geometry.Offset.Zero, 0f, androidx.compose.ui.geometry.Offset(100f, 500f)))
+        assertEquals(androidx.compose.ui.geometry.Offset.Zero, dev.chengeeker.lucent.review.galleryDoubleTapFocus(viewport, null, 1f,
+            androidx.compose.ui.geometry.Offset.Zero, 0f, androidx.compose.ui.geometry.Offset(100f, 500f)))
     }
 }

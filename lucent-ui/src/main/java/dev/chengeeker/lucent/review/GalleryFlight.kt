@@ -68,7 +68,6 @@ internal fun galleryDoubleTapFocus(viewport: Size, image: Size?, scale: Float, p
         center + (plane.bottomRight - center) * scale + pan + Offset(0f, dragY))
     return if (drawn.contains(tap)) tap - center - Offset(0f, dragY) else Offset.Zero
 }
-
 @Composable
 internal fun GalleryFlightImage(flight: GalleryFlight, screenOrigin: Offset, position: Float) {
     val bitmap = remember(flight.plane.bitmap) { flight.plane.bitmap.asImageBitmap() }

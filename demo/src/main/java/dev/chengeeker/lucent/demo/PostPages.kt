@@ -148,7 +148,7 @@ internal fun ArticlePage(model: DemoModel, post: DemoPost?, jumpToComments: Bool
                         GalleryThumbnail(media[0], origin, Modifier.fillMaxWidth().height(220.dp)) {
                             openGallery?.invoke(media, 0, mapOf(0 to origin))
                         }
-                    } else PostMedia(post.kind, model.bool("imageRound"), onVideo)
+                    } else PostMedia(post, model.bool("imageRound"), detail = true, onVideo = onVideo)
                     Text(post.body, Modifier.padding(vertical = 12.dp),
                         style = MaterialTheme.typography.bodyLarge.copy(lineHeight = (16 * model.str("bodySpacing").toFloat()).sp))
                 }

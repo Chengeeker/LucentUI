@@ -5,12 +5,13 @@ import dev.chengeeker.lucent.review.GalleryMedia
 import dev.chengeeker.lucent.review.GalleryOrigin
 import dev.chengeeker.lucent.review.ReviewGallery
 
-data class GalleryItem(val uri: String, val description: String, val hdr: Boolean = false)
+data class GalleryItem(val uri: String, val description: String, val hdr: Boolean = false,
+    val video: String = "", val duration: String = "")
 
 @Composable
 fun LucentGallery(items: List<GalleryItem>, start: Int, sources: Map<Int, GalleryOrigin> = emptyMap(),
     onDismiss: () -> Unit, onSave: (GalleryItem) -> Unit) {
     if (items.isEmpty()) return
-    ReviewGallery(items.map { GalleryMedia(it.uri, long = it.uri.endsWith("/long.jpg"), gif = it.uri.endsWith(".gif", true), hdr = it.hdr, description = it.description) }, start, sources, onDismiss,
+    ReviewGallery(items.map { GalleryMedia(it.uri, long = it.uri.endsWith("/long.jpg"), gif = it.uri.endsWith(".gif", true), hdr = it.hdr, description = it.description, video = it.video, duration = it.duration) }, start, sources, onDismiss,
         onSave = { media -> items.firstOrNull { it.uri == media.url }?.let(onSave) })
 }

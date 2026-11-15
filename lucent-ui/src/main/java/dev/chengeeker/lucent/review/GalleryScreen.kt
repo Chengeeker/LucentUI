@@ -28,8 +28,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material.icons.rounded.MotionPhotosOn
 import androidx.compose.material.icons.rounded.PauseCircleOutline
 import androidx.compose.material.icons.rounded.PlayCircleOutline
@@ -60,6 +62,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import dev.chengeeker.lucent.LucentVideo
+import dev.chengeeker.lucent.VideoSource
 import androidx.compose.ui.platform.LocalView
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
@@ -131,12 +135,14 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
     @Composable fun Content(inDialog: Boolean) {
         val pulse = reviewPulse()
         val item = media[pager.currentPage]
+        val settledItem = media[pager.settledPage]
         val context = LocalContext.current
         var zoomed by remember { mutableStateOf(false) }
         var dragY by remember(pager.currentPage) { mutableFloatStateOf(0f) }
         var dragFraction by remember(pager.currentPage) { mutableFloatStateOf(0f) }
 
         var showControls by remember { mutableStateOf(true) }
+        var videoControlsHeight by remember { mutableIntStateOf(0) }
 
 
 
@@ -221,7 +227,15 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             HorizontalPager(pager, userScrollEnabled = !zoomed && !closing && !morphing,
                 modifier = Modifier.fillMaxSize().graphicsLayer { alpha = if (morphing) 0f else 1f }.recordBackdrop(mediaBackdrop), beyondViewportPageCount = 0) { page ->
                 val picture = media[page]
-                run {
+                if (picture.video.isNotBlank()) {
+                    if (page == pager.settledPage && !pager.isScrollInProgress && !closing) key(picture.video) {
+                        LucentVideo(listOf(VideoSource("自动", picture.video)), Modifier.fillMaxSize(), autoplay = true,
+                            onControlsHeight = { videoControlsHeight = it })
+                    } else Box(Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
+                        GalleryMediaImage(picture, "视频封面", Modifier.fillMaxSize())
+                        Icon(Icons.Rounded.PlayCircle, "播放视频", Modifier.size(56.dp), tint = Color.White)
+                    }
+                } else run {
                     val firstBitmap = remember(page) { if (page == initial) openingImage else sources[page]?.bitmap }
                     var scale by remember(page) { mutableFloatStateOf(1f) }
                     var pan by remember(page) { mutableStateOf(Offset.Zero) }
@@ -290,22 +304,33 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             }
             flight?.let { GalleryFlightImage(it, viewport.topLeft, motion.position) }
             val chrome = showControls && !morphing && !closing && dragFraction == 0f
+            val liquid = dev.chengeeker.lucent.LocalLucentStyle.current.glass
             val bottomInsets = WindowInsets.navigationBarsIgnoringVisibility.union(WindowInsets.displayCutout)
                 .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
             if (chrome) Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
+                if (liquid) GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
+                else PlainGalleryControl("返回", true, hapticClick(::close)) {
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, null, Modifier.size(24.dp), tint = Color.White)
+                }
                 Spacer(Modifier.weight(1f))
                     Text("${pager.currentPage + 1} / ${media.size}",
                         Modifier.background(Color.Black.copy(alpha = .45f), RoundedCornerShape(16.dp)).padding(horizontal = 14.dp, vertical = 6.dp),
                         color = Color.White, fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
-                GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
+                if (item.video.isBlank()) {
+                    if (liquid) GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
+                    else PlainGalleryControl("下载", !saving, hapticClick { save(item) }) {
+                        if (saving) CircularProgressIndicator(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp)
+                        else Icon(Icons.Rounded.Download, null, Modifier.size(24.dp), tint = Color.White.copy(alpha = if (saving) .38f else 1f))
+                    }
+                } else Spacer(Modifier.size(48.dp))
             }
             if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).windowInsetsPadding(bottomInsets)
                 .padding(end = 16.dp, bottom = if (media.size > 1) 110.dp else 24.dp))
-            if (chrome && media.size > 1) GalleryThumbnails(media, pager,
+            if (chrome && media.size > 1 && !(landscape && settledItem.video.isNotBlank())) GalleryThumbnails(media, pager,
                 Modifier.align(Alignment.BottomCenter).fillMaxWidth().windowInsetsPadding(bottomInsets)
-                    .padding(start = 12.dp, end = 12.dp, bottom = 32.dp))
+                    .padding(start = 12.dp, end = 12.dp, bottom = if (settledItem.video.isNotBlank() && videoControlsHeight > 0)
+                        with(density) { videoControlsHeight.toDp() } + 8.dp else 32.dp))
 
         }
         }
@@ -357,7 +382,15 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
                     .reviewClickable { scope.launch { pager.scrollToPage(index) } }) {
                     Box(Modifier.fillMaxSize().padding(2.dp).clip(RoundedCornerShape(6.dp))) {
                         val image = Modifier.fillMaxSize()
-                        GalleryMediaImage(item.copy(url = item.preview.ifBlank { item.url }), "第 ${index + 1} 张图片", image)
+                        GalleryMediaImage(item.copy(url = item.preview.ifBlank { item.url }),
+                            if (item.video.isNotBlank()) "第 ${index + 1} 个视频封面" else "第 ${index + 1} 张图片", image)
+                        if (item.video.isNotBlank()) Icon(Icons.Rounded.PlayCircle, null,
+                            Modifier.align(Alignment.Center).size(20.dp), tint = Color.White)
+                        if (item.duration.isNotBlank()) Text(item.duration,
+                            Modifier.align(Alignment.BottomEnd).padding(2.dp)
+                                .background(Color.Black.copy(alpha = .7f), RoundedCornerShape(3.dp))
+                                .padding(horizontal = 3.dp, vertical = 1.dp),
+                            color = Color.White, fontSize = 8.sp)
                         if (!selected) Box(Modifier.matchParentSize().background(Color.White.copy(alpha = .5f)))
                         if (item.hdr) HdrBadge(Modifier.align(Alignment.BottomEnd).padding(3.dp),
                             description = "第 ${index + 1} 张 HDR 图片", compact = true)
@@ -370,7 +403,8 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
 
 
 data class GalleryMedia(val url: String, val preview: String = "", val width: Int = 0, val height: Int = 0,
-    val long: Boolean = false, val gif: Boolean = false, val hdr: Boolean = false, val description: String = "图片")
+    val long: Boolean = false, val gif: Boolean = false, val hdr: Boolean = false, val description: String = "图片",
+    val video: String = "", val duration: String = "")
 
 @Composable private fun GalleryMediaImage(media: GalleryMedia, description: String, modifier: Modifier) {
     coil.compose.AsyncImage(media.url, description, modifier, contentScale = androidx.compose.ui.layout.ContentScale.Crop)
