@@ -2,8 +2,6 @@
 
 Lucent UI is distributed under the MIT License. Selected components are adapted from Chengeeker’s Review. The glass shader retains the notices of Tim Lehmann and Sebastian Degenaar.
 
-The RedNote gallery icon font is distributed under CC BY 4.0; its license is bundled at assets/licenses/rednote-material-icons.txt.
-
 AndroidX / Compose / Media3 / Material Components / Material icons: Copyright The Android Open Source Project and Google, Apache-2.0.
 Kotlin / kotlinx.coroutines: Copyright JetBrains s.r.o. and contributors, Apache-2.0.
 Coil: Copyright Coil Contributors, Apache-2.0.

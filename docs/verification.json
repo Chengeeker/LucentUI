@@ -1,9 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.9",
-  "versionCode": 11,
-  "apkBytes": 6592137,
-  "sha256": "294553ee990b89e4d37368a7f1ae8d7952ece73c83cd6d0f9445262082a70a5e",
+  "versionName": "0.2.10",
+  "versionCode": 12,
+  "apkBytes": 6014129,
+  "sha256": "a88e851b346834f4e92d92f04a7d09039ac4ac69d4e5e16c74a9fff9539763b2",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -16,12 +16,12 @@
   "lintWarnings": 13,
   "installedApkSha256MatchesDelivery": true,
   "runtimeChecks": [
-    "Physical device: verified 0.2.8 strip moves upward while dragging onto video.",
-    "Physical device: 0.2.9 thumbnail strip remains at image height during drag and moves above video controls after release.",
-    "Same device: compared non-glass buttons with RedNote 1.1.23; black-background overlapping button regions match pixel for pixel."
+    "Android device: Review 3.18.2 and LucentUI 0.2.10 gallery top controls were captured with glass disabled.",
+    "The installed APK hash matched the delivered file."
   ],
   "notVerified": [
-    "Landscape interaction, canceled drag and OEM variants not checked."
+    "RedNote and other application gallery controls were not visually checked on this build.",
+    "Landscape, video and OEM-specific behavior were not checked."
   ],
   "buildJdk": "26.0.1",
   "evidence": "docs/interaction-audit.md"

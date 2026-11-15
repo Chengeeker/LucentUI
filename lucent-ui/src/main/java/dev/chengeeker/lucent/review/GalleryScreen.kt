@@ -28,7 +28,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.PlayCircle
@@ -305,7 +304,6 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             }
             flight?.let { GalleryFlightImage(it, viewport.topLeft, motion.position) }
             val chrome = showControls && !morphing && !closing && dragFraction == 0f
-            val liquid = dev.chengeeker.lucent.LocalLucentStyle.current.glass
             val desiredVideoThumbnail = settledItem.video.isNotBlank()
             var videoThumbnail by remember { mutableStateOf(desiredVideoThumbnail) }
             LaunchedEffect(desiredVideoThumbnail, thumbnailScrolling) {
@@ -314,21 +312,14 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             val bottomInsets = WindowInsets.navigationBarsIgnoringVisibility.union(WindowInsets.displayCutout)
                 .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
             if (chrome) Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (liquid) GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
-                else PlainGalleryControl("返回", true, hapticClick(::close)) {
-                    PlainGalleryGlyph(62834, Color.White)
-                }
+                GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
                 Spacer(Modifier.weight(1f))
                     Text("${pager.currentPage + 1} / ${media.size}",
                         Modifier.background(Color.Black.copy(alpha = .45f), RoundedCornerShape(16.dp)).padding(horizontal = 14.dp, vertical = 6.dp),
                         color = Color.White, fontSize = 13.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.weight(1f))
                 if (item.video.isBlank()) {
-                    if (liquid) GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
-                    else PlainGalleryControl("下载", !saving, hapticClick { save(item) }) {
-                        if (saving) CircularProgressIndicator(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp)
-                        else PlainGalleryGlyph(63199, Color.White)
-                    }
+                    GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
                 } else Spacer(Modifier.size(48.dp))
             }
             if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).windowInsetsPadding(bottomInsets)

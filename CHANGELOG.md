@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.10+12
+
+- Match the gallery's non-glass top controls to Review, including the dark circular surface and 22dp icons.
+
+
 ## 0.2.9+11
 
 - Keep the gallery thumbnail strip at its original height while dragging across a video, then reposition it after the drag finishes.
