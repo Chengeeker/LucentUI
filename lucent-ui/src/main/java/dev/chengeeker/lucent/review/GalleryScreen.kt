@@ -143,6 +143,7 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
 
         var showControls by remember { mutableStateOf(true) }
         var videoControlsHeight by remember { mutableIntStateOf(0) }
+        var thumbnailScrolling by remember { mutableStateOf(false) }
 
 
 
@@ -305,12 +306,17 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             flight?.let { GalleryFlightImage(it, viewport.topLeft, motion.position) }
             val chrome = showControls && !morphing && !closing && dragFraction == 0f
             val liquid = dev.chengeeker.lucent.LocalLucentStyle.current.glass
+            val desiredVideoThumbnail = settledItem.video.isNotBlank()
+            var videoThumbnail by remember { mutableStateOf(desiredVideoThumbnail) }
+            LaunchedEffect(desiredVideoThumbnail, thumbnailScrolling) {
+                if (!thumbnailScrolling) videoThumbnail = desiredVideoThumbnail
+            }
             val bottomInsets = WindowInsets.navigationBarsIgnoringVisibility.union(WindowInsets.displayCutout)
                 .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
             if (chrome) Row(Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 if (liquid) GalleryGlassButton(Icons.AutoMirrored.Outlined.ArrowBack, "返回", click = ::close)
                 else PlainGalleryControl("返回", true, hapticClick(::close)) {
-                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, null, Modifier.size(24.dp), tint = Color.White)
+                    PlainGalleryGlyph(62834, Color.White)
                 }
                 Spacer(Modifier.weight(1f))
                     Text("${pager.currentPage + 1} / ${media.size}",
@@ -321,16 +327,17 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                     if (liquid) GalleryGlassButton(Icons.Rounded.Download, "下载", enabled = !saving, busy = saving) { save(item) }
                     else PlainGalleryControl("下载", !saving, hapticClick { save(item) }) {
                         if (saving) CircularProgressIndicator(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp)
-                        else Icon(Icons.Rounded.Download, null, Modifier.size(24.dp), tint = Color.White.copy(alpha = if (saving) .38f else 1f))
+                        else PlainGalleryGlyph(63199, Color.White)
                     }
                 } else Spacer(Modifier.size(48.dp))
             }
             if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).windowInsetsPadding(bottomInsets)
                 .padding(end = 16.dp, bottom = if (media.size > 1) 110.dp else 24.dp))
-            if (chrome && media.size > 1 && !(landscape && settledItem.video.isNotBlank())) GalleryThumbnails(media, pager,
+            if (chrome && media.size > 1 && !(landscape && videoThumbnail)) GalleryThumbnails(media, pager,
                 Modifier.align(Alignment.BottomCenter).fillMaxWidth().windowInsetsPadding(bottomInsets)
-                    .padding(start = 12.dp, end = 12.dp, bottom = if (settledItem.video.isNotBlank() && videoControlsHeight > 0)
-                        with(density) { videoControlsHeight.toDp() } + 8.dp else 32.dp))
+                    .padding(start = 12.dp, end = 12.dp, bottom = if (videoThumbnail && videoControlsHeight > 0)
+                        with(density) { videoControlsHeight.toDp() } + 8.dp else 32.dp),
+                onScrolling = { thumbnailScrolling = it })
 
         }
         }
@@ -343,13 +350,15 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
 private fun galleryRatio(media: GalleryMedia): Float = if (media.width > 0 && media.height > 0) media.width.toFloat() / media.height else 1f
 
 @Composable
-internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compose.foundation.pager.PagerState, modifier: Modifier) {
+internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compose.foundation.pager.PagerState, modifier: Modifier, onScrolling: (Boolean) -> Unit) {
     val list = rememberLazyListState(pager.currentPage)
     val dragged by list.interactionSource.collectIsDraggedAsState()
     val mainDragged by pager.interactionSource.collectIsDraggedAsState()
     var ownsSelection by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val tick = reviewPulse()
+    LaunchedEffect(dragged, list.isScrollInProgress) { onScrolling(dragged || list.isScrollInProgress) }
+    DisposableEffect(Unit) { onDispose { onScrolling(false) } }
     LaunchedEffect(dragged, list.isScrollInProgress, mainDragged) {
         if (mainDragged) { ownsSelection = false; list.stopScroll() }
         else if (dragged) ownsSelection = true

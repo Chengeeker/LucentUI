@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.9+11
+
+- Keep the gallery thumbnail strip at its original height while dragging across a video, then reposition it after the drag finishes.
+- Render the non-glass gallery controls with the same icon font and glyphs used by RedNote.
+
+
 ## 0.2.8+10
 
 Synced the UI source code for Lucent UI 0.2.8+10.

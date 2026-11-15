@@ -47,3 +47,9 @@
 - Focused checks: DemoPostsTest 1/1 and ContractsTest 6/6 passed. Full Demo suite: 10 of 20 tests failed because Robolectric's ASM rejects Java class file major version 70 under the only installed JDK 26.0.1.
 - Release Lint: 0 errors, 13 warnings. Signed ARM64 APK: 6,014,073 bytes, SHA-256 6592e0f6fed4c3b08a076154d3c02dcd973b7bcf22000a4f433c1101a33b0986. Signature matches the previous release; ZIP integrity, 16 KiB alignment and arm64-v8a-only ABI checks passed.
 - No emulator or physical-device interaction check was possible; the gesture timing is confirmed by the pager-state source logic and host-side tests only.
+## 0.2.9+11 真实设备复现与复测
+
+- 0.2.8 在缩略条被手指拖动时使用 scrollToPage；因此 pager.settledPage 也会在手指未松开时变化，上次只处理主图拖动不足以解决问题。
+- 在用户授权的 Android 设备安装原签名 0.2.9，手机 APK SHA-256 与交付文件一致。用 12 秒慢拖缩略条：拖动到视频时缩略条保持原高度；释放后移到视频控件上方。0.2.8 的同类拖动截图显示按住时已提前上移。
+- 同机对照 RedNote 1.1.23 液态玻璃关闭状态：使用原字体及 arrow_back_rounded / download_rounded 字形。排除照片底色不同的边缘后，两个按钮的共同黑底区域逐像素一致；0.2.8 原按钮的截图也非常接近，仅有少量图标边缘差异。
+- DemoPostsTest 1 项通过，Release Lint 0 错误、13 警告。签名、16 KiB 对齐、ZIP 内容与仅 arm64-v8a ABI 检查通过。未检查横屏和取消拖动。
