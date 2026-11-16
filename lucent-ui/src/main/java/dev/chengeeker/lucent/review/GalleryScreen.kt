@@ -84,7 +84,8 @@ internal fun galleryDoubleTapScale(scale: Float, long: Boolean): Float = when {
 private val galleryCurve = CubicBezierEasing(.215f, .61f, .355f, 1f)
 
 @Composable
-fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, GalleryOrigin> = emptyMap(), onClose: () -> Unit, saving: Boolean = false, onSave: (GalleryMedia) -> Unit) {
+fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, GalleryOrigin> = emptyMap(), onClose: () -> Unit,
+    saving: Boolean = false, originalLoader: GalleryOriginalLoader? = null, onSave: (GalleryMedia) -> Unit) {
     require(media.isNotEmpty())
     val initial = start.coerceIn(media.indices)
     val pager = rememberPagerState(initial) { media.size }
@@ -141,6 +142,7 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
         var dragFraction by remember(pager.currentPage) { mutableFloatStateOf(0f) }
 
         var showControls by remember { mutableStateOf(true) }
+        var currentOriginalState by remember { mutableStateOf<GalleryHiResState?>(null) }
         var videoControlsHeight by remember { mutableIntStateOf(0) }
         var thumbnailScrolling by remember { mutableStateOf(false) }
 
@@ -239,6 +241,11 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                     val firstBitmap = remember(page) { if (page == initial) openingImage else sources[page]?.bitmap }
                     var scale by remember(page) { mutableFloatStateOf(1f) }
                     var pan by remember(page) { mutableStateOf(Offset.Zero) }
+                    val highRes = rememberGalleryHiResState(picture.url)
+                    SideEffect {
+                        if (page == pager.currentPage && currentOriginalState !== highRes)
+                            currentOriginalState = highRes
+                    }
                     var displayedBitmap by remember(page) { mutableStateOf(firstBitmap) }
                     var zoomAnimation by remember(page) { mutableStateOf<kotlinx.coroutines.Job?>(null) }
                     DisposableEffect(page) {
@@ -296,6 +303,9 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
                             Box(Modifier.fillMaxSize().graphicsLayer { scaleX = scale; scaleY = scale; translationX = pan.x; translationY = pan.y + dragY }, contentAlignment = Alignment.Center) {
                                 OriginalImage(picture, Modifier.fillMaxSize(),
                                     onBitmap = { displayedBitmap = it }, showImage = !morphing)
+                                GalleryHighResolutionLayer(picture, highRes, scale, pan, Size(width, height),
+                                    originalLoader = originalLoader, preserveHdr = picture.hdr,
+                                    active = page == pager.currentPage && !morphing && !closing)
 
                             }
                         }
@@ -324,6 +334,22 @@ fun ReviewGallery(media: List<GalleryMedia>, start: Int, sources: Map<Int, Galle
             }
             if (chrome && hasHdr) HdrBadge(Modifier.align(Alignment.BottomEnd).windowInsetsPadding(bottomInsets)
                 .padding(end = 16.dp, bottom = if (media.size > 1) 110.dp else 24.dp))
+            // The original-file action follows the same glass preference as the top buttons.
+            // Center it just above the 64dp filmstrip (or above the bottom inset when alone).
+            if (chrome && item.video.isBlank()) {
+                val highResState = currentOriginalState?.takeIf { it.url == item.url }
+                val stripVisible = media.size > 1 && !(landscape && videoThumbnail)
+                val stripBottom = if (videoThumbnail && videoControlsHeight > 0)
+                    with(density) { videoControlsHeight.toDp() } + 8.dp else 32.dp
+                Box(
+                    Modifier.align(Alignment.BottomCenter)
+                        .windowInsetsPadding(bottomInsets)
+                        .padding(bottom = galleryOriginalPillBottomMargin(stripVisible, stripBottom)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    GalleryOriginalPill(highResState, item.hdr)
+                }
+            }
             if (chrome && media.size > 1 && !(landscape && videoThumbnail)) GalleryThumbnails(media, pager,
                 Modifier.align(Alignment.BottomCenter).fillMaxWidth().windowInsetsPadding(bottomInsets)
                     .padding(start = 12.dp, end = 12.dp, bottom = if (videoThumbnail && videoControlsHeight > 0)
@@ -363,14 +389,13 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
             layout.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2 - center) }?.index
         }.collectLatest { index -> if (index != null && index != pager.currentPage) { tick(); pager.scrollToPage(index) } }
     }
-    // The main pager only moves the strip once it settles; touching the strip owns selection.
-    LaunchedEffect(pager.settledPage, ownsSelection, mainDragged) {
-        if (!ownsSelection && !mainDragged &&
-            (list.firstVisibleItemIndex != pager.settledPage || list.firstVisibleItemScrollOffset != 0)
-        ) list.animateScrollToItem(pager.settledPage)
-    }
     BoxWithConstraints(modifier) {
         val cell = maxWidth * .16f
+        val cellPixels = with(LocalDensity.current) { cell.toPx() }
+        LaunchedEffect(pager, list, ownsSelection, cellPixels) {
+            if (!ownsSelection) snapshotFlow { pager.currentPage to pager.currentPageOffsetFraction }
+                .collect { (page, fraction) -> list.requestScrollToItem(page, (fraction * cellPixels).toInt()) }
+        }
         LazyRow(state = list, contentPadding = PaddingValues(horizontal = (maxWidth - cell) / 2), modifier = Modifier.height(64.dp)) {
             items(media.size) { index ->
                 val item = media[index]

@@ -4,6 +4,22 @@ package dev.chengeeker.lucent.review
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.draw.clip
+import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.semantics.Role
+import dev.chengeeker.lucent.review.liquidBackdrop
 import androidx.compose.foundation.border
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -101,6 +117,84 @@ fun GalleryGlassButton(icon: ImageVector, label: String, enabled: Boolean = true
         }.liquidBackdrop(Color(0x66000000), pressed = growth, button = true), contentAlignment = Alignment.Center) {
             if (busy) CircularProgressIndicator(Modifier.size(18.dp), color = Color.White, strokeWidth = 2.dp)
             else Icon(icon, null, Modifier.size(22.dp), tint = Color.White)
+        }
+    }
+}
+
+
+/** Keep the original-file action visually consistent with the gallery's two top controls. */
+internal fun galleryOriginalPillBottomMargin(hasStrip: Boolean, stripBottom: androidx.compose.ui.unit.Dp) =
+    if (hasStrip) stripBottom + 64.dp + 8.dp else 24.dp
+
+@Composable
+internal fun GalleryOriginalPill(state: GalleryHiResState?, hdr: Boolean) {
+    val liquid = dev.chengeeker.lucent.LocalLucentStyle.current.glass
+    val phase = state?.phase ?: GalleryHiResPhase.IDLE
+    val enabled = state != null && (phase == GalleryHiResPhase.IDLE || phase == GalleryHiResPhase.FAILED)
+    val caption = when (phase) {
+        GalleryHiResPhase.IDLE -> "加载原图"
+        GalleryHiResPhase.LOADING -> {
+            val total = state?.total
+            val loaded = state?.downloaded ?: 0L
+            if (total != null && total > 0L)
+                "原图 " + (loaded * 100 / total).coerceIn(0, 100) + "%"
+            else "正在加载原图…"
+        }
+        GalleryHiResPhase.READY -> when {
+            hdr -> "HDR 原图已缓存"
+            state?.tileIssue != null -> "原图已缓存·不支持区域解码"
+            else -> "原图已缓存"
+        }
+        GalleryHiResPhase.FAILED -> "重试原图"
+    }
+    val action = hapticClick {
+        if (phase == GalleryHiResPhase.FAILED) state?.retry()
+        else if (phase == GalleryHiResPhase.IDLE) state?.request()
+    }
+    val interaction = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
+    val pressed by interaction.collectIsPressedAsState()
+    val press by animateFloatAsState(
+        if (pressed && liquid) 1f else 0f,
+        spring(dampingRatio = .65f, stiffness = 450f),
+        label = "gallery-original-glass-press",
+    )
+    Box(
+        Modifier.widthIn(min = 96.dp, max = 258.dp).height(48.dp)
+            .clickable(
+                enabled = enabled,
+                interactionSource = interaction,
+                indication = null,
+                role = Role.Button,
+                onClick = action,
+            )
+            .semantics { contentDescription = caption },
+        contentAlignment = Alignment.Center,
+    ) {
+        val pill = CircleShape
+        Row(
+            Modifier.height(36.dp)
+                .then(
+                    if (liquid) Modifier.liquidBackdrop(Color(0x66000000), pressed = press, button = true)
+                    else Modifier.clip(pill)
+                        .background(if (pressed && enabled) Color.Black.copy(alpha = .28f) else Color.Black.copy(alpha = .40f), pill)
+                        .border(.5.dp, Color.White.copy(alpha = .24f), pill)
+                )
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            if (phase == GalleryHiResPhase.LOADING) {
+                CircularProgressIndicator(Modifier.size(12.dp), strokeWidth = 1.5.dp, color = Color.White)
+                Spacer(Modifier.width(7.dp))
+            }
+            Text(
+                caption,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = Color.White.copy(alpha = if (enabled) 1f else .85f),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+            )
         }
     }
 }
