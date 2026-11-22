@@ -10,6 +10,8 @@ Demo保存使用系统文件选择器，用户取消不产生成功提示。原�
 
 混合媒体图库的缩略条位置以稳定页和缩略条滚动状态共同决定：手指拖动缩略条或惯性滚动时固定原高度，结束后再根据视频控制区高度调整。主图分页滑动时也保持原位置。
 
+主图直接滑动保持 Pager 默认分页，每次最多切换一张。底部缩略连廊使用 `LazyRow` 与 `rememberSnapFlingBehavior`：松手后按 Compose 的衰减曲线继续滑动，随后吸附到最近居中的缩略图；双向同步和视频停靠时机不变。参见 [Compose decayed snapping API](https://developer.android.com/reference/kotlin/androidx/compose/foundation/gestures/snapping/rememberSnapFlingBehavior.composable)。
+
 ## 普通视频
 
 `LucentVideo` 使用调用方提供的 `VideoSource(label, uri)`，播放器控件沿用 ReviewVideoChrome；真实 Media3 实例管理暂停、跳转、倍速、方向和生命周期。Demo内置720p/480p独立H.264/AAC文件。

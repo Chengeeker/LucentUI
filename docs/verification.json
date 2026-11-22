@@ -1,9 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.12",
-  "versionCode": 14,
+  "versionName": "0.2.18",
+  "versionCode": 20,
   "apkBytes": 6030513,
-  "sha256": "73e26ec70238065d96eaeb77e620554b433b69074ba6f23c1acc97f44a6c599f",
+  "sha256": "87d8cff328beecb766d5a4269fcb26c290c4028bad4589c689c9ff0218637ad0",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -11,17 +11,17 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 0,
-  "lintErrors": null,
-  "lintWarnings": null,
+  "testCount": null,
+  "lintErrors": 0,
+  "lintWarnings": 10,
   "releaseLintVitalPassed": true,
   "installedApkSha256MatchesDelivery": false,
   "runtimeChecks": [],
   "notVerified": [
-    "Unit tests were not run for this candidate build.",
-    "Device gesture, fling and gallery thumbnail motion have not been tested for this build.",
-    "Landscape, video and OEM-specific behavior have not been tested for this build."
+    "Unit tests not rerun for this source sync.",
+    "Thumbnail edge fling and no-rebound behavior have not been tested on a device.",
+    "Landscape, video and OEM-specific behavior have not been tested."
   ],
   "buildJdk": "21.0.13",
-  "evidence": "LucentUI 0.2.12+14 release build and static APK checks"
+  "evidence": "LucentUI 0.2.18+20 Release lint and ARM64 APK static checks; unit tests not run in this source sync."
 }

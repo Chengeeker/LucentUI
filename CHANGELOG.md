@@ -1,8 +1,36 @@
 # Changelog
 
+## 0.2.18+20
+
+- Disable edge overscroll on the thumbnail strip so the last thumbnail settles without a rebound; retain decayed fling and centered snapping.
+
+## 0.2.17+19
+
+- Add decayed snapping to the thumbnail strip: it coasts after release and settles with a thumbnail centered. Main-image gestures still page one image at a time.
+
+## 0.2.16+18
+
+- Free scrolling fixed the immediate-stop feel but could leave the strip between thumbnails; superseded by centered snapping in 0.2.17.
+
+## 0.2.15+17
+
+- First scope correction; the strip still snapped to pages and was replaced by free scrolling in 0.2.16.
+
+## 0.2.14+16
+
+- First attempt at slower release snapping; superseded because it also changed main-image paging.
+
+## 0.2.13+15
+
+- Let image and thumbnail pagers continue by velocity after release, snapping at most two pages per fling.
+
 ## 0.2.12+14
 
 - Synchronize the gallery thumbnail strip continuously with the main image swipe in both directions.
+
+## 0.2.11+13
+
+- Keep the gallery thumbnail strip synchronized with image paging during a partial swipe.
 
 ## 0.2.10+12
 
