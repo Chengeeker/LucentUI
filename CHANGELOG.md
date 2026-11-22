@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.12+14
+
+- Synchronize the gallery thumbnail strip continuously with the main image swipe in both directions.
+
 ## 0.2.10+12
 
 - Match the gallery's non-glass top controls to Review, including the dark circular surface and 22dp icons.

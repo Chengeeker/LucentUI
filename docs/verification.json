@@ -1,9 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.10",
-  "versionCode": 12,
-  "apkBytes": 6014129,
-  "sha256": "a88e851b346834f4e92d92f04a7d09039ac4ac69d4e5e16c74a9fff9539763b2",
+  "versionName": "0.2.12",
+  "versionCode": 14,
+  "apkBytes": 6030513,
+  "sha256": "73e26ec70238065d96eaeb77e620554b433b69074ba6f23c1acc97f44a6c599f",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -11,18 +11,17 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": 1,
-  "lintErrors": 0,
-  "lintWarnings": 13,
-  "installedApkSha256MatchesDelivery": true,
-  "runtimeChecks": [
-    "Android device: Review 3.18.2 and LucentUI 0.2.10 gallery top controls were captured with glass disabled.",
-    "The installed APK hash matched the delivered file."
-  ],
+  "testCount": 0,
+  "lintErrors": null,
+  "lintWarnings": null,
+  "releaseLintVitalPassed": true,
+  "installedApkSha256MatchesDelivery": false,
+  "runtimeChecks": [],
   "notVerified": [
-    "RedNote and other application gallery controls were not visually checked on this build.",
-    "Landscape, video and OEM-specific behavior were not checked."
+    "Unit tests were not run for this candidate build.",
+    "Device gesture, fling and gallery thumbnail motion have not been tested for this build.",
+    "Landscape, video and OEM-specific behavior have not been tested for this build."
   ],
-  "buildJdk": "26.0.1",
-  "evidence": "docs/interaction-audit.md"
+  "buildJdk": "21.0.13",
+  "evidence": "LucentUI 0.2.12+14 release build and static APK checks"
 }
