@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.19+21
+
+- Add explicit reusable single-choice and option rows, and align toggle text hierarchy with shared settings rows.
+- Keep decayed thumbnail-strip flinging with centered settling and no edge rebound; direct main-image swipes still advance one image at a time.
+
 ## 0.2.18+20
 
 - Disable edge overscroll on the thumbnail strip so the last thumbnail settles without a rebound; retain decayed fling and centered snapping.

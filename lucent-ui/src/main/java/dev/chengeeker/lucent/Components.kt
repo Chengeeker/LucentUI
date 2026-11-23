@@ -42,11 +42,17 @@ fun LucentRow(title:String,subtitle:String?=null,icon:ImageVector?=null,enabled:
  modifier=if(onClick!=null) Modifier.lucentClick(enabled,onClick=onClick) else Modifier)
 }
 @Composable
-fun LucentToggle(title:String,value:Boolean,onChange:(Boolean)->Unit,subtitle:String?=null,enabled:Boolean=true) {
- SettingsTile(headlineContent={Text(title,fontSize=16.sp,fontWeight=reviewWeight(FontWeight.SemiBold))},
- supportingContent=subtitle?.takeIf{it.isNotBlank()}?.let{{Text(it,fontSize=14.sp,lineHeight=19.6.sp)}},
+fun LucentToggle(
+ title:String,value:Boolean,onChange:(Boolean)->Unit,
+ subtitle:String?=null,enabled:Boolean=true,icon:ImageVector?=null,
+) {
+ val colors=MaterialTheme.colorScheme
+ SettingsTile(headlineContent={Text(title,fontSize=15.sp,lineHeight=20.25.sp,
+     color=colors.onSurface.copy(alpha=if(enabled)1f else .38f))},
+ supportingContent=subtitle?.takeIf{it.isNotBlank()}?.let{{Text(it,fontSize=12.5.sp,lineHeight=17.5.sp)}},
+ leadingContent=icon?.let{{Icon(it,null,tint=colors.onSurfaceVariant)}},
  trailingContent={Switch(value,null,modifier=Modifier.padding(horizontal=4.dp),enabled=enabled)},
- modifier=Modifier.reviewToggleable(value,enabled,onChange).padding(vertical=3.dp))
+ modifier=Modifier.reviewToggleable(value,enabled,onChange))
 }
 @Composable
 fun LucentAction(text:String,onClick:()->Unit,modifier:Modifier=Modifier,enabled:Boolean=true,primary:Boolean=true,icon:ImageVector?=null) {

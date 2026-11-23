@@ -11,6 +11,7 @@ Lucent UI 是面向 Android 和 Jetpack Compose 的开放设计系统。这份�
 | [媒体浏览](media.md) | 图片浏览、HDR 标签、缩放和普通视频播放器 |
 | [设置与备份](settings.md) | 个性化、WebDAV、缓存和本地迁移 |
 | [页面与流程](patterns.md) | 时间线、阅读、评论与设置入口 |
+| [设置选项交互](SETTINGS_SELECTION_SPEC.md) | 开关、单选、多选与明确提交规则 |
 | [接入与构建](integration.md) | Compose 模块、页面宿主和业务接入 |
 | [验收](quality.md) | 交互、兼容性和设备验证 |
 

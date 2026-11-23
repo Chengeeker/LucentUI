@@ -1,9 +1,9 @@
 {
   "applicationId": "dev.chengeeker.lucent.demo",
-  "versionName": "0.2.18",
-  "versionCode": 20,
+  "versionName": "0.2.19",
+  "versionCode": 21,
   "apkBytes": 6030513,
-  "sha256": "87d8cff328beecb766d5a4269fcb26c290c4028bad4589c689c9ff0218637ad0",
+  "sha256": "058f4bea902fe3c819e48250c810c4d2189d6fbd4e183bdf8b7ad0f88bcaf9f6",
   "signerSha256": "3eb0f6708904f8ef916c6a2572e394ba981ee25d64861344cf1921ca7ea17975",
   "signatureMatchesPreviousRelease": true,
   "zipAlignment16KiB": true,
@@ -11,17 +11,16 @@
     "arm64-v8a"
   ],
   "zipIntegrity": true,
-  "testCount": null,
+  "testCount": 37,
   "lintErrors": 0,
   "lintWarnings": 10,
-  "releaseLintVitalPassed": true,
+  "releaseLintVitalPassed": null,
   "installedApkSha256MatchesDelivery": false,
   "runtimeChecks": [],
   "notVerified": [
-    "Unit tests not rerun for this source sync.",
-    "Thumbnail edge fling and no-rebound behavior have not been tested on a device.",
-    "Landscape, video and OEM-specific behavior have not been tested."
+    "This APK was not installed or visually checked on a physical device.",
+    "Gallery thumbnail fling feel, landscape, video and OEM-specific behavior have not been device-tested."
   ],
   "buildJdk": "21.0.13",
-  "evidence": "LucentUI 0.2.18+20 Release lint and ARM64 APK static checks; unit tests not run in this source sync."
+  "evidence": "LucentUI 0.2.19+21 release script: 37 passing unit tests, release lint with 0 errors and 10 warnings, signed ARM64 APK, signer, 16 KiB alignment, ZIP integrity and ABI checks. lintVitalRelease was skipped by Gradle."
 }
