@@ -18,7 +18,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.calculateTargetValue
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -71,6 +76,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 import kotlin.math.abs
 import kotlin.math.roundToInt
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.sign
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.isSpecified
 
@@ -388,6 +396,41 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
     BoxWithConstraints(modifier) {
         val cell = maxWidth * .16f
         val cellPixels = with(density) { cell.toPx() }
+        val decay = rememberSplineBasedDecay<Float>()
+        var dragDirection by remember { mutableFloatStateOf(0f) }
+        LaunchedEffect(dragged) {
+            if (dragged) {
+                dragDirection = 0f
+                var previous: Float? = null
+                snapshotFlow { thumbnails.firstVisibleItemIndex * cellPixels + thumbnails.firstVisibleItemScrollOffset }
+                    .collect { position ->
+                        previous?.let { if (abs(position - it) > .1f) dragDirection = (position - it).sign }
+                        previous = position
+                    }
+            }
+        }
+        val direction by rememberUpdatedState(dragDirection)
+        val fling = remember(thumbnails, cellPixels, media.size, decay) {
+            object : FlingBehavior {
+                override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+                    val layout = thumbnails.layoutInfo
+                    val center = (layout.viewportStartOffset + layout.viewportEndOffset) / 2f
+                    val item = layout.visibleItemsInfo.minByOrNull { abs(it.offset + it.size / 2f - center) } ?: return initialVelocity
+                    val position = (item.index + (center - item.offset - item.size / 2f) / cellPixels).coerceIn(0f, media.lastIndex.toFloat())
+                    val projected = (position + decay.calculateTargetValue(0f, initialVelocity) / cellPixels).coerceIn(0f, media.lastIndex.toFloat())
+                    val motion = if (abs(initialVelocity) > 1f) initialVelocity.sign else direction
+                    val target = when { motion > 0f -> ceil(projected); motion < 0f -> floor(projected); else -> projected.roundToInt().toFloat() }.coerceIn(0f, media.lastIndex.toFloat())
+                    val distance = (target - position) * cellPixels
+                    if (abs(distance) < .5f) return 0f
+                    val duration = (abs(distance) / abs(initialVelocity).coerceAtLeast(cellPixels * 2f) * 2000f).roundToInt().coerceIn(180, 700)
+                    var consumed = 0f
+                    animate(0f, distance, animationSpec = tween(duration, easing = LinearOutSlowInEasing)) { value, _ ->
+                        consumed += scrollBy(value - consumed)
+                    }
+                    return 0f
+                }
+            }
+        }
         LaunchedEffect(scrollOwner, cellPixels) {
             if (scrollOwner == 1) {
                 snapshotFlow { pager.currentPage to pager.currentPageOffsetFraction }
@@ -417,7 +460,7 @@ internal fun GalleryThumbnails(media: List<GalleryMedia>, pager: androidx.compos
                 }
             }
         }
-        LazyRow(state = thumbnails, flingBehavior = rememberSnapFlingBehavior(thumbnails), overscrollEffect = null,
+        LazyRow(state = thumbnails, flingBehavior = fling, overscrollEffect = null,
             contentPadding = PaddingValues(horizontal = (maxWidth - cell) / 2),
             modifier = Modifier.height(64.dp)) {
             items(media.size) { index ->
