@@ -112,7 +112,7 @@ private fun VideoPage(model: DemoModel) {
             Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp)) {
                 LucentSection("播放控制") {
                     LucentToggle("仅提供一个有效画质", single, { single = it }, "开启后隐藏画质按钮，保留倍速。")
-                    LucentRow("手势", "双击播放/暂停；横向拖动定位；左侧亮度、右侧音量；长按临时 2×。")
+                    LucentRow("手势", "双击播放/暂停；横向拖动定位；左侧亮度、右侧音量；长按临时 2×，下滑锁定，再次长按上滑恢复原速。")
                 }
             }
     }

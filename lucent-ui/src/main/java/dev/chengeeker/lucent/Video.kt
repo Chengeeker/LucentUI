@@ -8,16 +8,24 @@ import android.content.ContextWrapper
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.media.AudioManager
+import android.os.SystemClock
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.BiasAlignment
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
@@ -36,7 +44,10 @@ import androidx.media3.common.*
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import kotlin.math.abs
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 data class VideoSource(val label: String, val uri: String)
 
@@ -97,6 +108,15 @@ fun LucentVideo(
     var menu by remember { mutableStateOf("") }
     var controls by remember { mutableStateOf(true) }
     var hint by remember { mutableStateOf("") }
+    var speedCue by remember { mutableStateOf("") }
+    var lockCue by remember { mutableStateOf("") }
+    var boostLocked by remember { mutableStateOf(false) }
+    val latestBoostLocked by rememberUpdatedState(boostLocked)
+    val latestSpeed by rememberUpdatedState(speed)
+    val gestureScope = rememberCoroutineScope()
+    var pendingTap by remember { mutableStateOf<Job?>(null) }
+    var pendingTapPosition by remember { mutableStateOf<androidx.compose.ui.geometry.Offset?>(null) }
+    var pendingTapTime by remember { mutableLongStateOf(0L) }
     val audio = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     val landscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
     val pulse by rememberUpdatedState(reviewPulse())
@@ -163,12 +183,9 @@ fun LucentVideo(
             delay(if (playing) 250 else 1000)
         }
     }
-    LaunchedEffect(hint) {
-        if (hint.isNotBlank()) {
-            delay(1300)
-            hint = ""
-        }
-    }
+    LaunchedEffect(hint) { if (hint.isNotBlank()) { delay(900); hint = "" } }
+    LaunchedEffect(speedCue) { if (speedCue.isNotBlank()) { delay(900); speedCue = "" } }
+    LaunchedEffect(lockCue) { if (lockCue.isNotBlank()) { delay(900); lockCue = "" } }
     DisposableEffect(activity, fullscreen) {
         val window = activity?.window
         if (!fullscreen || window == null) {
@@ -217,76 +234,143 @@ fun LucentVideo(
         Box(
             Modifier.fillMaxSize()
                 .pointerInput(player, speed) {
-                    detectTapGestures(
-                        onTap = { pulse(); controls = !controls },
-                        onDoubleTap = { pulse(); if (player.isPlaying) player.pause() else player.play() },
-                        onLongPress = {
-                            pulse()
-                            player.setPlaybackSpeed(2f)
-                            hint = "2× 临时倍速"
-                        },
-                        onPress = {
-                            try {
-                                tryAwaitRelease()
-                            } finally {
-                                player.setPlaybackSpeed(speed)
-                            }
-                        },
-                    )
-                }
-                .pointerInput(player) {
-                    var totalX = 0f
-                    var totalY = 0f
-                    var start = 0L
-                    var left = false
-                    var direction = 0
-                    var startVolume = 0
-                    var brightness = .5f
-                    detectDragGestures(
-                        onDragStart = { p ->
-                            totalX = 0f
-                            totalY = 0f
-                            direction = 0
-                            start = player.currentPosition
-                            left = p.x < size.width / 2
-                            startVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC)
-                            brightness =
-                                activity?.window?.attributes?.screenBrightness?.takeIf { it >= 0 }
-                                    ?: .5f
-                        },
-                        onDragEnd = {
-                            if (direction == 1)
-                                player.seekTo(
-                                    (start + totalX / size.width * 60_000)
-                                        .toLong()
-                                        .coerceIn(0, player.duration.coerceAtLeast(0))
-                                )
-                        },
-                        onDrag = { change, delta ->
-                            change.consume()
-                            totalX += delta.x
-                            totalY += delta.y
-                            if (direction == 0) direction = if (abs(totalX) > abs(totalY)) 1 else 2
-                            if (direction == 1)
-                                hint =
-                                    "定位 ${((start+totalX/size.width*60_000).coerceAtLeast(0f)/1000).toInt()} 秒"
-                            else if (left) {
-                                val value = (brightness - totalY / size.height).coerceIn(.05f, 1f)
-                                activity?.window?.let { w ->
-                                    w.attributes = w.attributes.apply { screenBrightness = value }
+                    awaitEachGesture {
+                        val down = awaitFirstDown(requireUnconsumed = false)
+                        val origin = down.position
+                        val downAt = down.uptimeMillis
+                        val startPosition = player.currentPosition
+                        val left = origin.x < size.width / 2
+                        val startVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC)
+                        val maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC).coerceAtLeast(1)
+                        val startBrightness = activity?.window?.attributes?.screenBrightness?.takeIf { it >= 0 } ?: .5f
+                        var axis = 0
+                        var held = false
+                        var completed = false
+                        var lockOnRelease = false
+                        var unlockOnRelease = false
+                        var seekTarget = startPosition
+                        try {
+                            while (true) {
+                                val elapsed = (SystemClock.uptimeMillis() - downAt).coerceAtLeast(0L)
+                                val wait = (viewConfiguration.longPressTimeoutMillis - elapsed).coerceAtLeast(0L)
+                                val event = if (!held && axis == 0) {
+                                    withTimeoutOrNull(wait) { awaitPointerEvent(PointerEventPass.Initial) }
+                                } else awaitPointerEvent(PointerEventPass.Initial)
+                                if (event == null) {
+                                    held = true
+                                    pendingTapPosition = null
+                                    pendingTap?.cancel()
+                                    pulse()
+                                    speedCue = if (latestBoostLocked) "2× 倍速已锁定" else "2× 临时倍速"
+                                    lockCue = ""
+                                    player.setPlaybackSpeed(2f)
+                                    continue
                                 }
-                                hint = "亮度 ${(value*100).toInt()}%"
-                            } else {
-                                val max = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-                                val value =
-                                    (startVolume - totalY / size.height * max)
-                                        .toInt()
-                                        .coerceIn(0, max)
-                                audio.setStreamVolume(AudioManager.STREAM_MUSIC, value, 0)
-                                hint = "音量 ${(value*100/max.coerceAtLeast(1))}%"
+                                val change = event.changes.firstOrNull { it.id == down.id } ?: break
+                                val offset = change.position - origin
+                                if (!held && axis == 0 && change.uptimeMillis - downAt >= viewConfiguration.longPressTimeoutMillis && offset.getDistance() <= viewConfiguration.touchSlop) {
+                                    held = true
+                                    pendingTapPosition = null
+                                    pendingTap?.cancel()
+                                    pulse()
+                                    speedCue = if (latestBoostLocked) "2× 倍速已锁定" else "2× 临时倍速"
+                                    lockCue = ""
+                                    player.setPlaybackSpeed(2f)
+                                }
+                                if (change.pressed) {
+                                    if (held) {
+                                        val threshold = 48.dp.toPx()
+                                        lockOnRelease = !latestBoostLocked && offset.y >= threshold
+                                        unlockOnRelease = latestBoostLocked && offset.y <= -threshold
+                                        lockCue = when {
+                                            lockOnRelease -> "松开锁定倍速"
+                                            unlockOnRelease -> "松开恢复原速"
+                                            else -> ""
+                                        }
+                                        change.consume()
+                                    } else {
+                                        if (axis == 0 && offset.getDistance() > viewConfiguration.touchSlop) {
+                                            axis = if (abs(offset.x) > abs(offset.y)) 1 else 2
+                                            pendingTapPosition = null
+                                        }
+                                        when (axis) {
+                                            1 -> {
+                                                seekTarget = (startPosition + offset.x / size.width * 60_000)
+                                                    .toLong().coerceIn(0, player.duration.coerceAtLeast(0))
+                                                hint = "定位 ${seekTarget / 1000} 秒"
+                                                change.consume()
+                                            }
+                                            2 -> {
+                                                if (left) {
+                                                    val value = (startBrightness - offset.y / size.height).coerceIn(.05f, 1f)
+                                                    activity?.window?.let { window -> window.attributes = window.attributes.apply { screenBrightness = value } }
+                                                    hint = "亮度 ${(value * 100).toInt()}%"
+                                                } else {
+                                                    val value = (startVolume - offset.y / size.height * maxVolume).toInt().coerceIn(0, maxVolume)
+                                                    audio.setStreamVolume(AudioManager.STREAM_MUSIC, value, 0)
+                                                    hint = "音量 ${(value * 100 / maxVolume)}%"
+                                                }
+                                                change.consume()
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    completed = true
+                                    if (held) {
+                                        if (unlockOnRelease) boostLocked = false
+                                        else if (lockOnRelease) boostLocked = true
+                                        player.setPlaybackSpeed(if (boostLocked) 2f else latestSpeed)
+                                        speedCue = ""
+                                        lockCue = when {
+                                            lockOnRelease -> "2× 倍速已锁定"
+                                            unlockOnRelease -> "已恢复原速"
+                                            else -> ""
+                                        }
+                                        change.consume()
+                                    } else if (axis == 1) {
+                                        player.seekTo(seekTarget)
+                                        change.consume()
+                                    } else if (axis == 2) change.consume()
+                                    hint = ""
+                                    if (!held && axis == 0) {
+                                        val previous = pendingTapPosition
+                                        val doubleTap = previous != null &&
+                                            change.uptimeMillis - pendingTapTime in viewConfiguration.doubleTapMinTimeMillis..viewConfiguration.doubleTapTimeoutMillis &&
+                                            (change.position - previous).getDistance() <= android.view.ViewConfiguration.get(context).scaledDoubleTapSlop
+                                        if (doubleTap) {
+                                            pendingTap?.cancel()
+                                            pendingTap = null
+                                            pendingTapPosition = null
+                                            pulse()
+                                            if (player.isPlaying) player.pause() else player.play()
+                                        } else {
+                                            pendingTap?.cancel()
+                                            pendingTapPosition = change.position
+                                            pendingTapTime = change.uptimeMillis
+                                            pendingTap = gestureScope.launch {
+                                                delay(viewConfiguration.doubleTapTimeoutMillis)
+                                                if (pendingTapPosition != null) {
+                                                    pulse()
+                                                    controls = !controls
+                                                    pendingTapPosition = null
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break
+                                }
                             }
-                        },
-                    )
+                        } finally {
+                            if (held) {
+                                if (!completed) {
+                                    player.setPlaybackSpeed(if (latestBoostLocked) 2f else latestSpeed)
+                                    speedCue = ""
+                                    lockCue = ""
+                                }
+                            }
+                            if (!completed) hint = ""
+                        }
+                    }
                 }
         )
         if (loading)
@@ -306,14 +390,40 @@ fun LucentVideo(
                     },
                 )
             }
-        if (hint.isNotBlank())
-            Text(
-                hint,
-                Modifier.align(Alignment.Center)
-                    .background(Color.Black.copy(alpha = .7f))
-                    .padding(12.dp),
-                color = Color.White,
-            )
+        val hud = lockCue.ifEmpty { speedCue.ifEmpty { hint } }
+        val levelHud = lockCue.isEmpty() && speedCue.isEmpty() && (hint.startsWith("亮度") || hint.startsWith("音量"))
+        if (hud.isNotBlank()) LucentVideoHintOverlay(player, Modifier.fillMaxSize()) {
+            Row(
+                Modifier.shadow(12.dp, RoundedCornerShape(10.dp))
+                    .background(Color.Black.copy(alpha = .87f), RoundedCornerShape(10.dp))
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (levelHud) {
+                    val brightnessHint = hint.startsWith("亮度")
+                    val value = hint.substringAfter(' ').removeSuffix("%").toFloatOrNull()?.div(100f) ?: 0f
+                    Icon(
+                        if (brightnessHint) Icons.Rounded.Brightness6 else Icons.Rounded.VolumeUp,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp),
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    LinearProgressIndicator(
+                        progress = { value.coerceIn(0f, 1f) },
+                        modifier = Modifier.width(96.dp).height(5.dp),
+                        color = Color.White,
+                        trackColor = Color.White.copy(alpha = .25f),
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    Text("${(value * 100).toInt()}%", color = Color.White, style = MaterialTheme.typography.labelLarge)
+                } else {
+                    Icon(Icons.Rounded.FastForward, contentDescription = null, tint = Color.White, modifier = Modifier.size(20.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(hud, color = Color.White, style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        }
         if (showChrome)
             LucentVideoBottom(
                 Modifier.align(Alignment.BottomCenter).onSizeChanged { onControlsHeight(it.height) },
@@ -371,3 +481,30 @@ fun LucentVideo(
 }
 
 private fun time(ms: Long) = "${ms/60000}:${(ms/1000%60).toString().padStart(2,'0')}"
+
+@Composable
+private fun LucentVideoHintOverlay(
+    player: androidx.media3.common.Player,
+    modifier: Modifier,
+    content: @Composable () -> Unit,
+) {
+    var ratio by remember(player) { mutableFloatStateOf(0f) }
+    DisposableEffect(player) {
+        fun update(size: VideoSize) {
+            ratio = if (size.height > 0) size.width * size.pixelWidthHeightRatio / size.height else 0f
+        }
+        update(player.videoSize)
+        val listener = object : Player.Listener {
+            override fun onVideoSizeChanged(videoSize: VideoSize) = update(videoSize)
+        }
+        player.addListener(listener)
+        onDispose { player.removeListener(listener) }
+    }
+    BoxWithConstraints(modifier) {
+        val topSpace = if (ratio > 0f) ((maxHeight - maxWidth / ratio).coerceAtLeast(0.dp) / 2) else 0.dp
+        val slot = if (topSpace >= 144.dp) {
+            Modifier.align(Alignment.TopCenter).height(topSpace).padding(top = 56.dp)
+        } else Modifier.align(BiasAlignment(0f, -.5f))
+        Box(slot, contentAlignment = Alignment.Center) { content() }
+    }
+}

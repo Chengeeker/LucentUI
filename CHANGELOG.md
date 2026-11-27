@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.20+22
+
+- Sync the shared video player with the cross-app hold-to-boost, drag-to-lock/unlock gesture, independent HUD timing, capsule styling, and video-aware HUD position.
+
 ## 0.2.19+21
 
 - Add explicit reusable single-choice and option rows, and align toggle text hierarchy with shared settings rows.
